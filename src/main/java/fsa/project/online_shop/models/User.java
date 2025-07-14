@@ -1,12 +1,12 @@
 package fsa.project.online_shop.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,5 +19,18 @@ public class User {
 
     private String username;
     private String password;
-    private String role;
+    private String fullname;
+    private String email;
+    private String phone;
+    private Boolean status;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
 }
