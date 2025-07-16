@@ -1,3 +1,145 @@
-/*
-Custom Css
-*/
+.collection-section {
+            padding: 3rem 0;
+            background-color: #f8f9fa;
+        }
+        
+.collection-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+.collection-scroll-area {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 1rem 0;
+        }
+        
+.collection-scroll-area::-webkit-scrollbar {
+            display: none;
+        }
+        
+.collection-card {
+            flex: 0 0 auto;
+            width: 280px;
+            height: 320px;
+            position: relative;
+            text-decoration: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+.collection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+        
+.collection-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+.collection-card:hover img {
+            transform: scale(1.05);
+        }
+        
+.collection-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+.collection-card-content h6 {
+            margin: 0;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+.nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+.nav-button:hover {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+        
+.nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+        
+.nav-button:disabled:hover {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+            color: #6c757d;
+        }
+        
+.nav-button.prev {
+            left: 10px;
+        }
+        
+.nav-button.next {
+            right: 10px;
+        }
+        
+.arrow {
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+.arrow-left {
+            border-width: 6px 10px 6px 0;
+            border-color: transparent currentColor transparent transparent;
+        }
+        
+.arrow-right {
+            border-width: 6px 0 6px 10px;
+            border-color: transparent transparent transparent currentColor;
+        }
+        
+@media (max-width: 768px) {
+            .collection-card {
+                width: 250px;
+                height: 280px;
+            }
+            
+            .nav-button {
+                width: 40px;
+                height: 40px;
+            }
+        }
