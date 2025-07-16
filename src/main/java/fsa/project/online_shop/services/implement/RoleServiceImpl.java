@@ -1,4 +1,17 @@
 package fsa.project.online_shop.services.implement;
 
-public class RoleServiceImpl {
+import fsa.project.online_shop.models.Role;
+import fsa.project.online_shop.repositories.RoleRepository;
+import fsa.project.online_shop.services.RoleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class RoleServiceImpl implements RoleService {
+    private final RoleRepository roleRepository;
+    @Override
+    public Role getRoleByName(String name) {
+        return roleRepository.findByName(name).orElse(null);
+    }
 }

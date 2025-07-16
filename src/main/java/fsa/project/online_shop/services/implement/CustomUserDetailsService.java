@@ -1,7 +1,6 @@
-package fsa.project.online_shop.configs;
+package fsa.project.online_shop.services.implement;
 
 import fsa.project.online_shop.models.User;
-import fsa.project.online_shop.repositories.UserRepository;
 import fsa.project.online_shop.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
@@ -35,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
-                .disabled(false)
+                .disabled(user.getStatus() == false)
                 .build();
     }
 }

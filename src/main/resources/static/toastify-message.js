@@ -1,12 +1,18 @@
 const params = new URLSearchParams(window.location.search);
 
-const messsageMap = {
+const messageMap = {
     "login-ok": "Login successfully",
-    "login-failed": "Login failed"
+    "login-failed": "Login failed",
+    "register-successfully": "Register successfully",
+    "username-exists": "Username already exists",
+    "email-exists": "Email already exists",
+    "bad-credentials": "Username or password is incorrect",
+    "disabled": "Your account is disabled",
+    "login-error": "An error occurred while logging in",
 }
 if (params.has("success")) {
     const key = params.get("success");
-    const message = messsageMap[key] || "Success!";
+    const message = messageMap[key] || "Success!";
     Toastify( {
         text: message,
         duration: 3000,
@@ -22,7 +28,7 @@ if (params.has("success")) {
 }
 if (params.has("error")) {
     const key = params.get("error");
-    const message = messsageMap[key] || "An error occurred!";
+    const message = messageMap[key] || "An error occurred!";
     Toastify( {
         text: message,
         duration: 3000,

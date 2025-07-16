@@ -1,10 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
+
+    <link rel="stylesheet" href="user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="user/css/templatemo.css">
+    <link rel="stylesheet" href="user/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="user/css/fontawesome.min.css">
+
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
-$END$
+<div class="container-fluid">
+    <div class="shadow-lg border-0 row justify-content-center">
+        <div class="col-md-7 d-none d-md-block login-bg">
+            <div class="login-bg-content">
+                <div>
+                    <h1>Inspirational gaming setup</h1>
+                    <a class="btn btn-outline-light btn-lg">Homepage</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+            <a class="navbar-brand text-success logo h1 align-self-center d-flex justify-content-center"
+               href="index.html">
+                GOS
+            </a>
+            <form method="post" th:action="@{/reset-password}">
+                <div class="mb-3">
+                    <label class="form-label">Username<span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg" type="text" name="username"
+                           placeholder="Enter username"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password<span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg" type="password" name="password"
+                           placeholder="Enter password"/>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" name="remember-me" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember Me</label>
+                </div>
+                <div class="mb-3 d-flex justify-content-end">
+                    <a th:href="@{/forgot-password}" class="text-decoration-none"
+                       style="font-style: italic">Forgot Password?</a>
+                </div>
+                <div class="text-center mb-3">
+                    <button class="btn btn-primary col-12 col-md-6" type="submit">Login</button>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <hr class="flex-grow-1">
+                    <span class="px-2">
+                        You don't have any account? <a th:href="@{/register}" class="text-decoration-none">Register now</a>
+                    </span>
+                    <hr class="flex-grow-1">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Start Script -->
+<script src="user/js/jquery-1.11.0.min.js"></script>
+<script src="user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="user/js/bootstrap.bundle.min.js"></script>
+<script src="user/js/templatemo.js"></script>
+<script src="user/js/custom.js"></script>
+<!-- End Script -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="toastify-message.js"></script>
 </body>
+
 </html>
