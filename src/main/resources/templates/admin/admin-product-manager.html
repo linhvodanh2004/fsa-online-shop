@@ -70,6 +70,16 @@
 										<input type="text" id="productSearchBox"
 											class="form-control form-control-sm w-auto" placeholder="Search products..."
 											style="min-width: 300px; font-size: 16px;">
+										<select id="sortSelect" class="form-select form-select-sm w-auto ms-2"
+											style="font-size: 16px; min-width: 180px;">
+											<option value="">Sort by</option>
+											<option value="name-asc">Name (A-Z)</option>
+											<option value="name-desc">Name (Z-A)</option>
+											<option value="price-asc">Price ↑</option>
+											<option value="price-desc">Price ↓</option>
+											<option value="quantity-asc">Quantity ↑</option>
+											<option value="quantity-desc">Quantity ↓</option>
+										</select>
 									</div>
 									<table id="datatables-column-search-text-inputs" class="table table-striped"
 										style="width:100%">
@@ -138,6 +148,41 @@
 			});
 		});
 
+		document.addEventListener("DOMContentLoaded", function () {
+			const sortSelect = document.getElementById('sortSelect');
+			const table = document.getElementById('datatables-column-search-text-inputs');
+			sortSelect.addEventListener('change', function () {
+				const rows = Array.from(table.querySelectorAll('tbody tr'));
+				let compare;
+				switch (sortSelect.value) {
+					case 'name-asc':
+						compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
+						break;
+					case 'name-desc':
+						compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
+						break;
+					case 'price-asc':
+						compare = (a, b) => parseFloat(a.children[5].textContent) - parseFloat(b.children[5].textContent);
+						break;
+					case 'price-desc':
+						compare = (a, b) => parseFloat(b.children[5].textContent) - parseFloat(a.children[5].textContent);
+						break;
+					case 'quantity-asc':
+						compare = (a, b) => parseFloat(a.children[6].textContent) - parseFloat(b.children[6].textContent);
+						break;
+					case 'quantity-desc':
+						compare = (a, b) => parseFloat(b.children[6].textContent) - parseFloat(a.children[6].textContent);
+						break;
+					default:
+						compare = null;
+				}
+				if (compare) {
+					rows.sort(compare);
+					const tbody = table.querySelector('tbody');
+					rows.forEach(row => tbody.appendChild(row));
+				}
+			});
+		});
 
 		document.addEventListener("DOMContentLoaded", function (event) {
 			setTimeout(function () {
