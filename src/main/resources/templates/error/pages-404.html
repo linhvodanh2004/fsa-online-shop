@@ -1,73 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="admin/icons/icon-48x48.png" />
-
-	<link rel="canonical" href="pages-404.html" />
-
-	<title>404 | AdminKit Demo</title>
-
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
-
-	<!-- Choose your prefered color scheme -->
-	 <link href="admin/css/light.css" rel="stylesheet">
-	<!-- <link href="admin/css/dark.css" rel="stylesheet"> -->
-
-	<!-- BEGIN SETTINGS -->
-	<!-- Remove this after purchasing -->
-	<link class="js-stylesheet" href="admin/css/light.css" rel="stylesheet">
-	<script src="admin/js/settings.js"></script>
-	<style>body {
-			opacity: 0;
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Error Pages</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+	<style>
+		.error-page {
+			min-height: 100vh;
+			display: none;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+		}
+		.error-page.active {
+			display: flex;
+		}
+		.error-container {
+			max-width: 600px;
+			margin: auto;
+			padding: 2rem;
+		}
+		.error-code {
+			font-size: 8rem;
+			font-weight: bold;
+			text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+			margin-bottom: 0;
+		}
+		.error-title {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+			text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+		}
+		.error-description {
+			font-size: 1.1rem;
+			margin-bottom: 2rem;
+			opacity: 0.9;
+		}
+		.btn-custom {
+			background: rgba(255,255,255,0.2);
+			border: 2px solid white;
+			color: white;
+			padding: 0.75rem 2rem;
+			border-radius: 50px;
+			transition: all 0.3s ease;
+		}
+		.btn-custom:hover {
+			background: white;
+			color: #667eea;
+			transform: translateY(-2px);
+		}
+		.page-selector {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 1000;
+		}
+		.page-selector .btn {
+			margin: 0 5px;
+			border-radius: 25px;
+		}
+		.error-icon {
+			font-size: 6rem;
+			margin-bottom: 1rem;
+			opacity: 0.8;
+		}
+		.floating-shapes {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			z-index: -1;
+		}
+		.shape {
+			position: absolute;
+			opacity: 0.1;
+			animation: float 6s ease-in-out infinite;
+		}
+		.shape:nth-child(1) {
+			top: 20%;
+			left: 10%;
+			animation-delay: 0s;
+		}
+		.shape:nth-child(2) {
+			top: 60%;
+			right: 10%;
+			animation-delay: 2s;
+		}
+		.shape:nth-child(3) {
+			bottom: 20%;
+			left: 20%;
+			animation-delay: 4s;
+		}
+		@keyframes float {
+			0%, 100% { transform: translateY(0px) rotate(0deg); }
+			50% { transform: translateY(-20px) rotate(180deg); }
+		}
+		/* Different gradient backgrounds for each error */
+		.error-403 {
+			background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+		}
+		.error-404 {
+			background: linear-gradient(135deg, #4834d4 0%, #686de0 100%);
+		}
+		.error-500 {
+			background: linear-gradient(135deg, #ff9ff3 0%, #f368e0 100%);
 		}
 	</style>
-	<!-- END SETTINGS -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
-</script></head>
-<!--
-  HOW TO USE: 
-  data-theme: default (default), dark, light, colored
-  data-layout: fluid (default), boxed
-  data-sidebar-position: left (default), right
-  data-sidebar-layout: default (default), compact
--->
-
-<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
-	<main class="d-flex w-100 h-100">
-		<div class="container d-flex flex-column">
-			<div class="row vh-100">
-				<div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
-					<div class="d-table-cell align-middle">
-
-						<div class="text-center">
-							<h1 class="display-1 font-weight-bold">404</h1>
-							<p class="h1">Page not found.</p>
-							<p class="h2 font-weight-normal mt-3 mb-4">The page you are looking for might have been removed.</p>
-							<a href="admin/dashboard.html" class="btn btn-primary btn-lg">Return to website</a>
-						</div>
-
-					</div>
-				</div>
-			</div>
+</head>
+<body>
+<!-- 403 Forbidden Page -->
+<div id="page-404" class="error-page error-404 active">
+	<div class="floating-shapes">
+		<div class="shape"><i class="fas fa-search fa-3x"></i></div>
+		<div class="shape"><i class="fas fa-question fa-3x"></i></div>
+		<div class="shape"><i class="fas fa-exclamation fa-3x"></i></div>
+	</div>
+	<div class="error-container text-center">
+		<div class="error-icon">
+			<i class="fas fa-search"></i>
 		</div>
-	</main>
-
-	<script src="admin/js/app.js"></script>
+		<h1 class="error-code">404</h1>
+		<h2 class="error-title">Page Not Found</h2>
+		<p class="error-description">
+			Oops! The page you're looking for doesn't exist.
+			It might have been moved, deleted, or you entered the wrong URL.
+		</p>
+		<div class="d-flex justify-content-center gap-3 flex-wrap">
+			<a class="btn btn-custom" href="/">
+				<i class="fas fa-home me-2"></i>Go Home
+			</a>
+		</div>
+	</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

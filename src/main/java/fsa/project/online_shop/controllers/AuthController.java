@@ -5,12 +5,17 @@ import fsa.project.online_shop.models.constant.UserRole;
 import fsa.project.online_shop.services.EmailSenderService;
 import fsa.project.online_shop.services.RoleService;
 import fsa.project.online_shop.services.UserService;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,22 +24,13 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements ErrorController {
 
     private final UserService userService;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailSenderService;
 
-    @GetMapping("/notfound")
-    public String notFoundError() {
-        return "error/pages-404";
-    }
-
-    @GetMapping("/access-denied")
-    public String accessDenied() {
-        return "error/pages-403";
-    }
 
     @GetMapping("/register")
     public String registerPage() {
@@ -100,9 +96,14 @@ public class AuthController {
             return "redirect:/forgot-password?error=username-or-email-not-matched";
         }
         String verificationCode = generateRandomCode();
-        String hashedVerificationCode = passwordEncoder.encode(verificationCode);
+        String hashedVerificationCode = DigestUtils.sha256Hex(verificationCode);
         model.addAttribute("hashedVerificationCode", hashedVerificationCode);
         model.addAttribute("email", email);
+        try {
+            emailSenderService.sendVerificationCode(email, username, verificationCode);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return "user/verification";
     }
 }

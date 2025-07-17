@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>Login</title>
     <meta charset="utf-8">
@@ -20,6 +19,64 @@
 
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .code-input-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .code-input {
+            width: 55px;
+            height: 55px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #495057;
+            background: white;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .code-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: scale(1.05);
+        }
+
+        .code-input.filled {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #verifyBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+    <!-- Previous head content remains unchanged -->
+    <style>
+        .code-input.error {
+            border-color: #dc3545;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .message-container {
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -33,53 +90,386 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
-            <a class="navbar-brand text-success logo h1 align-self-center d-flex justify-content-center"
-               href="index.html">
+            <a class="navbar-brand text-success logo h1 align-self-center d-flex justify-content-center" href="index.html">
                 GOS
             </a>
-            <form method="post" th:action="@{/reset-password}">
-                <div class="mb-3">
-                    <label class="form-label">Username<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="text" name="username"
-                           placeholder="Enter username"/>
+            <form id="verificationForm">
+                <div class="code-input-container">
+                    <input type="text" class="code-input" maxlength="1" data-index="0">
+                    <input type="text" class="code-input" maxlength="1" data-index="1">
+                    <input type="text" class="code-input" maxlength="1" data-index="2">
+                    <input type="text" class="code-input" maxlength="1" data-index="3">
+                    <input type="text" class="code-input" maxlength="1" data-index="4">
+                    <input type="text" class="code-input" maxlength="1" data-index="5">
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Password<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="password" name="password"
-                           placeholder="Enter password"/>
+                <div class="message-container">
+                    <div class="alert alert-success d-none" id="successMessage"></div>
+                    <div class="alert alert-danger d-none" id="errorMessage"></div>
                 </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" name="remember-me" id="rememberMe">
-                    <label class="form-check-label" for="rememberMe">Remember Me</label>
-                </div>
-                <div class="mb-3 d-flex justify-content-end">
-                    <a th:href="@{/forgot-password}" class="text-decoration-none"
-                       style="font-style: italic">Forgot Password?</a>
-                </div>
-                <div class="text-center mb-3">
-                    <button class="btn btn-primary col-12 col-md-6" type="submit">Login</button>
-                </div>
-                <div class="mb-3 d-flex justify-content-center">
-                    <hr class="flex-grow-1">
-                    <span class="px-2">
-                        You don't have any account? <a th:href="@{/register}" class="text-decoration-none">Register now</a>
-                    </span>
-                    <hr class="flex-grow-1">
+                <div class="text-center mb-4">
+                    <button type="submit" class="btn btn-primary verify-btn" id="verifyBtn" disabled>
+                        <i class="fas fa-check me-2"></i>Verify Code
+                    </button>
+                    <div class="timer mt-2" id="timer"></div>
+                    <div class="mt-2">
+                        <a href="#" id="resendLink"><i class="fas fa-sync-alt me-1"></i>Resend Code</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- Start Script -->
+
+<!-- Password Reset Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel">
+                    <i class="fas fa-key me-2"></i>Reset Password
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="resetPasswordForm">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="newPassword" required
+                                   minlength="8" placeholder="Enter new password">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">Password must be at least 8 characters long, include uppercase, lowercase, number, and special character</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required
+                               minlength="8" placeholder="Confirm new password">
+                    </div>
+                    <div class="password-strength mb-3" id="passwordStrength">
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" id="strengthBar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted" id="strengthText">Password strength</small>
+                    </div>
+                    <div class="alert alert-danger d-none" id="passwordError"></div>
+                    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
 <script src="user/js/jquery-1.11.0.min.js"></script>
 <script src="user/js/jquery-migrate-1.2.1.min.js"></script>
 <script src="user/js/bootstrap.bundle.min.js"></script>
 <script src="user/js/templatemo.js"></script>
 <script src="user/js/custom.js"></script>
-<!-- End Script -->
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="toastify-message.js"></script>
-</body>
+<!--<script src="https://cdn.jsdelivr.net/gh/dcodeIO/bcrypt.js@v3.0.2/index.js"></script>-->
+<script th:inline="javascript" type="text/javascript">
+    const hashedVerificationCode = /*[[${hashedVerificationCode}]]*/ '';
+    class CodeVerification {
+        constructor() {
+            this.inputs = document.querySelectorAll('.code-input');
+            this.verifyBtn = document.getElementById('verifyBtn');
+            this.resendLink = document.getElementById('resendLink');
+            this.timer = document.getElementById('timer');
+            this.successMessage = document.getElementById('successMessage');
+            this.errorMessage = document.getElementById('errorMessage');
+            this.form = document.getElementById('verificationForm');
+            this.resetForm = document.getElementById('resetPasswordForm');
+            this.newPassword = document.getElementById('newPassword');
+            this.confirmPassword = document.getElementById('confirmPassword');
+            this.passwordStrength = document.getElementById('passwordStrength');
+            this.strengthBar = document.getElementById('strengthBar');
+            this.strengthText = document.getElementById('strengthText');
+            this.passwordError = document.getElementById('passwordError');
+            this.togglePassword = document.getElementById('togglePassword');
+            this.resendTimer = 60 * 5;
+            this.init();
+        }
 
+        init() {
+            this.inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => this.handleInput(e, index));
+                input.addEventListener('keydown', (e) => this.handleKeyDown(e, index));
+                input.addEventListener('paste', (e) => this.handlePaste(e, index));
+                input.addEventListener('focus', () => this.clearMessages());
+            });
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            this.resendLink.addEventListener('click', (e) => this.handleResend(e));
+            this.resetForm.addEventListener('submit', (e) => this.handlePasswordReset(e));
+            this.newPassword.addEventListener('input', () => this.checkPasswordStrength());
+            this.togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
+            this.inputs[0].focus();
+            this.startResendTimer();
+            console.log(hashedVerificationCode);
+        }
+
+        showToast(msg, type = 'error') {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                close: true,
+                style: {
+                    background: type === 'error' ? "#f44336" : "#28a745",
+                }
+            }).showToast();
+        }
+
+        handleInput(e, index) {
+            const value = e.target.value;
+            if (!/^\d*$/.test(value)) {
+                e.target.value = '';
+                return;
+            }
+            if (value) {
+                e.target.classList.add('filled');
+                e.target.classList.remove('error');
+                if (index < this.inputs.length - 1) {
+                    this.inputs[index + 1].focus();
+                }
+            } else {
+                e.target.classList.remove('filled');
+            }
+            this.updateVerifyButton();
+        }
+
+        handleKeyDown(e, index) {
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                this.inputs[index - 1].focus();
+                this.inputs[index - 1].value = '';
+                this.inputs[index - 1].classList.remove('filled');
+                this.updateVerifyButton();
+            }
+            if (e.key === 'ArrowLeft' && index > 0) {
+                this.inputs[index - 1].focus();
+            }
+            if (e.key === 'ArrowRight' && index < this.inputs.length - 1) {
+                this.inputs[index + 1].focus();
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.handleSubmit(e);
+            }
+        }
+
+        handlePaste(e, index) {
+            e.preventDefault();
+            const paste = e.clipboardData.getData('text');
+            const digits = paste.replace(/\D/g, '').slice(0, 6);
+            digits.split('').forEach((digit, i) => {
+                if (index + i < this.inputs.length) {
+                    this.inputs[index + i].value = digit;
+                    this.inputs[index + i].classList.add('filled');
+                }
+            });
+            const lastIndex = Math.min(index + digits.length - 1, this.inputs.length - 1);
+            this.inputs[lastIndex].focus();
+            this.updateVerifyButton();
+        }
+
+        async handleSubmit(e) {
+            e.preventDefault();
+            if (!this.isCodeComplete()) return;
+
+            const code = this.getCode();
+            this.verifyBtn.disabled = true;
+            this.verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
+
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(code);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                if (hashHex === hashedVerificationCode) {
+                    this.showToast('Verification successful!', 'success');
+                    const modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+                    modal.show();
+                } else {
+                    this.showError('Invalid verification code');
+                }
+            } catch (error) {
+                this.showError('Verification failed: ' + error.message);
+                console.error('Verification error:', error);
+            } finally {
+                this.verifyBtn.disabled = false;
+                this.verifyBtn.innerHTML = '<i class="fas fa-check me-2"></i>Verify Code';
+            }
+        }
+
+        async handlePasswordReset(e) {
+            e.preventDefault();
+            const password = this.newPassword.value;
+            const confirmPassword = this.confirmPassword.value;
+
+            if (password !== confirmPassword) {
+                this.showPasswordError('Passwords do not match');
+                return;
+            }
+
+            if (!this.isPasswordStrong(password)) {
+                this.showPasswordError('Password must contain uppercase, lowercase, number, and special character');
+                return;
+            }
+
+            try {
+                // Replace with actual API call to backend
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password }),
+                });
+
+                if (response.ok) {
+                    this.showToast('Password reset successful!', 'success');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                    modal.hide();
+                    setTimeout(() => window.location.href = '/login', 1000);
+                } else {
+                    this.showPasswordError('Failed to reset password');
+                }
+            } catch (error) {
+                this.showPasswordError('An error occurred');
+                console.error('Password reset error:', error);
+            }
+        }
+
+        checkPasswordStrength() {
+            const password = this.newPassword.value;
+            this.passwordStrength.style.display = 'block';
+
+            let strength = 0;
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+            this.strengthBar.style.width = `${strength}%`;
+            this.strengthBar.className = 'progress-bar ' + (
+                strength < 50 ? 'bg-danger' :
+                    strength < 75 ? 'bg-warning' : 'bg-success'
+            );
+            this.strengthText.textContent = strength < 50 ? 'Weak' :
+                strength < 75 ? 'Medium' : 'Strong';
+        }
+
+        isPasswordStrong(password) {
+            return password.length >= 8 &&
+                /[A-Z]/.test(password) &&
+                /[0-9]/.test(password) &&
+                /[^A-Za-z0-9]/.test(password);
+        }
+
+        togglePasswordVisibility() {
+            const type = this.newPassword.type === 'password' ? 'text' : 'password';
+            this.newPassword.type = type;
+            this.togglePassword.innerHTML = `<i class="fas ${type === 'password' ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
+        }
+
+        handleResend(e) {
+            e.preventDefault();
+            if (this.resendTimer > 0) return;
+
+            this.resendLink.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Sending...';
+            // Replace with actual API call to resend code
+            fetch('/api/resend-verification', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        this.resendTimer = 60 * 5;
+                        this.startResendTimer();
+                        this.clearInputs();
+                        this.showToast('Verification code resent!', 'success');
+                    } else {
+                        this.showToast('Failed to resend code');
+                    }
+                })
+                .catch(error => {
+                    this.showToast('An error occurred while resending code');
+                    console.error('Resend error:', error);
+                })
+                .finally(() => {
+                    this.resendLink.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Resend Code';
+                });
+        }
+
+        startResendTimer() {
+            const updateTimer = () => {
+                if (this.resendTimer > 0) {
+                    const minutes = Math.floor(this.resendTimer / 60);
+                    const seconds = this.resendTimer % 60;
+                    this.timer.textContent = `Resend available in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    this.resendLink.style.pointerEvents = 'none';
+                    this.resendLink.style.opacity = '0.5';
+                    this.resendTimer--;
+                    setTimeout(updateTimer, 1000);
+                } else {
+                    this.timer.textContent = '';
+                    this.resendLink.style.pointerEvents = 'auto';
+                    this.resendLink.style.opacity = '1';
+                }
+            };
+            updateTimer();
+        }
+
+        updateVerifyButton() {
+            this.verifyBtn.disabled = !this.isCodeComplete();
+        }
+
+        isCodeComplete() {
+            return Array.from(this.inputs).every(input => input.value.length === 1);
+        }
+
+        getCode() {
+            return Array.from(this.inputs).map(input => input.value).join('');
+        }
+
+        clearInputs() {
+            this.inputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('filled', 'error');
+            });
+            this.inputs[0].focus();
+            this.updateVerifyButton();
+        }
+
+        showError(message) {
+            this.clearMessages();
+            this.errorMessage.textContent = message;
+            this.errorMessage.classList.remove('d-none');
+            this.inputs.forEach(input => input.classList.add('error'));
+            this.showToast(message);
+            setTimeout(() => this.clearInputs(), 1000);
+        }
+
+        showPasswordError(message) {
+            this.passwordError.textContent = message;
+            this.passwordError.classList.remove('d-none');
+            setTimeout(() => {
+                this.passwordError.classList.add('d-none');
+            }, 3000);
+        }
+
+        clearMessages() {
+            this.successMessage.classList.add('d-none');
+            this.errorMessage.classList.add('d-none');
+            this.inputs.forEach(input => input.classList.remove('error'));
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new CodeVerification();
+    });
+</script>
+</body>
 </html>
