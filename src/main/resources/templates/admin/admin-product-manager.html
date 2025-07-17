@@ -85,10 +85,8 @@
 										style="width:100%">
 										<thead>
 											<tr>
-												<th>ID</th>
-												<th>Name</th>
 												<th>Image</th>
-												<th>Description</th>
+												<th>Name</th>
 												<th>Category</th>
 												<th>Price</th>
 												<th>Quantity</th>
@@ -97,20 +95,40 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="product : ${products}">
-												<td th:text="${product.id}"></td>
-												<td th:text="${product.name}"></td>
+											<tr th:each="product : ${products}"
+												th:classappend="${!product.status} ? 'opacity-50'">
 												<td>
-													img
+													<img th:src="@{${product.image}}" alt="Product Image"
+														style="width: 120px; height: 120px;">
 												</td>
-												<td th:text="${product.description}"></td>
+												<td th:text="${product.name}"></td>
 												<td> cate</td>
 												<td th:text="${product.price}"></td>
 												<td th:text="${product.quantity}"></td>
 												<td th:text="${product.sold}"></td>
-												<td th:text="${product.status}"></td>
+												<td>
+													<span class="align-middle">
+														<i class="align-middle" th:if="${product.status}"
+															data-feather="toggle-right"
+															style="cursor:pointer; color: green;"
+															th:attr="data-id=${product.id}, data-status=${product.status}"
+															onclick="toggleStatus(this)">
+														</i>
+														<i class="align-middle" th:unless="${product.status}"
+															data-feather="toggle-left"
+															style="cursor:pointer; color: red;"
+															th:attr="data-id=${product.id}, data-status=${product.status}"
+															onclick="toggleStatus(this)">
+														</i>
+													</span>
+												</td>
 											</tr>
 										</tbody>
+										<style>
+											.opacity-50 {
+												opacity: 0.5;
+											}
+										</style>
 									</table>
 								</div>
 							</div>
@@ -184,25 +202,51 @@
 			});
 		});
 
-		document.addEventListener("DOMContentLoaded", function (event) {
-			setTimeout(function () {
-				if (localStorage.getItem('popState') !== 'shown') {
-					window.notyf.open({
-						type: "success",
-						message: "Get access to all 500+ components and 45+ pages with AdminKit PRO. <u><a class=\"text-white\" href=\"https://adminkit.io/pricing\" target=\"_blank\">More info</a></u> 🚀",
-						duration: 10000,
-						ripple: true,
-						dismissible: false,
-						position: {
-							x: "left",
-							y: "bottom"
-						}
-					});
+		function updateRowOpacity(icon, newStatus) {
+			const row = icon.closest('tr');
+			if (!newStatus) {
+				row.classList.add('opacity-50');
+			} else {
+				row.classList.remove('opacity-50');
+			}
+		}
 
-					localStorage.setItem('popState', 'shown');
-				}
-			}, 15000);
-		});
+		function toggleStatus(icon) {
+			const currentStatus = icon.getAttribute('data-status') === 'true';
+			const productId = icon.getAttribute('data-id');
+			const newStatus = !currentStatus;
+
+			// Change opacity immediately
+			updateRowOpacity(icon, newStatus);
+
+			fetch(`/admin/products/${productId}/status`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ status: newStatus })
+			})
+				.then(response => {
+					if (!response.ok) throw new Error('Failed to update status');
+					// Update icon attributes instead of replacing HTML
+					if (newStatus) {
+						icon.setAttribute('data-feather', 'toggle-right');
+						icon.setAttribute('style', 'cursor:pointer; color: green;');
+						icon.setAttribute('data-status', 'true');
+					} else {
+						icon.setAttribute('data-feather', 'toggle-left');
+						icon.setAttribute('style', 'cursor:pointer; color: red;');
+						icon.setAttribute('data-status', 'false');
+					}
+					if (window.feather) {
+						feather.replace();
+					}
+				})
+				.catch(error => {
+					alert('Error updating status!');
+					console.error(error);
+					updateRowOpacity(icon, currentStatus);
+				});
+		}
+
 	</script>
 </body>
 
