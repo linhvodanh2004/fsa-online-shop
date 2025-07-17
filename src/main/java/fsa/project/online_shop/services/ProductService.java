@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ProductService {
     List<Product> getLatestProducts(int limit);
-     List<Product> getAllProducts();
+    List<Product> getAllProducts();
+    Product getProductById(Long id);
 }
