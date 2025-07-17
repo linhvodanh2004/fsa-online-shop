@@ -31,28 +31,34 @@ public class UserController {
         return "user/index";
     }
 
-    @GetMapping("/product_manager")
+    @GetMapping("admin/products")
     public String adminProductPage(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "admin/admin-product-manager";
     }
 
-    @PostMapping("/admin/products/{id}/status")
+    @PostMapping("/product/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateProductStatus(
             @PathVariable Long id,
             @RequestBody Map<String, Object> payload) {
         Boolean status = (Boolean) payload.get("status");
         Product product = productService.getProductById(id);
-        if (product != null) {
-            product.setStatus(status);
-            productRepository.save(product);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
-        }
+        product.setStatus(status);
+        productRepository.save(product);
+        return ResponseEntity.ok().build();
+
     }
+
+    @GetMapping("admin/update/{id}")
+    public String updateProductPage(@PathVariable Long id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "admin/admin-product-form";
+    }
+
+    
 
     @GetMapping("/login-ok")
     public String loginOk() {
