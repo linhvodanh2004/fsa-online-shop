@@ -11,7 +11,7 @@
 		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="admin/img/icons/icon-48x48.png" />
+	<link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png" />
 
 	<link rel="canonical" href="#" />
 
@@ -20,13 +20,13 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
 
 	<!-- Choose your prefered color scheme -->
-	<link href="admin/css/light.css" rel="stylesheet">
+	<link href="/admin/css/light.css" rel="stylesheet">
 	<!-- <link href="css/dark.css" rel="stylesheet"> -->
 
 	<!-- BEGIN SETTINGS -->
 	<!-- Remove this after purchasing -->
-	<link class="js-stylesheet" href="admin/css/light.css" rel="stylesheet">
-	<script src="admin/js/settings.js"></script>
+	<link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
+	<script src="/admin/js/settings.js"></script>
 	<style>
 		body {
 			opacity: 0;
@@ -41,6 +41,23 @@
 
 		gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
 	</script>
+
+	<style>
+		.opacity-50 {
+			opacity: 0.5;
+		}
+
+		tbody tr:hover {
+			background-color: #ebebeb;
+			
+		}
+
+		tbody tr.opacity-50:hover {
+			background-color: inherit;
+			color: inherit;
+			box-shadow: none;
+		}
+	</style>
 </head>
 <!--
   HOW TO USE:
@@ -81,14 +98,12 @@
 											<option value="quantity-desc">Quantity ↓</option>
 										</select>
 									</div>
-									<table id="datatables-column-search-text-inputs" class="table table-striped"
+									<table id="datatables-column-search-text-inputs" class="table"
 										style="width:100%">
 										<thead>
 											<tr>
-												<th>ID</th>
-												<th>Name</th>
 												<th>Image</th>
-												<th>Description</th>
+												<th>Name</th>
 												<th>Category</th>
 												<th>Price</th>
 												<th>Quantity</th>
@@ -97,18 +112,35 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="product : ${products}">
-												<td th:text="${product.id}"></td>
-												<td th:text="${product.name}"></td>
+											<tr th:each="product : ${products}"
+												th:classappend="${!product.status} ? 'opacity-50'"
+												style="cursor: pointer;"
+												th:onclick="'location.href=\'/admin/update/' + ${product.id} + '\';'">
 												<td>
-													img
+													<img th:src="@{'/admin/img/photos/' + ${product.image}}" alt="Product Image"
+														style="width: 120px; height: 120px;">
 												</td>
-												<td th:text="${product.description}"></td>
+												<td th:text="${product.name}"></td>
 												<td> cate</td>
 												<td th:text="${product.price}"></td>
 												<td th:text="${product.quantity}"></td>
 												<td th:text="${product.sold}"></td>
-												<td th:text="${product.status}"></td>
+												<td>
+													<span class="align-middle" onclick="event.stopPropagation();">
+														<i class="align-middle" th:if="${product.status}"
+															data-feather="toggle-right"
+															style="cursor:pointer; color: green;"
+															th:attr="data-id=${product.id}, data-status=${product.status}"
+															onclick="toggleStatus(this)">
+														</i>
+														<i class="align-middle" th:unless="${product.status}"
+															data-feather="toggle-left"
+															style="cursor:pointer; color: red;"
+															th:attr="data-id=${product.id}, data-status=${product.status}"
+															onclick="toggleStatus(this)">
+														</i>
+													</span>
+												</td>
 											</tr>
 										</tbody>
 									</table>
@@ -128,9 +160,17 @@
 	</div>
 
 
-	<script src="admin/js/app.js"></script>
+	<script src="/admin/js/app.js"></script>
 
-	<script src="admin/js/datatables.js"></script>
+	<script src="/admin/js/datatables.js"></script>
+	<script src="https://unpkg.com/feather-icons"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			if (window.feather) {
+				feather.replace();
+			}
+		});
+	</script>
 
 
 	<script>
@@ -184,25 +224,51 @@
 			});
 		});
 
-		document.addEventListener("DOMContentLoaded", function (event) {
-			setTimeout(function () {
-				if (localStorage.getItem('popState') !== 'shown') {
-					window.notyf.open({
-						type: "success",
-						message: "Get access to all 500+ components and 45+ pages with AdminKit PRO. <u><a class=\"text-white\" href=\"https://adminkit.io/pricing\" target=\"_blank\">More info</a></u> 🚀",
-						duration: 10000,
-						ripple: true,
-						dismissible: false,
-						position: {
-							x: "left",
-							y: "bottom"
-						}
-					});
+		function updateRowOpacity(icon, newStatus) {
+			const row = icon.closest('tr');
+			if (!newStatus) {
+				row.classList.add('opacity-50');
+			} else {
+				row.classList.remove('opacity-50');
+			}
+		}
 
-					localStorage.setItem('popState', 'shown');
-				}
-			}, 15000);
-		});
+		function toggleStatus(icon) {
+			const currentStatus = icon.getAttribute('data-status') === 'true';
+			const productId = icon.getAttribute('data-id');
+			const newStatus = !currentStatus;
+
+			// Change opacity immediately
+			updateRowOpacity(icon, newStatus);
+
+			fetch(`/product/${productId}/status`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ status: newStatus })
+			})
+				.then(response => {
+					if (!response.ok) throw new Error('Failed to update status');
+					// Update icon attributes instead of replacing HTML
+					if (newStatus) {
+						icon.setAttribute('data-feather', 'toggle-right');
+						icon.setAttribute('style', 'cursor:pointer; color: green;');
+						icon.setAttribute('data-status', 'true');
+					} else {
+						icon.setAttribute('data-feather', 'toggle-left');
+						icon.setAttribute('style', 'cursor:pointer; color: red;');
+						icon.setAttribute('data-status', 'false');
+					}
+					if (window.feather) {
+						feather.replace();
+					}
+				})
+				.catch(error => {
+					alert('Error updating status!');
+					console.error(error);
+					updateRowOpacity(icon, currentStatus);
+				});
+		}
+
 	</script>
 </body>
 
