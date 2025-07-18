@@ -15,7 +15,7 @@
 
 	<link rel="canonical" href="#" />
 
-	<title>Product | Admin</title>
+	<title>Update Product | Admin</title>
 
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
 
@@ -71,8 +71,7 @@
 								<h5 class="card-title" style="color: black; font-size: 23px;">Product form</h5>
 							</div>
 							<div class="card-body">
-								<form th:action="@{/admin/update/{id}(id=${product.id})}" method="post"
-									enctype="multipart/form-data">
+								<form th:action="@{/admin/update/{id}(id=${product.id})}" method="post" enctype="multipart/form-data">
 									<div class="mb-3">
 										<label class="form-label">Name:</label>
 										<input type="text" class="form-control" name="name" th:value="${product.name}">
@@ -83,7 +82,7 @@
 											<option disabled selected>Select Category</option>
 											<option th:each="category : ${categories}" th:value="${category.id}"
 												th:text="${category.name}"
-												th:selected="${category.id == product.category.id}">
+												th:selected="${category.id == product.category?.id}">
 											</option>
 										</select>
 									</div>
@@ -125,6 +124,7 @@
 										</label>
 									</div>
 									<button type="submit" class="btn btn-primary">Save</button>
+									<a href="/admin/products" class="btn btn-danger">Go Back</a>
 								</form>
 							</div>
 

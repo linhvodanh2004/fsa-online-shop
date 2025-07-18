@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.Files;
 import java.util.List;
@@ -69,7 +68,7 @@ public class UserController {
         Product product = productService.getProductById(pid);
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);
-        return "admin/admin-product-form";
+        return "admin/admin-product-update";
     }
 
     @PostMapping("/admin/update/{id}")
@@ -101,7 +100,7 @@ public class UserController {
         try {
             // Create uploads folder if it doesn't exist
             if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+                Files.createDirectories(uploadPath);
             }
             // Get safe file name and save path
             Path filePath = uploadPath.resolve(Paths.get(image.getOriginalFilename()).getFileName());
@@ -110,14 +109,57 @@ public class UserController {
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
         if (image != null && !image.isEmpty()) {
             product.setImage(image.getOriginalFilename());
-        }else {
-            Product existingProduct = productService.getProductById(id);
-            product.setImage(existingProduct.getImage());
         }
+        productRepository.save(product);
+        return "redirect:/admin/products";
+    }
+
+    @GetMapping("/admin/add-product")
+    public String addProductPage(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("product", new Product());
+        return "admin/admin-product-add";
+    }
+
+    @PostMapping("/admin/add-product")
+    public String handleAddProduct(
+            @RequestParam String name,
+            @RequestParam Double price,
+            @RequestParam Integer quantity,
+            @RequestParam Integer sold,
+            @RequestParam String description,
+            @RequestParam(required = false) Boolean status,
+            @RequestParam Long categoryId,
+            @RequestParam(required = false) MultipartFile image) {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        product.setSold(sold);
+        product.setDescription(description);
+        product.setStatus(status != null ? status : false);
+
+        Category category = categoryService.getCategoryById(categoryId);
+        product.setCategory(category);
+
+        if (image != null && !image.isEmpty()) {
+            Path uploadPath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "productImg");
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                Path filePath = uploadPath.resolve(Paths.get(image.getOriginalFilename()).getFileName());
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                product.setImage(image.getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         productRepository.save(product);
         return "redirect:/admin/products";
     }
