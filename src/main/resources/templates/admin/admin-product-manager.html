@@ -100,7 +100,7 @@
 											<option value="quantity-desc">Quantity ↓</option>
 										</select>
 									</div>
-									<table id="datatables-column-search-text-inputs" class="table" style="width:100%">
+									<table id="datatables-column-search-text-inputs" class="table" style="width:100%; text-align: center;">
 										<thead>
 											<tr>
 												<th>Image</th>
@@ -141,6 +141,11 @@
 															onclick="toggleStatus(this)">
 														</i>
 													</span>
+												</td>
+												<td style="width: 10px;">
+													<button type="button" class="btn btn-sm ms-2" onclick="location.reload(); event.stopPropagation();" >
+														<i data-feather="refresh-cw"></i>
+													</button>
 												</td>
 											</tr>
 										</tbody>
