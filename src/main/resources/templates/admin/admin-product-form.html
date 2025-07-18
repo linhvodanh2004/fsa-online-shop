@@ -15,7 +15,7 @@
 
 	<link rel="canonical" href="#" />
 
-	<title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+	<title>Product | Admin</title>
 
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
 
@@ -68,47 +68,59 @@
 
 						<div class="card">
 							<div class="card-header">
-								<h5 class="card-title">Basic form</h5>
-								<h6 class="card-subtitle text-muted">Default Bootstrap form layout.</h6>
+								<h5 class="card-title" style="color: black; font-size: 23px;">Product form</h5>
 							</div>
 							<div class="card-body">
-								<form>
+								<form th:action="@{/admin/update/{id}(id=${product.id})}" method="post"
+									enctype="multipart/form-data">
 									<div class="mb-3">
 										<label class="form-label">Name:</label>
-										<input type="text" class="form-control">
+										<input type="text" class="form-control" name="name" th:value="${product.name}">
 									</div>
 									<div class="mb-3">
 										<label class="form-label">Category:</label>
-										<select class="form-control">
-											<option selected>Category</option>
-											<option>One</option>
-											<option>Two</option>
-											<option>Three</option>
+										<select class="form-control" name="categoryId">
+											<option disabled selected>Select Category</option>
+											<option th:each="category : ${categories}" th:value="${category.id}"
+												th:text="${category.name}"
+												th:selected="${category.id == product.category.id}">
+											</option>
 										</select>
 									</div>
 									<div class="mb-3">
 										<label class="form-label">Price:</label>
-										<input type="number" class="form-control">
+										<input type="number" class="form-control" name="price"
+											th:value="${product.price}">
 									</div>
 									<div class="mb-3">
 										<label class="form-label">Quantity:</label>
-										<input type="number" class="form-control">
+										<input type="number" class="form-control" name="quantity"
+											th:value="${product.quantity}">
 									</div>
 									<div class="mb-3">
 										<label class="form-label">Sold:</label>
-										<input type="number" class="form-control">
+										<input type="number" class="form-control" name="sold"
+											th:value="${product.sold}">
 									</div>
 									<div class="mb-3">
 										<label class="form-label">Description:</label>
-										<textarea class="form-control" rows="4"></textarea>
+										<textarea class="form-control" rows="4" name="description"
+											th:text="${product.description}"></textarea>
 									</div>
 									<div class="mb-3">
 										<label class="form-label w-100">Product's Image:</label>
-										<input type="file">
+										<div id="image-preview-container" th:if="${product.image != null}">
+											<img id="image-preview" th:src="@{'/productImg/' + ${product.image}}"
+												alt="Product Image"
+												style="max-width: 200px; max-height: 200px; margin-bottom: 10px;">
+										</div>
+										<input type="file" name="image" class="form-control-file" id="image-input">
+										<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 									</div>
 									<div class="my-3">
 										<label class="form-check m-0">
-											<input type="checkbox" class="form-check-input" ch>
+											<input type="checkbox" class="form-check-input" name="status"
+												th:checked="${product.status}">
 											<span class="form-check-label">Enable</span>
 										</label>
 									</div>
@@ -125,265 +137,42 @@
 			<div th:replace="~{component/admin-footer :: admin-footer}"></div>
 		</div>
 	</div>
-
+	<script src="https://cdn.tiny.cloud/1/3r6p3w9fdtbe83dz1ri0eh608u5jwrt1fm3jsdl05bwfvvxe/tinymce/7/tinymce.min.js"
+		referrerpolicy="origin"></script>
 	<script src="/admin/js/app.js"></script>
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-			var gradientLight = ctx.createLinearGradient(0, 0, 0, 225);
-			gradientLight.addColorStop(0, "rgba(215, 227, 244, 1)");
-			gradientLight.addColorStop(1, "rgba(215, 227, 244, 0)");
-			var gradientDark = ctx.createLinearGradient(0, 0, 0, 225);
-			gradientDark.addColorStop(0, "rgba(51, 66, 84, 1)");
-			gradientDark.addColorStop(1, "rgba(51, 66, 84, 0)");
-			// Line chart
-			new Chart(document.getElementById("chartjs-dashboard-line"), {
-				type: "line",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "Sales ($)",
-						fill: true,
-						backgroundColor: window.theme.id === "light" ? gradientLight : gradientDark,
-						borderColor: window.theme.primary,
-						data: [
-							2115,
-							1562,
-							1584,
-							1892,
-							1587,
-							1923,
-							2566,
-							2448,
-							2805,
-							3438,
-							2917,
-							3327
-						]
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					tooltips: {
-						intersect: false
-					},
-					hover: {
-						intersect: true
-					},
-					plugins: {
-						filler: {
-							propagate: false
-						}
-					},
-					scales: {
-						xAxes: [{
-							reverse: true,
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}],
-						yAxes: [{
-							ticks: {
-								stepSize: 1000
-							},
-							display: true,
-							borderDash: [3, 3],
-							gridLines: {
-								color: "rgba(0,0,0,0.0)",
-								fontColor: "#fff"
-							}
-						}]
-					}
+		const imageInput = document.getElementById('image-input');
+		const imagePreview = document.getElementById('image-preview');
+		imageInput.addEventListener('change', function (event) {
+			if (event.target.files && event.target.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					imagePreview.src = e.target.result;
 				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE", "Other"],
-					datasets: [{
-						data: [4306, 3801, 1689, 3251],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger,
-							"#E8EAED"
-						],
-						borderWidth: 5,
-						borderColor: window.theme.white
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 70
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Bar chart
-			new Chart(document.getElementById("chartjs-dashboard-bar"), {
-				type: "bar",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "This year",
-						backgroundColor: window.theme.primary,
-						borderColor: window.theme.primary,
-						hoverBackgroundColor: window.theme.primary,
-						hoverBorderColor: window.theme.primary,
-						data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-						barPercentage: .75,
-						categoryPercentage: .5
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							gridLines: {
-								display: false
-							},
-							stacked: false,
-							ticks: {
-								stepSize: 20
-							}
-						}],
-						xAxes: [{
-							stacked: false,
-							gridLines: {
-								color: "transparent"
-							}
-						}]
-					}
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var markers = [{
-				coords: [31.230391, 121.473701],
-				name: "Shanghai"
-			},
-			{
-				coords: [28.704060, 77.102493],
-				name: "Delhi"
-			},
-			{
-				coords: [6.524379, 3.379206],
-				name: "Lagos"
-			},
-			{
-				coords: [35.689487, 139.691711],
-				name: "Tokyo"
-			},
-			{
-				coords: [23.129110, 113.264381],
-				name: "Guangzhou"
-			},
-			{
-				coords: [40.7127837, -74.0059413],
-				name: "New York"
-			},
-			{
-				coords: [34.052235, -118.243683],
-				name: "Los Angeles"
-			},
-			{
-				coords: [41.878113, -87.629799],
-				name: "Chicago"
-			},
-			{
-				coords: [51.507351, -0.127758],
-				name: "London"
-			},
-			{
-				coords: [40.416775, -3.703790],
-				name: "Madrid "
+				reader.readAsDataURL(event.target.files[0]);
 			}
-			];
-			var map = new jsVectorMap({
-				map: "world",
-				selector: "#world_map",
-				zoomButtons: true,
-				markers: markers,
-				markerStyle: {
-					initial: {
-						r: 9,
-						stroke: window.theme.white,
-						strokeWidth: 7,
-						stokeOpacity: .4,
-						fill: window.theme.primary
-					},
-					hover: {
-						fill: window.theme.primary,
-						stroke: window.theme.primary
-					}
-				},
-				regionStyle: {
-					initial: {
-						fill: window.theme["gray-200"]
-					}
-				},
-				zoomOnScroll: false
-			});
-			window.addEventListener("resize", () => {
-				map.updateSize();
-			});
-			setTimeout(function () {
-				map.updateSize();
-			}, 250);
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span class=\"fas fa-chevron-left\" title=\"Previous month\"></span>",
-				nextArrow: "<span class=\"fas fa-chevron-right\" title=\"Next month\"></span>",
-				defaultDate: defaultDate
-			});
 		});
 	</script>
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function (event) {
-			setTimeout(function () {
-				if (localStorage.getItem('popState') !== 'shown') {
-					window.notyf.open({
-						type: "success",
-						message: "Get access to all 500+ components and 45+ pages with AdminKit PRO. <u><a class=\"text-white\" href=\"https://adminkit.io/pricing\" target=\"_blank\">More info</a></u> 🚀",
-						duration: 10000,
-						ripple: true,
-						dismissible: false,
-						position: {
-							x: "left",
-							y: "bottom"
-						}
-					});
-
-					localStorage.setItem('popState', 'shown');
-				}
-			}, 15000);
+		tinymce.init({
+			selector: 'textarea',
+			plugins: [
+				// Core editing features
+				'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+				// Your account includes a free trial of TinyMCE premium features
+				// Try the most popular premium features until Aug 1, 2025:
+				'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+			],
+			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+			tinycomments_mode: 'embedded',
+			tinycomments_author: 'Author name',
+			mergetags_list: [
+				{ value: 'First.Name', title: 'First Name' },
+				{ value: 'Email', title: 'Email' },
+			],
+			ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
 		});
 	</script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
