@@ -12,4 +12,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.status = true AND p.quantity > 0 ORDER BY p.id DESC")
     List<Product> findLatestActiveProducts(Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.status = true AND p.quantity > 0 ORDER BY p.price DESC")
+    List<Product> findFeaturedProductsByHighestPrice(Pageable pageable);
 }

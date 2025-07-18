@@ -37,7 +37,9 @@ public class UserController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("LatestProducts", productService.getLatestProducts(9));
+        model.addAttribute("latestProducts", productService.getLatestProducts(9));
+        model.addAttribute("featuredProducts", productService.getLatestProducts(3));
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "user/index";
     }
 

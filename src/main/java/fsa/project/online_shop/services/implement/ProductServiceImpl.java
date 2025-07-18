@@ -3,20 +3,26 @@ package fsa.project.online_shop.services.implement;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
 
     @Override
     public List<Product> getLatestProducts(int limit) {
         return productRepository.findLatestActiveProducts(PageRequest.of(0, limit));
+    }
+
+    @Override
+    public List<Product> getFeaturedProducts(int limit) {
+        return productRepository.findFeaturedProductsByHighestPrice(PageRequest.of(0, limit));
     }
 
     @Override
