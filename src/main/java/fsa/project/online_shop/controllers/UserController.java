@@ -5,7 +5,6 @@ import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.ProductService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,14 +30,7 @@ public class UserController {
         return "user/index";
     }
 
-    @GetMapping("admin/products")
-    public String adminProductPage(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "admin/admin-product-manager";
-    }
-
-    @PostMapping("/product/{id}/status")
+    @PostMapping("/admin/product/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateProductStatus(
             @PathVariable Long id,
@@ -48,7 +40,14 @@ public class UserController {
         product.setStatus(status);
         productRepository.save(product);
         return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("admin/products")
+    public String adminProductPage(Model model, org.springframework.security.web.csrf.CsrfToken csrfToken) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        model.addAttribute("_csrf", csrfToken);
+        return "admin/admin-product-manager";
     }
 
     @GetMapping("admin/update/{id}")
@@ -57,8 +56,6 @@ public class UserController {
         model.addAttribute("product", product);
         return "admin/admin-product-form";
     }
-
-    
 
     @GetMapping("/login-ok")
     public String loginOk() {
