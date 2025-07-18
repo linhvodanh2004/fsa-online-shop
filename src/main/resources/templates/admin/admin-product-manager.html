@@ -99,8 +99,15 @@
 											<option value="quantity-asc">Quantity ↑</option>
 											<option value="quantity-desc">Quantity ↓</option>
 										</select>
+										<div class="ms-auto">
+											<button type="button" class="btn btn-primary"
+												onclick="location.href='/admin/add-product';">
+												<i data-feather="plus"></i> Add New Product
+											</button>
+										</div>
 									</div>
-									<table id="datatables-column-search-text-inputs" class="table" style="width:100%; text-align: center;">
+									<table id="datatables-column-search-text-inputs" class="table"
+										style="width:100%; text-align: center;">
 										<thead>
 											<tr>
 												<th>Image</th>
@@ -119,7 +126,8 @@
 												th:onclick="'location.href=\'/admin/update/' + ${product.id} + '\';'">
 												<td>
 													<img th:src="@{'/productImg/' + ${product.image}}"
-														alt="Product Image" style="width: 120px; height: 120px; object-fit: cover;">
+														alt="Product Image"
+														style="width: 120px; height: 120px; object-fit: cover;">
 												</td>
 												<td th:text="${product.name}"></td>
 												<td th:text="${product.category.name}"></td>
@@ -143,9 +151,15 @@
 													</span>
 												</td>
 												<td style="width: 10px;">
-													<button type="button" class="btn btn-sm ms-2" onclick="location.reload(); event.stopPropagation();" >
+													<button type="button" class="btn btn-sm ms-2"
+														onclick="location.reload(); event.stopPropagation();">
 														<i data-feather="refresh-cw"></i>
 													</button>
+												</td>
+											</tr>
+											<tr style="cursor: pointer;" onclick="location.href='/admin/add-product';">
+												<td colspan="8" style="text-align: center;">
+													<i data-feather="plus"></i>
 												</td>
 											</tr>
 										</tbody>
