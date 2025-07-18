@@ -4,6 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
@@ -49,7 +51,7 @@
 
 		tbody tr:hover {
 			background-color: #ebebeb;
-			
+
 		}
 
 		tbody tr.opacity-50:hover {
@@ -98,8 +100,7 @@
 											<option value="quantity-desc">Quantity ↓</option>
 										</select>
 									</div>
-									<table id="datatables-column-search-text-inputs" class="table"
-										style="width:100%">
+									<table id="datatables-column-search-text-inputs" class="table" style="width:100%">
 										<thead>
 											<tr>
 												<th>Image</th>
@@ -117,8 +118,8 @@
 												style="cursor: pointer;"
 												th:onclick="'location.href=\'/admin/update/' + ${product.id} + '\';'">
 												<td>
-													<img th:src="@{'/admin/img/photos/' + ${product.image}}" alt="Product Image"
-														style="width: 120px; height: 120px;">
+													<img th:src="@{'/admin/img/photos/' + ${product.image}}"
+														alt="Product Image" style="width: 120px; height: 120px;">
 												</td>
 												<td th:text="${product.name}"></td>
 												<td> cate</td>
@@ -238,29 +239,39 @@
 			const productId = icon.getAttribute('data-id');
 			const newStatus = !currentStatus;
 
-			// Change opacity immediately
 			updateRowOpacity(icon, newStatus);
 
-			fetch(`/product/${productId}/status`, {
+			// Get CSRF token and header name from meta tags
+			const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+			const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+			const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+			const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
+
+			// Build headers object
+			const headers = {
+				'Content-Type': 'application/json'
+			};
+			if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
+				headers[csrfHeader] = csrfToken;
+			}
+
+			fetch(`/admin/product/${productId}/status`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: headers,
 				body: JSON.stringify({ status: newStatus })
 			})
 				.then(response => {
 					if (!response.ok) throw new Error('Failed to update status');
-					// Update icon attributes instead of replacing HTML
+					// Update icon and data-status without reload
+					icon.setAttribute('data-status', newStatus);
 					if (newStatus) {
 						icon.setAttribute('data-feather', 'toggle-right');
-						icon.setAttribute('style', 'cursor:pointer; color: green;');
-						icon.setAttribute('data-status', 'true');
+						icon.style.color = 'green';
 					} else {
 						icon.setAttribute('data-feather', 'toggle-left');
-						icon.setAttribute('style', 'cursor:pointer; color: red;');
-						icon.setAttribute('data-status', 'false');
+						icon.style.color = 'red';
 					}
-					if (window.feather) {
-						feather.replace();
-					}
+					if (window.feather) feather.replace();
 				})
 				.catch(error => {
 					alert('Error updating status!');
