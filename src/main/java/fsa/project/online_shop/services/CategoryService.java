@@ -1,13 +1,13 @@
 package fsa.project.online_shop.services;
 
-import fsa.project.online_shop.models.Category;
-
 import java.util.List;
 
-public interface CategoryService {
-    public List<Category> findAllCategories();
+import fsa.project.online_shop.models.Category;
 
+public interface CategoryService {
     public Category handleSaveCategory(Category category);
 
     public boolean checkCategoryExists(String name);
+    public List<Category> getAllCategories();
+    public Category getCategoryById(Long categoryId);
 }

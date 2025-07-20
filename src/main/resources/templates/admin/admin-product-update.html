@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords"
+		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="shortcut icon" href="admin/img/icons/icon-48x48.png" />
+
+	<link rel="canonical" href="#" />
+
+	<title>Update Product | Admin</title>
+
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
+
+	<!-- Toastify -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<script>
+
+	</script>
+	<!-- Choose your prefered color scheme -->
+	<link href="/admin/css/light.css" rel="stylesheet">
+	<!-- <link href="css/dark.css" rel="stylesheet"> -->
+
+	<!-- BEGIN SETTINGS -->
+	<!-- Remove this after purchasing -->
+	<link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
+	<script src="/admin/js/settings.js"></script>
+	<style>
+		body {
+			opacity: 0;
+		}
+	</style>
+	<!-- END SETTINGS -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
+	</script>
+</head>
+<!--
+  HOW TO USE: 
+  data-theme: default (default), dark, light, colored
+  data-layout: fluid (default), boxed
+  data-sidebar-position: left (default), right
+  data-sidebar-layout: default (default), compact
+-->
+
+<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+	<div class="wrapper">
+		<div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+
+		<div class="main">
+			<div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="row">
+
+						<div class="card">
+							<div class="card-header">
+								<h5 class="card-title" style="color: black; font-size: 23px;">Product form</h5>
+							</div>
+							<div class="card-body">
+								<form th:action="@{/admin/update/{id}(id=${product.id})}" method="post" enctype="multipart/form-data">
+									<div class="mb-3">
+										<label class="form-label">Name:</label>
+										<input type="text" class="form-control" name="name" th:value="${product.name}">
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Category:</label>
+										<select class="form-control" name="categoryId">
+											<option disabled selected>Select Category</option>
+											<option th:each="category : ${categories}" th:value="${category.id}"
+												th:text="${category.name}"
+												th:selected="${category.id == product.category?.id}">
+											</option>
+										</select>
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Price:</label>
+										<input type="number" class="form-control" name="price"
+											th:value="${product.price}">
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Quantity:</label>
+										<input type="number" class="form-control" name="quantity"
+											th:value="${product.quantity}">
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Sold:</label>
+										<input type="number" class="form-control" name="sold"
+											th:value="${product.sold}">
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Description:</label>
+										<textarea class="form-control" rows="4" name="description"
+											th:text="${product.description}"></textarea>
+									</div>
+									<div class="mb-3">
+										<label class="form-label w-100">Product's Image:</label>
+										<div id="image-preview-container" th:if="${product.image != null}">
+											<img id="image-preview" th:src="@{'/productImg/' + ${product.image}}"
+												alt="Product Image"
+												style="max-width: 200px; max-height: 200px; margin-bottom: 10px;">
+										</div>
+										<input type="file" name="image" class="form-control-file" id="image-input">
+										<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+									</div>
+									<div class="my-3">
+										<label class="form-check m-0">
+											<input type="checkbox" class="form-check-input" name="status"
+												th:checked="${product.status}">
+											<span class="form-check-label">Enable</span>
+										</label>
+									</div>
+									<button type="submit" class="btn btn-primary">Save</button>
+									<a href="/admin/products" class="btn btn-danger">Go Back</a>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</main>
+
+
+			<div th:replace="~{component/admin-footer :: admin-footer}"></div>
+		</div>
+	</div>
+	<script src="https://cdn.tiny.cloud/1/3r6p3w9fdtbe83dz1ri0eh608u5jwrt1fm3jsdl05bwfvvxe/tinymce/7/tinymce.min.js"
+		referrerpolicy="origin"></script>
+	<script src="/admin/js/app.js"></script>
+
+	<script>
+		const imageInput = document.getElementById('image-input');
+		const imagePreview = document.getElementById('image-preview');
+		imageInput.addEventListener('change', function (event) {
+			if (event.target.files && event.target.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					imagePreview.src = e.target.result;
+				}
+				reader.readAsDataURL(event.target.files[0]);
+			}
+		});
+	</script>
+
+	<script>
+		tinymce.init({
+			selector: 'textarea',
+			plugins: [
+				// Core editing features
+				'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+				// Your account includes a free trial of TinyMCE premium features
+				// Try the most popular premium features until Aug 1, 2025:
+				'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+			],
+			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+			tinycomments_mode: 'embedded',
+			tinycomments_author: 'Author name',
+			mergetags_list: [
+				{ value: 'First.Name', title: 'First Name' },
+				{ value: 'Email', title: 'Email' },
+			],
+			ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+		});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<script src="toastify-message.js"></script>
+
+
+</body>
+
+</html>

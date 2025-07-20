@@ -1,9 +1,8 @@
 package fsa.project.online_shop.controllers;
 
-import fsa.project.online_shop.models.Category;
-import fsa.project.online_shop.services.CategoryService;
-import fsa.project.online_shop.services.FileService;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import fsa.project.online_shop.models.Category;
+import fsa.project.online_shop.services.CategoryService;
+import fsa.project.online_shop.services.FileService;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/admin/category-manager")
     public String getCategoryManagementPage(Model model) {
-        List<Category> categories = categoryService.findAllCategories();
+        List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         return "admin/category-manager";
     }

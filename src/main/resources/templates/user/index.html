@@ -243,65 +243,29 @@ https://templatemo.com/tm-559-zay-shop
 
     <!-- Start Categories of The Month -->
     <section class="collection-section">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-lg-6 mx-auto">
-                    <h1 class="h1 mb-4">Categories of The Month</h1>
-                    <p class="lead">
-                        Discover our featured categories with premium products and exclusive collections
+        <div class="container py-5">
+            <div class="row text-center py-3">
+                <div class="col-lg-6 m-auto">
+                    <h1 class="h1">Categories of The Month</h1>
+                    <p>
+                        Discover our featured categories of the month, showcasing a curated selection of products that highlight the latest trends and innovations in the gaming industry.
                     </p>
                 </div>
             </div>
-
             <div class="collection-container">
-                <div class="collection-scroll-area" id="collectionScroll">
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_01.jpg" alt="Gaming Mouse">
-                        <div class="collection-card-content">
-                            <h6>Gaming Mouse</h6>
-                        </div>
-                    </a>
-
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_02.jpg" alt="Mechanical Keyboard">
-                        <div class="collection-card-content">
-                            <h6>Mechanical Keyboard</h6>
-                        </div>
-                    </a>
-
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_03.jpg" alt="Gaming Headset">
-                        <div class="collection-card-content">
-                            <h6>Gaming Headset</h6>
-                        </div>
-                    </a>
-
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_01.jpg" alt="Gaming Monitor">
-                        <div class="collection-card-content">
-                            <h6>Gaming Monitor</h6>
-                        </div>
-                    </a>
-
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_01.jpg" alt="Gaming Chair">
-                        <div class="collection-card-content">
-                            <h6>Gaming Chair</h6>
-                        </div>
-                    </a>
-
-                    <a href="#" class="collection-card">
-                        <img src="./user/img/category_img_01.jpg" alt="Mouse Pad">
-                        <div class="collection-card-content">
-                            <h6>Mouse Pad</h6>
-                        </div>
-                    </a>
-                </div>
-
-                <button class="nav-button prev" id="prevBtn">
+                <button class="nav-button prev" id="prevBtn" disabled>
                     <span class="arrow arrow-left"></span>
                 </button>
-
+                <div class="collection-scroll-area" id="collectionScroll">
+                    <div th:each="category : ${categories}" class="collection-card">
+                        <a th:href="@{/shop-category/{id}(id=${category.id})}">
+                            <img th:src="@{${category.image}}" th:alt="${category.name}">
+                            <div class="collection-card-content">
+                                <h6 th:text="${category.name}">Category Name</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
                 <button class="nav-button next" id="nextBtn">
                     <span class="arrow arrow-right"></span>
                 </button>
@@ -358,87 +322,41 @@ https://templatemo.com/tm-559-zay-shop
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Product</h1>
+                    <h1 class="h1">Featured Products</h1>
                     <p>
-                        Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident.
+                        Discover our premium selection of high-end gaming products, featuring top-tier performance and exceptional build quality for the most demanding gamers.
                     </p>
                 </div>
             </div>
-<!--            <div class="row">-->
-<!--                <div class="col-12 col-md-4 mb-4">-->
-<!--                    <div class="card h-100">-->
-<!--                        <a href="shop-single.html">-->
-<!--                            <img src="./user/img/feature_prod_01.jpg" class="card-img-top" alt="...">-->
-<!--                        </a>-->
-<!--                        <div class="card-body">-->
-<!--                            <ul class="list-unstyled d-flex justify-content-between">-->
-<!--                                <li>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-muted fa fa-star"></i>-->
-<!--                                    <i class="text-muted fa fa-star"></i>-->
-<!--                                </li>-->
-<!--                                <li class="text-muted text-right">$240.00</li>-->
-<!--                            </ul>-->
-<!--                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Gym Weight</a>-->
-<!--                            <p class="card-text">-->
-<!--                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.-->
-<!--                            </p>-->
-<!--                            <p class="text-muted">Reviews (24)</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-12 col-md-4 mb-4">-->
-<!--                    <div class="card h-100">-->
-<!--                        <a href="shop-single.html">-->
-<!--                            <img src="./user/img/feature_prod_02.jpg" class="card-img-top" alt="...">-->
-<!--                        </a>-->
-<!--                        <div class="card-body">-->
-<!--                            <ul class="list-unstyled d-flex justify-content-between">-->
-<!--                                <li>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-muted fa fa-star"></i>-->
-<!--                                    <i class="text-muted fa fa-star"></i>-->
-<!--                                </li>-->
-<!--                                <li class="text-muted text-right">$480.00</li>-->
-<!--                            </ul>-->
-<!--                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>-->
-<!--                            <p class="card-text">-->
-<!--                                Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.-->
-<!--                            </p>-->
-<!--                            <p class="text-muted">Reviews (48)</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-12 col-md-4 mb-4">-->
-<!--                    <div class="card h-100">-->
-<!--                        <a href="shop-single.html">-->
-<!--                            <img src="./user/img/feature_prod_03.jpg" class="card-img-top" alt="...">-->
-<!--                        </a>-->
-<!--                        <div class="card-body">-->
-<!--                            <ul class="list-unstyled d-flex justify-content-between">-->
-<!--                                <li>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                    <i class="text-warning fa fa-star"></i>-->
-<!--                                </li>-->
-<!--                                <li class="text-muted text-right">$360.00</li>-->
-<!--                            </ul>-->
-<!--                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>-->
-<!--                            <p class="card-text">-->
-<!--                                Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.-->
-<!--                            </p>-->
-<!--                            <p class="text-muted">Reviews (74)</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="row">
+                <div th:each="product : ${featuredProducts}" class="col-12 col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-danger">Featured</span>
+                        </div>
+                        <a th:href="@{/shop-single/{id}(id=${product.id})}">
+                            <img th:src="${product.image}" class="card-img-top" alt="Product Image">
+                        </a>
+                        <div class="card-body">
+                            <ul class="list-unstyled d-flex justify-content-between">
+                                <li>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                </li>
+                                <li class="text-muted text-right" th:text="${'$' + product.price}">$0.00</li>
+                            </ul>
+                            <a th:href="@{/shop-single/{id}(id=${product.id})}"
+                               class="h2 text-decoration-none text-dark"
+                               th:text="${product.name}">Product Name</a>
+                            <p class="card-text" th:text="${product.description}">Description</p>
+                            <p class="text-muted">Sold: <span th:text="${product.sold}">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     <!-- End Featured Product -->

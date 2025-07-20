@@ -14,7 +14,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
@@ -26,5 +26,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean checkCategoryExists(String name) {
         return categoryRepository.existsCategoryByNameIgnoreCase(name.trim());
+    }
+    
+    @Override
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 }
