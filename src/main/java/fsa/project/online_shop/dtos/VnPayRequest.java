@@ -1,0 +1,4 @@
+package fsa.project.online_shop.dtos;
+
+public class VnPayRequest {
+}
