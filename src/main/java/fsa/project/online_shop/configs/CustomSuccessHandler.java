@@ -48,8 +48,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
-
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -62,7 +60,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         String username = authentication.getName();
         logger.info("User '{}' logged in with authorities: {}", username, authentication.getAuthorities());
         User user = userService.getUserByUsername(username);
-        session.setAttribute("userId", user.getId());
+//        session.setAttribute("user", user);
+        session.setAttribute("fullname", user.getFullname());
         redirectStrategy.sendRedirect(request, response, targetUrl);
         clearAuthenticationAttributes(session);
     }

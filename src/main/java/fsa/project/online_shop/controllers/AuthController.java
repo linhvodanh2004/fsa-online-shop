@@ -90,7 +90,7 @@ public class AuthController implements ErrorController {
             @RequestParam String email,
             @RequestParam String username,
             Model model
-    ) {
+    ){
         User user = userService.getUserByUsername(username);
         if (user == null || user.getEmail() == null || !user.getEmail().equals(email)) {
             return "redirect:/forgot-password?error=username-or-email-not-matched";
@@ -101,9 +101,39 @@ public class AuthController implements ErrorController {
         model.addAttribute("email", email);
         try {
             emailSenderService.sendVerificationCode(email, username, verificationCode);
+            return "user/verification";
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-        return "user/verification";
+    }
+
+    @PostMapping("/reset-password")
+    public String handleResetPassword(
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model
+    ){
+        User user = userService.getUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        userService.handleSaveUser(user);
+        return "redirect:/login?success=reset-successfully";
+    }
+
+    @PostMapping("/resend-code")
+    public String resendCode(
+            @RequestParam String email,
+            Model model
+    ){
+        String verificationCode = generateRandomCode();
+        String hashedVerificationCode = DigestUtils.sha256Hex(verificationCode);
+        model.addAttribute("hashedVerificationCode", hashedVerificationCode);
+        model.addAttribute("email", email);
+        try {
+            emailSenderService.sendVerificationCode(email, userService.getUserByEmail(email).getUsername()
+                    , verificationCode);
+            return "user/verification";
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

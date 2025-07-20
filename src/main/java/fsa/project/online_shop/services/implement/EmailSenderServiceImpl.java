@@ -23,7 +23,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 + "<div style='background-color: #f3f4f6; padding: 10px; text-align: center; font-size: 24px; "
                 + "letter-spacing: 2px; font-weight: bold; color: #1d4ed8; border-radius: 5px;'>"
                 + code + "</div>"
-                + "<p>This code will expire in 5 minutes. If you didn’t request a password reset, please ignore this email.</p>"
+                + "<p>This code will expire in 90 seconds. If you didn’t request a password reset, please ignore this email.</p>"
                 + "<hr style='margin-top: 30px;'>"
                 + "<p style='font-size: 12px; color: gray;'>Gaming Online Shop Team</p>"
                 + "</div>";

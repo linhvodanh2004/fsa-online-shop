@@ -20,9 +20,13 @@ public class User {
     private String username;
     private String password;
     private String fullname;
+
+    @Column(unique = true)
     private String email;
+
     private String phone;
     private Boolean status;
+    private String provider;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -33,4 +37,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @PrePersist
+    private void onCreate(){
+        if(this.provider == null){
+            this.provider = "LOCAL";
+        }
+    }
 }

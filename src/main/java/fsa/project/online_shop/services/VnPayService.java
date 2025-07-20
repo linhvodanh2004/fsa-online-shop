@@ -1,4 +1,11 @@
 package fsa.project.online_shop.services;
 
-public class VnPay {
+import fsa.project.online_shop.dtos.VnPayRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.Map;
+
+public interface VnPayService {
+    public String createVnPayPayment(VnPayRequest vnPayRequest, String ipAddress);
+    public int vnPayReturn(HttpServletRequest request);
 }

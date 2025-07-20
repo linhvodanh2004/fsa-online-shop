@@ -2,6 +2,7 @@ package fsa.project.online_shop.configs;
 
 import fsa.project.online_shop.models.constant.UserRole;
 import fsa.project.online_shop.services.UserService;
+import fsa.project.online_shop.services.implement.CustomOAuth2UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,13 @@ import org.springframework.session.security.web.authentication.SpringSessionReme
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final AuthenticationSuccessHandler customSuccessAuthHandler;
     private final AuthenticationFailureHandler customFailureAuthHandler;
 
-    private static final String[    ] PUBLIC_ENDPOINTS = {
-            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**",
-            "/", "/login", "/register", "/error/**",
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/resend-code",
+            "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password"
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
     };
@@ -77,7 +79,7 @@ public class SecurityConfig {
                 .sessionManagement(
                         (sessionManagement) -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                                .invalidSessionUrl("/logout?expired")
+                                .invalidSessionUrl("/logout?success=session-expired")
                                 .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)
                 )
@@ -90,7 +92,7 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true))
                 .rememberMe(
                         (rememberMe) -> rememberMe
-                                .key("fsa-online-shop-remember-me-key")
+                                .key("7dZH1BivDnbMqsbswVO4925Hgtd3Pzmm")
                                 .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
                                 .rememberMeParameter("remember-me")
                                 .rememberMeServices(rememberMeServices())
@@ -98,11 +100,20 @@ public class SecurityConfig {
                 .formLogin(
                         formLogin -> formLogin
                                 .loginPage("/login")
-                                .failureUrl("/login?error")
+                                .failureUrl("/login?error=login-error")
                                 .successHandler(customSuccessAuthHandler)
                                 .failureHandler(customFailureAuthHandler)
                                 .permitAll()
 
+                )
+                .oauth2Login(
+                        oauth2 -> oauth2.loginPage("/login")
+                                .defaultSuccessUrl("/", true)
+                                .failureUrl("/login?error=login-error")
+                                .userInfoEndpoint(userInfoEndpointConfig ->
+                                        userInfoEndpointConfig.userService(customOAuth2UserService))
+                                .successHandler(customSuccessAuthHandler)
+                                .failureHandler(customFailureAuthHandler)
                 )
                 .exceptionHandling(
                         exception -> exception

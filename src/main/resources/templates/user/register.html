@@ -26,8 +26,8 @@
             <div class="login-bg-content">
                 <div>
                     <h1>Inspirational gaming setup</h1>
-                    <a class="btn btn-outline-light btn-lg">Homepage</a>
-                    <a class="btn btn-primary btn-lg">Login</a>
+                    <a class="btn btn-outline-light btn-lg" href="/">Homepage</a>
+                    <a class="btn btn-primary btn-lg" href="/login">Login</a>
                 </div>
             </div>
         </div>
@@ -112,6 +112,10 @@
         const phoneRegex = /^\+?\d{10,15}$/;
         if (!username || !password || !confirmPassword || !email || !fullname) {
             showToast("Please fill in all required fields");
+            return;
+        }
+        if(username.startsWith("google_user_")){
+            showToast("Invalid username");
             return;
         }
         if (username.length < 6) {

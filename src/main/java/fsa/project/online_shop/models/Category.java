@@ -16,7 +16,10 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String name;
+    private String image;
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products;

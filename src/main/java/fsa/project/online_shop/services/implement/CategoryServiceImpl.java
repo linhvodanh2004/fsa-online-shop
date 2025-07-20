@@ -1,4 +1,30 @@
 package fsa.project.online_shop.services.implement;
 
-public class CategoryServiceImpl {
+import fsa.project.online_shop.models.Category;
+import fsa.project.online_shop.repositories.CategoryRepository;
+import fsa.project.online_shop.services.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryRepository categoryRepository;
+
+    @Override
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Category handleSaveCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public boolean checkCategoryExists(String name) {
+        return categoryRepository.existsCategoryByNameIgnoreCase(name.trim());
+    }
 }

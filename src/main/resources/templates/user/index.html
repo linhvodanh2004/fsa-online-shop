@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>Gaming Online Shop</title>
@@ -16,6 +17,8 @@
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="user/css/fontawesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <!--
 
 TemplateMo 559 Zay Shop
@@ -93,10 +96,50 @@ https://templatemo.com/tm-559-zay-shop
                         <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                         <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-                    </a>
+                    <!-- User Icon -->
+                    <div class="nav-icon position-relative text-decoration-none dropdown">
+
+
+                        <!-- If user NOT logged in -->
+                        <div sec:authorize="isAnonymous()">
+                            <a class="text-decoration-none" th:href="@{/login}"><i class="fa fa-fw fa-user text-dark mr-1"></i></a>
+                        </div>
+<!--                        <a th:if="${#request.remoteUser == null}" class="text-decoration-none" th:href="@{/login}">Login</a>-->
+
+                        <!-- If user IS logged in -->
+                        <div sec:authorize="isAuthenticated()">
+                            <i class="fa fa-fw fa-user text-dark mr-1"></i>
+                            <div class="dropdown d-inline">
+                                <a href="#" class="dropdown-toggle text-decoration-none" role="button" id="userDropdown"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span th:text="${session.fullname}" class="text-truncate">Full Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item">My Profile</a></li>
+                                    <li><a class="dropdown-item">My Orders</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <form th:action="@{/logout}" method="post">
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+
+                                </ul>
+                            </div>
+
+                        </div>
+
+<!--                        <div th:if="${#request.remoteUser != null}" class="dropdown d-inline">-->
+<!--                            <a href="#" class="dropdown-toggle text-decoration-none" role="button" id="userDropdown"-->
+<!--                               data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                                <span th:text="${session.user.fullName}">Full Name</span>-->
+<!--                            </a>-->
+<!--                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">-->
+<!--                                <li><a class="dropdown-item" >My Profile</a></li>-->
+<!--                                <li><a class="dropdown-item" >My Orders</a></li>-->
+<!--                                <li><hr class="dropdown-divider"></li>-->
+<!--                                <li><a class="dropdown-item" >Logout</a></li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+                    </div>
                 </div>
             </div>
 
@@ -503,6 +546,9 @@ https://templatemo.com/tm-559-zay-shop
     <script src="user/js/templatemo.js"></script>
     <script src="user/js/custom.js"></script>
     <!-- End Script -->
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="toastify-message.js"></script>
 </body>
 
 </html>

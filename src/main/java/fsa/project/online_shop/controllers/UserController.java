@@ -50,7 +50,6 @@ public class UserController {
         return ResponseEntity.ok().build();
 
     }
-
     @GetMapping("admin/update/{id}")
     public String updateProductPage(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
