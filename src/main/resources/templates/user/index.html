@@ -259,7 +259,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="collection-scroll-area" id="collectionScroll">
                     <div th:each="category : ${categories}" class="collection-card">
                         <a th:href="@{/shop-category/{id}(id=${category.id})}">
-                            <img th:src="@{${category.image}}" th:alt="${category.name}">
+                            <img th:src="@{'/upload/' + ${category.image}}" th:alt="${category.name}">
                             <div class="collection-card-content">
                                 <h6 th:text="${category.name}">Category Name</h6>
                             </div>
