@@ -34,14 +34,6 @@ public class UserController {
     private final ProductRepository productRepository;
     public final CategoryService categoryService;
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("latestProducts", productService.getLatestProducts(9));
-        model.addAttribute("featuredProducts", productService.getLatestProducts(3));
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "user/index";
-    }
-
     @PostMapping("/admin/product/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateProductStatus(
