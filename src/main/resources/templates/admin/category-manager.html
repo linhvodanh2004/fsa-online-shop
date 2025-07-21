@@ -11,11 +11,11 @@
           content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png"/>
+    <link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png" />
 
-    <link rel="canonical" href="#"/>
+    <link rel="canonical" href="#" />
 
-    <title>Product Manager | Admin</title>
+    <title>Category Manager | Admin</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
 
@@ -36,14 +36,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
-        gtag('config', 'UA-120946860-10', {'anonymize_ip': true});
+        gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
     </script>
 
     <style>
@@ -55,13 +51,9 @@
             background-color: #ebebeb;
 
         }
-
-        tbody tr.opacity-50:hover {
-            background-color: inherit;
-            color: inherit;
-            box-shadow: none;
-        }
     </style>
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <!--
   HOW TO USE:
@@ -87,27 +79,42 @@
                                 <h5 class="card-title" style="color: black; font-size: 23px;">Category List</h5>
                             </div>
                             <div class="card-body">
-                                <table id="datatables-column-search-text-inputs"
-                                       class="table table-striped table-bordered align-middle"
-                                       style="width:100%">
+                                <div class="mb-3 d-flex justify-content-start">
+                                    <div class="ms-auto">
+                                        <button type="button" class="btn btn-primary"
+                                                data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                            <i data-feather="plus"></i> New category
+                                        </button>
+                                    </div>
+                                </div>
+                                <table id="datatables-column-search-text-inputs" class="table"
+                                       style="width:100%; text-align: center;">
                                     <thead>
                                     <tr>
-                                        <th>Image</th>
-                                        <th>Category</th>
-                                        <th>Action</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Category name</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="category : ${categories}"
-                                        style="cursor: pointer;"
-                                        th:onclick="'location.href=\'/admin/update/' + ${category.id} + '\';'">
-                                        <td class="text-center w-auto">
-                                            <img th:src="${category.image}" alt="Category Image"
-                                                 style="width: 80px; height: 80px; object-fit: cover;"
-                                                 class="img-thumbnail">
-                                        </td>
-                                        <td th:text="${category.name}" class="text-center"></td>
+                                        style="cursor: pointer;">
                                         <td>
+                                            <img th:src="${category.image}"
+                                                 alt="Category Image"
+                                                 class="img-fluid img-thumbnail rounded mx-auto d-block"
+                                                 style="max-width: 120px; height: auto; object-fit: cover;">
+                                        </td>
+                                        <td th:text="${category.name}"></td>
+                                        <td>
+                                            <a class="btn btn-danger"
+                                               th:href="@{/admin/delete-category/{id}(id=${category.id})}">Delete</a>
+                                            <button class="btn btn-primary"
+                                                    type="button"
+                                                    th:attr="data-id=${category.id}, data-name=${category.name}, data-image=@{${category.image}}"
+                                                    onclick="handleEditClick(this)">
+                                                Update
+                                            </button>
 
                                         </td>
                                     </tr>
@@ -116,13 +123,75 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
 
 
         </main>
+
+        <!-- modal starts -->
+        <!-- Add Category Modal -->
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="addCategoryForm" method="post" th:action="@{/admin/add-category}"
+                      enctype="multipart/form-data" onsubmit="return validateAddForm(event)">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add New Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label>Name</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label>Image</label>
+                                <input type="file" class="form-control" name="image" accept="image/*" onchange="previewImage(this, '#addPreview')">
+                                <img id="addPreview" src="#" alt="Image Preview" style="display:none; width: 120px; height: 120px; object-fit: cover; margin-top: 10px;">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Category Modal -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="editCategoryForm" method="post" th:action="@{/admin/edit-category}"
+                      enctype="multipart/form-data" onsubmit="return validateEditForm(event)">
+                    <input type="hidden" name="id" id="editCategoryId">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label>Name</label>
+                                <input type="text" class="form-control" name="name" id="editCategoryName">
+                            </div>
+                            <div class="mb-3">
+                                <label>Image</label>
+                                <input type="file" class="form-control" name="image" accept="image/*" onchange="previewImage(this, '#editPreview')">
+                                <img id="editPreview" src="#" alt="Image Preview" style="width: 120px; height: 120px; object-fit: cover; margin-top: 10px;">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- modal ends -->
 
         <div th:replace="~{component/admin-footer :: admin-footer}"></div>
     </div>
@@ -130,9 +199,10 @@
 
 
 <script src="/admin/js/app.js"></script>
-
 <script src="/admin/js/datatables.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         if (window.feather) {
@@ -140,6 +210,69 @@
         }
     });
 </script>
-</body>
+<script>
+    function previewImage(input, previewId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.querySelector(previewId);
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
+    function handleEditClick(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const image = button.getAttribute('data-image');
+
+        document.getElementById('editCategoryId').value = id;
+        document.getElementById('editCategoryName').value = name;
+        const preview = document.getElementById('editPreview');
+        preview.src = image;
+        preview.style.display = 'block';
+
+        const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+        modal.show();
+    }
+
+    function showToast(msg){
+        Toastify({
+            text: msg,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            newWindow: true,
+            close: true,
+            style: {
+                background: "#f44336",
+            }
+        }).showToast();
+    }
+    function validateAddForm(e) {
+        const name = document.querySelector('#addCategoryModal input[name="name"]').value.trim();
+        const file = document.querySelector('#addCategoryModal input[name="image"]').files[0];
+        if (!name || !file) {
+            e.preventDefault(); // stop form
+            showToast("Please enter name and choose image.");
+            return false;
+        }
+        return true;
+    }
+    function validateEditForm(e) {
+        const name = document.getElementById('editCategoryName').value.trim();
+        if (!name) {
+            e.preventDefault(); // stop form
+            showToast("Please enter category name.");
+            return false;
+        }
+        return true;
+    }
+
+
+</script>
+</body>
 </html>

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -57,11 +58,19 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
         // Get username from Spring Security Context Holder
-        String username = authentication.getName();
-        logger.info("User '{}' logged in with authorities: {}", username, authentication.getAuthorities());
-        User user = userService.getUserByUsername(username);
-//        session.setAttribute("user", user);
+        User user;
+        if(authentication.getPrincipal() instanceof OAuth2User oAuth2User){
+            String email = oAuth2User.getAttribute("email");
+            user = userService.getUserByEmail(email);
+        }
+        else {
+            String username = authentication.getName();
+            user = userService.getUserByUsername(username);
+        }
+        logger.info("User '{}' logged in with authorities: {}", user.getUsername(), authentication.getAuthorities());
         session.setAttribute("fullname", user.getFullname());
+        session.setAttribute("username", user.getUsername());
+        session.setAttribute("userId", user.getId());
         redirectStrategy.sendRedirect(request, response, targetUrl);
         clearAuthenticationAttributes(session);
     }

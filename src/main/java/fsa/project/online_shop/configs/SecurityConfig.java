@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
-
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -79,7 +78,7 @@ public class SecurityConfig {
                 .sessionManagement(
                         (sessionManagement) -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                                .invalidSessionUrl("/logout?success=session-expired")
+                                .invalidSessionUrl("/?success=session-expired")
                                 .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)
                 )
