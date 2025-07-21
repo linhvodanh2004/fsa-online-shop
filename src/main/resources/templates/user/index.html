@@ -163,7 +163,7 @@
 
     <!--Empty categories-->
     <div th:if="${#lists.isEmpty(categories)}">
-        <div th:replace="component/no-item-notification :: no-categories"></div>
+        <div th:replace="component/no-item-notification :: no-item-notification"></div>
     </div>
 
 
@@ -256,13 +256,13 @@
 
     <!--Empty products-->
     <div th:if="${#lists.isEmpty(products)}">
-        <div th:replace="component/no-item-notification :: no-products"></div>
+        <div th:replace="component/no-item-notification :: no-item-notification"></div>
     </div>
 
 
     <!--Empty  Shop  (no products and no categories)-->
     <div th:if="${#lists.isEmpty(products) and #lists.isEmpty(categories)}">
-        <div th:replace="component/no-item-notification :: empty-shop"></div>
+        <div th:replace="component/no-item-notification :: no-item-notification"></div>
     </div>
 
 

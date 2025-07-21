@@ -106,8 +106,11 @@
 											</button>
 										</div>
 									</div>
+									<div  th:if="${#lists.isEmpty(products)}">
+										<div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
+									</div>
 									<table id="datatables-column-search-text-inputs" class="table"
-										style="width:100%; text-align: center;">
+										style="width:100%; text-align: center;" th:if="${products != null and !#lists.isEmpty(products)}">
 										<thead>
 											<tr>
 												<th>Image</th>
@@ -174,8 +177,8 @@
 
 
 			</main>
-
 			<div th:replace="~{component/admin-footer :: admin-footer}"></div>
+
 		</div>
 	</div>
 
