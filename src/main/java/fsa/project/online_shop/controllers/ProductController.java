@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class ShopController {
+public class ProductController {
 
     private final ProductService productService;
 
@@ -56,5 +56,15 @@ public class ShopController {
         model.addAttribute("relatedProducts", relatedProducts);
 
         return "user/shop-single";
+    }
+
+    @GetMapping("/contact")
+    public String showContactPage() {
+        return "user/contact";
+    }
+
+    @GetMapping("/about")
+    public String showAboutPage() {
+        return "user/about";
     }
 }
