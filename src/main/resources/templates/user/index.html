@@ -290,7 +290,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div th:each="product : ${latestProducts}" class="col-12 col-md-4 mb-4">
                     <div class="card h-100">
                         <a th:href="@{/shop-single/{id}(id=${product.id})}">
-                            <img th:src="${product.image}" class="card-img-top" alt="Product Image">
+                            <img th:src="@{'/upload/' + ${product.image}}" class="card-img-top" th:alt="${product.name}">
                         </a>
                         <div class="card-body">
                             <ul class="list-unstyled d-flex justify-content-between">
@@ -335,7 +335,7 @@ https://templatemo.com/tm-559-zay-shop
                             <span class="badge bg-danger">Featured</span>
                         </div>
                         <a th:href="@{/shop-single/{id}(id=${product.id})}">
-                            <img th:src="${product.image}" class="card-img-top" alt="Product Image">
+                            <img th:src="@{'/upload/' + ${product.image}}" class="card-img-top" th:alt="${product.name}">
                         </a>
                         <div class="card-body">
                             <ul class="list-unstyled d-flex justify-content-between">
