@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
+
+    <link rel="stylesheet" href="user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="user/css/templatemo.css">
+    <link rel="stylesheet" href="user/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="user/css/fontawesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <title>No Products Available</title>
+</head>
+<body>
+
+<!-- Fragment for No Products Available -->
+<div th:fragment="no-item-notification">
+    <section class="no-products-section">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="no-products-content">
+                        <!-- Icon -->
+                        <div class="no-products-icon mb-4">
+                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5" class="text-muted">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="m1 1 4 4 16 5v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V8l-6-4"></path>
+                                <path d="M7.5 8h13l-4 6H8.5L6 9.5l1.5-1.5z"></path>
+                                <line x1="9" y1="9" x2="20" y2="9"></line>
+                            </svg>
+                        </div>
+
+                        <!-- Main Message -->
+                        <h2 class="h2 mb-3 text-muted">No Items Available</h2>
+                        <p class="lead text-muted mb-4">
+                            The items that you are finding are not found.
+                            Please try again later!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="toastify-message.js"></script>
+</body>
+</html>

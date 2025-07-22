@@ -34,4 +34,14 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Product> getRelatedProducts(Long categoryId, Long productId) {
+        return productRepository.findByCategoryIdAndIdNotAndQuantityGreaterThanAndStatusIsTrueOrderByIdDesc(
+                categoryId,
+                productId,
+                0,
+                PageRequest.of(0, 4)
+        );
+    }
 }

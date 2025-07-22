@@ -10,4 +10,5 @@ public interface CategoryService {
     public boolean checkCategoryExists(String name);
     public List<Category> getAllCategories();
     public Category getCategoryById(Long categoryId);
+    public void deleteCategoryById(Long categoryId);
 }

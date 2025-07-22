@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private static final String UPLOAD_DIR = "src/main/resources/static/upload/";
+    private static final String UPLOAD_DIR = "upload/";
     private static final String[] IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
 
     public String handleUploadImage(MultipartFile file) throws IOException {
@@ -50,8 +50,18 @@ public class FileServiceImpl implements FileService {
     }
     @Override
     public boolean handleDeleteImage(String filename) throws IOException {
+        if (filename == null || filename.isEmpty()) {
+            return false;
+        }
+
+        // Remove "/upload/" prefix if it exists
+        if (filename.startsWith("/upload/")) {
+            filename = filename.substring("/upload/".length());
+        }
+
         Path uploadPath = Paths.get(UPLOAD_DIR);
         Path targetPath = uploadPath.resolve(filename);
         return Files.deleteIfExists(targetPath);
     }
+
 }

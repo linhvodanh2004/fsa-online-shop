@@ -136,4 +136,10 @@ public class AuthController implements ErrorController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping({"/admin", "/admin/dashboard"})
+    public String getAdminDashboardPage(
+    ){
+        return "admin/dashboard";
+    }
 }
