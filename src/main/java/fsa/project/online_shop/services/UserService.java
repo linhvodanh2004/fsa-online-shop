@@ -2,6 +2,8 @@ package fsa.project.online_shop.services;
 
 import fsa.project.online_shop.models.User;
 
+import java.security.Principal;
+
 public interface UserService {
     public User getUserByUsername(String username);
 
@@ -11,4 +13,5 @@ public interface UserService {
 
     public boolean checkEmailExists(String email);
     public User getUserByEmail(String email);
+    public User getUserById(Long id);
 }

@@ -24,6 +24,6 @@ public class Cart {
 
     private Double sum;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private Set<CartItem> cartItems;
 }

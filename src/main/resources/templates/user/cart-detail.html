@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Cart detail</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Include the CSRF token for security -->
+    <!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
+    <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/user/img/favicon.ico">
+
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
+
+    <!-- Slick -->
+    <link rel="stylesheet" type="text/css" href="/user/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="/cart-service.js" defer></script>
+</head>
+
+<body>
+<!-- Start Top Nav -->
+<div th:replace="~{component/user-navbar :: user-navbar}"></div>
+<!-- Close Top Nav -->
+
+
+<!-- Header -->
+<div th:replace="~{component/user-header :: user-header}"></div>
+<!-- Close Header -->
+
+<!-- Modal -->
+<div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
+
+<div th:if="${anonymousCart == null and userCart == null}">
+    <div th:replace="component/no-item-notification :: no-item-notification"></div>
+</div>
+
+<section class="h-100" th:if="${anonymousCart != null}">
+    <div class="container h-100 py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-10">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-normal mb-0">Shopping Cart</h3>
+                </div>
+
+                <div class="card rounded-3 mb-4">
+                    <div class="card-body p-4">
+                        <div class="row d-flex justify-content-between align-items-center bg-light
+                         rounded-3 mb-4 px-4 py-2"
+                        th:each="cartItem : ${anonymousCart.cartItems}">
+                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                <img th:src="@{${cartItem.product.image}}"
+                                     width="100" height="100" class="rounded-circle me-2"
+                                     th:alt="${cartItem.product.name}" />
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                <p class="lead fw-normal mb-2 text-truncate" th:text="${cartItem.product.name}">Basic T-shirt</p>
+<!--                                <p><span class="text-muted">Size: </span>M <span class="text-muted">Color: </span>Grey</p>-->
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+
+                                <input id="form1" min="0" name="quantity" th:value="${cartItem.quantity}" type="number"
+                                       class="form-control form-control-sm" />
+
+                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                <h5 class="mb-0" th:text="${cartItem.price}">$499.00</h5>
+                            </div>
+                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body p-4 d-flex flex-row">
+                        <div data-mdb-input-init class="form-outline flex-fill">
+                            <input type="text" class="form-control form-control-lg" />
+                            <label class="form-label" for="form1">Discound code</label>
+                        </div>
+                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-warning btn-lg ms-3">Apply</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Start Footer -->
+<div th:replace="~{component/user-footer :: user-footer}"></div>
+<!-- End Footer -->
+
+<!-- Start Script -->
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
+<!-- End Script -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
+</body>
+
+</html>

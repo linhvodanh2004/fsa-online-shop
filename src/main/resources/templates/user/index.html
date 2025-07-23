@@ -5,6 +5,9 @@
     <title>Gaming Online Shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Include the CSRF token for security -->
+<!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
     <link rel="apple-touch-icon" href="user/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
@@ -23,6 +26,7 @@
     <link rel="stylesheet" type="text/css" href="user/css/slick-theme.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="/cart-service.js" defer></script>
 </head>
 
 <body>
@@ -37,9 +41,6 @@
 
     <!-- Modal -->
     <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
-
-
-
 
     <!-- Start Banner Hero -->
     <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
@@ -146,7 +147,7 @@
                 <div class="collection-scroll-area" id="collectionScroll">
                     <div th:each="category : ${categories}" class="collection-card">
                         <a th:href="@{/shop-category/{id}(id=${category.id})}">
-                            <img th:src="@{'/upload/' + ${category.image}}" th:alt="${category.name}">
+                            <img th:src="${category.image}" th:alt="${category.name}">
                             <div class="collection-card-content">
                                 <h6 th:text="${category.name}">Category Name</h6>
                             </div>
@@ -168,7 +169,7 @@
 
 
     <!-- Start Latest Product -->
-    <section class="bg-light" th:if="${latestProducts != null and !#lists.isEmpty(latestProducts)}">
+    <section class="bg-light">
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
@@ -179,28 +180,43 @@
                     </p>
                 </div>
             </div>
-            <div class="row">
+            <div th:if="${#lists.isEmpty(latestProducts)}">
+                <div th:replace="component/no-item-notification :: no-item-notification"></div>
+            </div>
+            <div class="row" th:if="${latestProducts != null and !#lists.isEmpty(latestProducts)}">
                 <div th:each="product : ${latestProducts}" class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <a th:href="@{/shop-single/{id}(id=${product.id})}">
-                            <img th:src="@{'/upload/' + ${product.image}}" class="card-img-top"
-                                th:alt="${product.name}">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                    <i class="text-muted fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right" th:text="${'$' + product.price}">$0.00</li>
-                            </ul>
-                            <a th:href="@{/shop-single/{id}(id=${product.id})}"
-                                class="h2 text-decoration-none text-dark" th:text="${product.name}">Product Name</a>
-                            <p class="card-text" th:text="${product.description}">Description</p>
-                            <p class="text-muted">Sold: <span th:text="${product.sold}">0</span></p>
+                    <div class="card h-100 product-wap rounded-0">
+                        <div class="card rounded-0">
+                            <img class="card-img rounded-0 img-fluid" th:src="${product.image}" th:alt="${product.name}">
+                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-success text-white mt-2" href="#"><i class="far fa-eye"></i></a></li>
+                                    <li><button class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                                th:data-product-id="${product.id}"
+                                                data-quantity="1"><i class="fas fa-cart-plus"></i></button></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-danger">Latest</span>
+                                </div>
+                                <a th:href="@{/shop-single/{id}(id=${product.id})}"
+                                   class="text-decoration-none">
+                                    <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
+                                        th:text="${product.name}">Product Name</h5>
+                                </a>
+                            </div>
+                            <div class="justify-content-between d-flex">
+                                <span class="text-danger fw-bold mb-0 h3"
+                                    th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </span>
+                                <span class="text-success fw-bold" th:text="${product.sold + ' Sold'} ">
+                                    0 Sold
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -210,7 +226,7 @@
     <!-- End Latest Product -->
 
     <!-- Start Featured Product -->
-    <section class="bg-light" th:if="${featuredProducts != null and !#lists.isEmpty(featuredProducts)}">
+    <section class="bg-light">
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
@@ -221,31 +237,43 @@
                     </p>
                 </div>
             </div>
-            <div class="row">
+            <div th:if="${#lists.isEmpty(featuredProducts)}">
+                <div th:replace="component/no-item-notification :: no-item-notification"></div>
+            </div>
+            <div class="row" th:if="${featuredProducts != null and !#lists.isEmpty(featuredProducts)}">
                 <div th:each="product : ${featuredProducts}" class="col-12 col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-danger">Featured</span>
+                    <div class="card h-100 product-wap rounded-0">
+                        <div class="card rounded-0">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-danger">Featured</span>
+                            </div>
+                            <img class="card-img rounded-0 img-fluid" th:src="${product.image}" th:alt="${product.name}">
+                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-success text-white mt-2" href="#"><i class="far fa-eye"></i></a></li>
+                                    <li><button class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                                th:data-product-id="${product.id}"
+                                                data-quantity="1"><i class="fas fa-cart-plus"></i></button></li>
+                                </ul>
+                            </div>
                         </div>
-                        <a th:href="@{/shop-single/{id}(id=${product.id})}">
-                            <img th:src="@{'/upload/' + ${product.image}}" class="card-img-top"
-                                th:alt="${product.name}">
-                        </a>
-                        <div class="card-body">
-                            <ul class="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                    <i class="text-warning fa fa-star"></i>
-                                </li>
-                                <li class="text-muted text-right" th:text="${'$' + product.price}">$0.00</li>
-                            </ul>
-                            <a th:href="@{/shop-single/{id}(id=${product.id})}"
-                                class="h2 text-decoration-none text-dark" th:text="${product.name}">Product Name</a>
-                            <p class="card-text" th:text="${product.description}">Description</p>
-                            <p class="text-muted">Sold: <span th:text="${product.sold}">0</span></p>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <a th:href="@{/shop-single/{id}(id=${product.id})}"
+                                   class="text-decoration-none">
+                                    <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
+                                        th:text="${product.name}">Product Name</h5>
+                                </a>
+                            </div>
+                            <div class="justify-content-between d-flex">
+                                <span class="text-danger fw-bold mb-0 h3"
+                                      th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </span>
+                                <span class="text-success fw-bold" th:text="${product.sold + ' Sold'} ">
+                                    0 Sold
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -253,19 +281,6 @@
         </div>
     </section>
     <!-- End Featured Product -->
-
-    <!--Empty products-->
-    <div th:if="${#lists.isEmpty(products)}">
-        <div th:replace="component/no-item-notification :: no-item-notification"></div>
-    </div>
-
-
-    <!--Empty  Shop  (no products and no categories)-->
-    <div th:if="${#lists.isEmpty(products) and #lists.isEmpty(categories)}">
-        <div th:replace="component/no-item-notification :: no-item-notification"></div>
-    </div>
-
-
     <!-- Start Footer -->
     <div th:replace="~{component/user-footer :: user-footer}"></div>
     <!-- End Footer -->
