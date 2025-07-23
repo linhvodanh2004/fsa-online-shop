@@ -27,6 +27,27 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="/cart-service.js" defer></script>
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .opacity-50 {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .border-warning {
+            border: 2px dashed orange !important;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -42,74 +63,61 @@
 <!-- Modal -->
 <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
 
-<div th:if="${anonymousCart == null and userCart == null}">
-    <div th:replace="component/no-item-notification :: no-item-notification"></div>
-</div>
-
-<section class="h-100" th:if="${anonymousCart != null}">
-    <div class="container h-100 py-5">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-10">
-
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-normal mb-0">Shopping Cart</h3>
-                </div>
-
+<section class="h-100">
+    <div class="container py-5">
+        <div class="row">
+            <!-- Left: Cart -->
+            <div class="col-lg-8 mb-4">
                 <div class="card rounded-3 mb-4">
-                    <div class="card-body p-4">
-                        <div class="row d-flex justify-content-between align-items-center bg-light
-                         rounded-3 mb-4 px-4 py-2"
-                        th:each="cartItem : ${anonymousCart.cartItems}">
-                            <div class="col-md-2 col-lg-2 col-xl-2">
-                                <img th:src="@{${cartItem.product.image}}"
-                                     width="100" height="100" class="rounded-circle me-2"
-                                     th:alt="${cartItem.product.name}" />
-                            </div>
-                            <div class="col-md-3 col-lg-3 col-xl-3">
-                                <p class="lead fw-normal mb-2 text-truncate" th:text="${cartItem.product.name}">Basic T-shirt</p>
-<!--                                <p><span class="text-muted">Size: </span>M <span class="text-muted">Color: </span>Grey</p>-->
-                            </div>
-                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-
-                                <input id="form1" min="0" name="quantity" th:value="${cartItem.quantity}" type="number"
-                                       class="form-control form-control-sm" />
-
-                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                <h5 class="mb-0" th:text="${cartItem.price}">$499.00</h5>
-                            </div>
-                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
-                            </div>
-                        </div>
+                    <div class="card-body p-4" id="cart-body">
+                        <!-- JS will render cart table here -->
                     </div>
                 </div>
-                <div class="card mb-4">
-                    <div class="card-body p-4 d-flex flex-row">
-                        <div data-mdb-input-init class="form-outline flex-fill">
-                            <input type="text" class="form-control form-control-lg" />
-                            <label class="form-label" for="form1">Discound code</label>
-                        </div>
-                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-warning btn-lg ms-3">Apply</button>
-                    </div>
-                </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
-                    </div>
+            <!-- Right: Checkout form -->
+            <div class="col-lg-4">
+                <div class="card p-4">
+                    <h5 class="mb-3">Checkout Information</h5>
+                    <form id="checkout-form">
+                        <div class="form-group mb-3">
+                            <label>Receiver Name</label>
+                            <input type="text" name="receiverName" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Phone</label>
+                            <input type="text" name="receiverPhone" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Email</label>
+                            <input type="email" name="receiverEmail" class="form-control">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Address</label>
+                            <input type="text" name="receiverAddress" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Note</label>
+                            <textarea name="note" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Payment Method</label>
+                            <select name="paymentMethod" class="form-control" required>
+                                <option value="COD">COD</option>
+                                <option value="VNPAY">VNPAY</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Total:</label>
+                            <h5 id="total-sum" class="text-danger">0 VND</h5>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">Place Order</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
 </section>
 
 <!-- Start Footer -->
@@ -126,6 +134,110 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/toastify-message.js"></script>
+<script src="/cart-service.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        reloadCart();
+    });
+
+    function stepQuantity(button, delta) {
+        const input = button.parentNode.querySelector('input[type="number"]');
+        let value = parseInt(input.value) || 1;
+        value = Math.max(1, value + delta);
+        input.value = value;
+        // TODO: Call update quantity API
+    }
+    function reloadCart() {
+        fetch('/cart/api/get-cart')
+            .then(res => res.json())
+            .then(data => {
+                const cartItems = data.cartItems || [];
+                const cartBody = document.getElementById('cart-body');
+                cartBody.innerHTML = '';
+
+                if (cartItems.length === 0) {
+                    cartBody.innerHTML = `<section class="no-products-section">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="no-products-content">
+                        <!-- Icon -->
+                        <div class="no-products-icon mb-4">
+                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5" class="text-muted">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="m1 1 4 4 16 5v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V8l-6-4"></path>
+                                <path d="M7.5 8h13l-4 6H8.5L6 9.5l1.5-1.5z"></path>
+                                <line x1="9" y1="9" x2="20" y2="9"></line>
+                            </svg>
+                        </div>
+
+                        <!-- Main Message -->
+                        <h2 class="h2 mb-3 text-muted">No Items Available</h2>
+                        <p class="lead text-muted mb-4">
+                            The items that you are finding are not found.
+                            Please try again later!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>`;
+                    return;
+                }
+
+                let total = 0;
+
+                cartItems.forEach(item => {
+                    const price = item.unitPrice * item.quantity;
+                    total += price;
+
+                    const imagePath = (item.productImage.startsWith('http') || item.productImage.startsWith('/'))
+                        ? item.productImage
+                        : `/upload/image_path/${item.productImage}`;
+
+                    const isUnavailable = !item.productStatus;
+                    const isExceedQuantity = item.productQuantity < item.quantity;
+
+                    const card = document.createElement('div');
+                    card.className = `card shadow-sm rounded-4 mb-3 p-3 ${isUnavailable ? 'opacity-50' : ''} ${isExceedQuantity ? 'border border-warning' : ''}`;
+
+                    card.innerHTML = `
+            <div class="d-flex gap-3">
+                <img src="${imagePath}" alt="${item.productName}" class="rounded-4" style="width: 90px; height: 90px; object-fit: cover;" />
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="mb-1 text-truncate" style="max-width: 300px;">${item.productName}</h5>
+                        <button class="btn btn-link text-danger p-0" onclick="removeFromCart(${item.productId}, reloadCart)">
+                            <i class="fa fa-trash fa-lg"></i>
+                        </button>
+                    </div>
+                    <div class="fw-bold text-danger small mb-2">${item.unitPrice.toLocaleString('vi-VN')} VND</div>
+
+                    ${isExceedQuantity ? `<div class="text-warning small mb-2">Only ${item.productQuantity} items remaining</div>` : ''}
+
+                    <div class="d-flex align-items-center gap-2 mt-2">
+                        <button class="btn btn-outline-success btn-sm" onclick="decreaseQuantity(${item.productId}, reloadCart)">−</button>
+                        <input type="number" value="${item.quantity}" class="form-control form-control-sm text-center quantity-input"
+                            data-product-id="${item.productId}" style="width: 60px;" min="1" readonly>
+                        <button class="btn btn-outline-success btn-sm" onclick="increaseQuantity(${item.productId}, reloadCart)">+</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+                    cartBody.appendChild(card);
+                });
+
+                document.getElementById("total-sum").innerText = `${total.toLocaleString('vi-VN')} VND`;
+            })
+            .catch(err => {
+                console.error('Lỗi khi lấy giỏ hàng:', err);
+            });
+    }
+</script>
+
 </body>
 
 </html>
