@@ -61,11 +61,11 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         User user;
         if(authentication.getPrincipal() instanceof OAuth2User oAuth2User){
             String email = oAuth2User.getAttribute("email");
-            user = userService.getUserByEmail(email);
+            user = userService.findByEmail(email);
         }
         else {
             String username = authentication.getName();
-            user = userService.getUserByUsername(username);
+            user = userService.findByUsername(username);
         }
         logger.info("User '{}' logged in with authorities: {}", user.getUsername(), authentication.getAuthorities());
         session.setAttribute("fullname", user.getFullname());
