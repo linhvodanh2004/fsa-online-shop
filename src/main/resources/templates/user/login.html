@@ -39,14 +39,17 @@
             </a>
             <form method="post" th:action="@{/login}">
                 <div class="mb-3">
-                    <label class="form-label">Username<span class="text-danger">*</span></label>
+                    <label class="form-label">Email / Phone / Username <span class="text-danger">*</span></label>
                     <input class="form-control form-control-lg" type="text" name="username"
-                           placeholder="Enter username"/>
+                           placeholder="Enter email, phone number, or username" required/>
+                    <div class="form-text text-muted">
+                        You can login with email, phone number, or username
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Password<span class="text-danger">*</span></label>
+                    <label class="form-label">Password <span class="text-danger">*</span></label>
                     <input class="form-control form-control-lg" type="password" name="password"
-                           placeholder="Enter password"/>
+                           placeholder="Enter your password" required/>
                 </div>
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" name="remember-me" id="rememberMe">
@@ -106,7 +109,7 @@
             }).showToast();
         };
         if (!username || !password) {
-            showToast("Username and password are required");
+            showToast("Email/Phone/Username and password are required");
             return;
         }
         this.submit();

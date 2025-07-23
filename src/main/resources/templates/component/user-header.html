@@ -95,13 +95,19 @@
                                 overflow: hidden;text-overflow: ellipsis;vertical-align: middle;">Full Name</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item">My Profile</a></li>
-                                <li><a class="dropdown-item">My Orders</a></li>
+                                <li><a class="dropdown-item" th:href="@{/my-profile}">
+                                    <i class="fas fa-user me-2"></i>My Profile
+                                </a></li>
+                                <li><a class="dropdown-item" th:href="@{/my-orders}">
+                                    <i class="fas fa-shopping-bag me-2"></i>My Orders
+                                </a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
                                 </form>
                             </ul>
                         </div>
