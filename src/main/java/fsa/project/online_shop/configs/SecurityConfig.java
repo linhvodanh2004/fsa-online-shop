@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,8 +32,9 @@ public class SecurityConfig {
     private final AuthenticationFailureHandler customFailureAuthHandler;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/productImg/**", "/resend-code",
-            "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password"
+            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/resend-code",
+            "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
+            "/cart/**"
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
     };
@@ -116,7 +118,8 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(
                         exception -> exception
-                                .accessDeniedPage("/access-denied"));
+                                .accessDeniedPage("/access-denied"))
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
 
     }

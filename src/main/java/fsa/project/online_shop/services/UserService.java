@@ -29,4 +29,9 @@ public interface UserService {
     // Statistics
     long getTotalUserCount();
     long getActiveUserCount();
+
+    public boolean checkEmailExists(String email);
+    public User getUserByEmail(String email);
+    public User getUserById(Long id);
+    public User handleSaveUser(User user);
 }

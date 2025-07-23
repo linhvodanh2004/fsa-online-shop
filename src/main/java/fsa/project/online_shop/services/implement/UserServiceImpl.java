@@ -1,6 +1,8 @@
 package fsa.project.online_shop.services.implement;
 
+import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.User;
+import fsa.project.online_shop.repositories.CartRepository;
 import fsa.project.online_shop.repositories.UserRepository;
 import fsa.project.online_shop.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
+    private final CartRepository cartRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -219,6 +222,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean checkEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     // Private helper methods
     private void validateUser(User user) {
         if (!StringUtils.hasText(user.getUsername())) {
@@ -278,4 +286,28 @@ public class UserServiceImpl implements UserService {
 
         return status.equals(user.getStatus());
     }
+
+    @Override
+    public User handleSaveUser(User user) {
+        if(user.getCart() == null) {
+            Cart cart = Cart.builder()
+                    .user(userRepository.save(user))
+                    .sum(0D)
+                    .build();
+            cartRepository.save(cart);
+            user.setCart(cart);
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
 }
