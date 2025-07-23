@@ -34,9 +34,9 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/resend-code",
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
-            "/cart/**"
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
+            "/cart/**",
     };
 
     @Bean
@@ -73,6 +73,8 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**")
 //                                .hasRole(UserRole.ADMIN)
                                 .permitAll()
+                                .requestMatchers(AUTHENTICATED_ENDPOINTS)
+                                .authenticated()
                                 .anyRequest()
 //                                .authenticated()
                                 .permitAll()

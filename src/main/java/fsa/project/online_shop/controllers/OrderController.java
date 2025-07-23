@@ -21,19 +21,11 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
-    private final UserService userService;
     private final CartService cartService;
     private final SessionUtil sessionUtil;
 
-    @GetMapping("/cart/anonymous")
-    public String showAnonymousCart(Model model) {
-        Map<Long, Integer> cart = sessionUtil.getCartFromSession();
-        Cart cartObj = cartService.generateCartFromMap(cart);
-        model.addAttribute("anonymousCart", (cartObj.getCartItems().isEmpty()) ? null : cartObj);
-        return "user/cart-detail";
-    }
 
-    @GetMapping("/cart/user-cart")
+    @GetMapping("/cart-detail")
     public String showUserCart( Model model) {
         User user = sessionUtil.getUserFromSession();
         System.out.println(user);

@@ -107,12 +107,10 @@ public class VnPayController {
                 response.put("RspCode", "97");
                 response.put("Message", "Invalid Signature");
             }
-
         } catch (Exception e) {
             response.put("RspCode", "99");
             response.put("Message", "Unknown error");
         }
-
         return ResponseEntity.ok(response);
     }
 

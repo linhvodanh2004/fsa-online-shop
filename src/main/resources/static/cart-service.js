@@ -52,6 +52,75 @@ class CartAPI {
         }
     }
 
+    // Delete item from cart by productId
+    async removeFromCart(productId, callback = null) {
+        try {
+            const response = await fetch(`${this.baseUrl}/cart/api/delete/${productId}`, {
+                method: 'DELETE',
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (!response.ok) {
+                throw new Error("Delete failed");
+            }
+            const msg = await response.text();
+            this.showToast("Remove item successfully", 'success');
+
+        } catch (error) {
+            console.error("Lỗi khi xoá sản phẩm:", error);
+            // this.showToast("Fail to remove item", 'error');
+        }
+        finally {
+            // Optional callback (like reloadCart)
+            if (typeof callback === 'function') {
+                callback();
+            }
+            // Update cart count
+            this.getCartCount().then(count => this.updateCartUI(count));
+        }
+    }
+
+    async increaseQuantity(productId, callback = null) {
+        try {
+            const response = await fetch(`${this.baseUrl}/cart/api/increase-quantity/${productId}`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            this.showToast(data.message, (data.success) ? 'success' : 'error');
+            return data;
+        } catch (error) {
+            this.showToast(error, 'error');
+        } finally {
+            // Optional callback (like reloadCart)
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    }
+
+    async decreaseQuantity(productId, callback = null) {
+        try {
+            const response = await fetch(`${this.baseUrl}/cart/api/decrease-quantity/${productId}`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            this.showToast(data.message, (data.success) ? 'success' : 'error');
+            return data;
+        } catch (error) {
+            this.showToast(error, 'error');
+        } finally {
+            // Optional callback (like reloadCart)
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }
+    }
 
     // Get cart item count
     async getCartCount() {
@@ -134,5 +203,21 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addToCart = (productId, quantity = 1) => {
     if (window.cartAPI) {
         return window.cartAPI.addToCart(productId, quantity);
+    }
+};
+// Utility function
+window.removeFromCart = (productId, callback = null) => {
+    if (window.cartAPI) {
+        return window.cartAPI.removeFromCart(productId, callback);
+    }
+};
+window.increaseQuantity = (productId, callback = null) => {
+    if (window.cartAPI) {
+        return window.cartAPI.increaseQuantity(productId, callback);
+    }
+};
+window.decreaseQuantity = (productId, callback = null) => {
+    if (window.cartAPI) {
+        return window.cartAPI.decreaseQuantity(productId, callback);
     }
 };
