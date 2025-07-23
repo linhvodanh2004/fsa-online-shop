@@ -1,0 +1,51 @@
+.opacity-50 {
+			opacity: 0.5;
+		}
+
+		tbody tr:hover {
+			background-color: #ebebeb;
+
+		}
+
+		tbody tr.opacity-50:hover {
+			background-color: inherit;
+			color: inherit;
+			box-shadow: none;
+		}
+
+		.user-avatar {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			object-fit: cover;
+			background-color: #f8f9fa;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+			color: #6c757d;
+			margin: 0 auto;
+		}
+
+		.provider-badge {
+			display: inline-block;
+			padding: 0.25rem 0.5rem;
+			border-radius: 0.375rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+		}
+
+		.provider-local {
+			background-color: #e7f3ff;
+			color: #0066cc;
+		}
+
+		.provider-google {
+			background-color: #fef3e7;
+			color: #cc6600;
+		}
+
+		.provider-facebook {
+			background-color: #e7f0ff;
+			color: #1877f2;
+		}

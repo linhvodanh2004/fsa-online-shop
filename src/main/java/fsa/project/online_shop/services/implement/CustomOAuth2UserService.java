@@ -38,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // Set role admin for some specific account
         Role userRole = roleService.getRoleByName(UserRole.USER);
 
-        User user = userService.getUserByEmail(email);
+        User user = userService.findByEmail(email);
         // If user is null, add this oauth user to DB
         if (user == null) {
             User newUser = User.builder()
@@ -49,7 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .username("google_user_" + sub)
                     .provider(registrationId.toUpperCase())
                     .build();
-            userService.handleSaveUser(newUser);
+            userService.save(newUser);
         } else {
             // if user is not null, check it's enabled or not
             if (!user.getStatus()) {
@@ -59,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setRole(userRole);
             user.setFullname(fullname);
             user.setProvider(registrationId.toUpperCase());
-            userService.handleSaveUser(user);
+            userService.save(user);
         }
         return new DefaultOAuth2User(
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
