@@ -4,16 +4,16 @@ import fsa.project.online_shop.models.Role;
 import fsa.project.online_shop.models.constant.UserRole;
 import fsa.project.online_shop.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class DataInitializer {
     private final RoleRepository roleRepository;
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DataInitializer.class);
     @Bean
     public CommandLineRunner initRoles() {
         return args -> {
@@ -27,7 +27,7 @@ public class DataInitializer {
             Role role = new Role();
             role.setName(roleName);
             roleRepository.save(role);
-            logger.info("Created role: " + roleName);
+            log.info("Created role: " + roleName);
         }
     }
 }
