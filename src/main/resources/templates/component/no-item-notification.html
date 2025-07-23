@@ -23,7 +23,7 @@
 <body>
 
 <!-- Fragment for No Products Available -->
-<div th:fragment="no-products">
+<div th:fragment="no-item-notification">
     <section class="no-products-section">
         <div class="container py-5">
             <div class="row justify-content-center">
@@ -42,175 +42,17 @@
                         </div>
 
                         <!-- Main Message -->
-                        <h2 class="h2 mb-3 text-muted">No Products Available</h2>
+                        <h2 class="h2 mb-3 text-muted">No Items Available</h2>
                         <p class="lead text-muted mb-4">
-                            We're currently updating our inventory. Please check back soon for exciting new products!
+                            The items that you are finding are not found.
+                            Please try again later!
                         </p>
-
-                        <!-- Additional Info -->
-                        <div class="no-products-info mb-4">
-                            <p class="text-muted">
-                                In the meantime, you can:
-                            </p>
-                            <div class="d-flex justify-content-center flex-wrap gap-3 mt-3">
-                                <a th:href="@{/}" class="btn btn-outline-primary">
-                                    <i class="fas fa-home me-2"></i>Go to Homepage
-                                </a>
-                                <a th:href="@{/contact}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-envelope me-2"></i>Contact Us
-                                </a>
-                                <a th:href="@{/about}" class="btn btn-outline-info">
-                                    <i class="fas fa-info-circle me-2"></i>About Us
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Newsletter Signup -->
-                        <div class="newsletter-signup mt-5 p-4 bg-light rounded">
-                            <h5 class="mb-3">Get Notified When New Products Arrive</h5>
-                            <div class="row justify-content-center">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control" placeholder="Enter your email address">
-                                        <button class="btn btn-primary" type="button">
-                                            <i class="fas fa-bell me-1"></i>Notify Me
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <small class="text-muted mt-2 d-block">We'll send you an update when new products are
-                                available.</small>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-
-<!-- Fragment for No Categories Available -->
-<div th:fragment="no-categories">
-    <section class="no-categories-section">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <div class="no-categories-content">
-                        <!-- Icon -->
-                        <div class="no-categories-icon mb-4">
-                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.5" class="text-muted">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                        </div>
-
-                        <!-- Main Message -->
-                        <h2 class="h2 mb-3 text-muted">No Categories Available</h2>
-                        <p class="lead text-muted mb-4">
-                            We're organizing our product categories. Please check back soon!
-                        </p>
-
-                        <!-- Action Buttons -->
-                        <div class="d-flex justify-content-center flex-wrap gap-3">
-                            <a th:href="@{/}" class="btn btn-primary">
-                                <i class="fas fa-home me-2"></i>Back to Homepage
-                            </a>
-                            <a th:href="@{/shop}" class="btn btn-outline-primary">
-                                <i class="fas fa-shopping-bag me-2"></i>Browse All Products
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-
-<!-- Fragment for Empty Shop -->
-<div th:fragment="empty-shop">
-    <section class="empty-shop-section">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <div class="empty-shop-content">
-                        <!-- Icon -->
-                        <div class="empty-shop-icon mb-4">
-                            <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1" class="text-muted">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                        </div>
-
-                        <!-- Main Message -->
-                        <h1 class="display-4 mb-4 text-muted">Our Shop is Coming Soon!</h1>
-                        <p class="lead text-muted mb-5">
-                            We're working hard to bring you an amazing selection of products.
-                            Our team is carefully curating the best items just for you.
-                        </p>
-
-                        <!-- Features Preview -->
-                        <div class="row mb-5">
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-preview p-3">
-                                    <i class="fas fa-star fa-2x text-warning mb-3"></i>
-                                    <h5>Quality Products</h5>
-                                    <p class="text-muted">Carefully selected items with premium quality</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-preview p-3">
-                                    <i class="fas fa-shipping-fast fa-2x text-primary mb-3"></i>
-                                    <h5>Fast Delivery</h5>
-                                    <p class="text-muted">Quick and reliable shipping to your doorstep</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-preview p-3">
-                                    <i class="fas fa-shield-alt fa-2x text-success mb-3"></i>
-                                    <h5>Secure Shopping</h5>
-                                    <p class="text-muted">Safe and secure payment processing</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Newsletter Signup -->
-                        <div class="newsletter-signup p-4 bg-light rounded">
-                            <h4 class="mb-3">Be the First to Know!</h4>
-                            <p class="mb-4">Subscribe to get notified when we launch our products</p>
-                            <div class="row justify-content-center">
-                                <div class="col-md-6">
-                                    <div class="input-group mb-3">
-                                        <input type="email" class="form-control form-control-lg"
-                                               placeholder="Your email address">
-                                        <button class="btn btn-primary btn-lg" type="button">
-                                            Subscribe Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <small class="text-muted">We respect your privacy. No spam, unsubscribe at any time.</small>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="mt-5">
-                            <a th:href="@{/}" class="btn btn-outline-primary btn-lg me-3">
-                                <i class="fas fa-home me-2"></i>Back to Homepage
-                            </a>
-                            <a th:href="@{/contact}" class="btn btn-outline-secondary btn-lg">
-                                <i class="fas fa-envelope me-2"></i>Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="toastify-message.js"></script>

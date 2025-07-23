@@ -29,7 +29,7 @@ public class CartController {
             return cart.values().stream().mapToInt(i -> i).sum();
         }
         String username = principal.getName();
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
         if (user == null) {return 0;}
         return cartService.getCartItemCount(user.getCart().getId());
     }

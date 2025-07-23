@@ -45,11 +45,11 @@ public class AuthController implements ErrorController {
             @RequestParam String email,
             @RequestParam(required = false) String phone
     ) {
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
         if (user != null) {
             return "redirect:/register?error=username-exists";
         }
-        if (userService.checkEmailExists(email)) {
+        if (userService.existsByEmail(email)) {
             return "redirect:/register?error=email-exists";
         }
         // We dont save password directly into database, instead we use PasswordEncoder in Security
@@ -66,7 +66,7 @@ public class AuthController implements ErrorController {
                 .status(true)
                 .role(roleService.getRoleByName(UserRole.USER))
                 .build();
-        userService.handleSaveUser(user);
+        userService.save(user);
         return "redirect:/register?success=register-successfully";
     }
 
@@ -91,7 +91,7 @@ public class AuthController implements ErrorController {
             @RequestParam String username,
             Model model
     ){
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
         if (user == null || user.getEmail() == null || !user.getEmail().equals(email)) {
             return "redirect:/forgot-password?error=username-or-email-not-matched";
         }
@@ -113,9 +113,9 @@ public class AuthController implements ErrorController {
             @RequestParam String password,
             Model model
     ){
-        User user = userService.getUserByEmail(email);
+        User user = userService.findByEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        userService.handleSaveUser(user);
+        userService.save(user);
         return "redirect:/login?success=reset-successfully";
     }
 
@@ -129,11 +129,17 @@ public class AuthController implements ErrorController {
         model.addAttribute("hashedVerificationCode", hashedVerificationCode);
         model.addAttribute("email", email);
         try {
-            emailSenderService.sendVerificationCode(email, userService.getUserByEmail(email).getUsername()
+            emailSenderService.sendVerificationCode(email, userService.findByEmail(email).getUsername()
                     , verificationCode);
             return "user/verification";
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping({"/admin", "/admin/dashboard"})
+    public String getAdminDashboardPage(
+    ){
+        return "admin/dashboard";
     }
 }

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords"
+          content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png"/>
+
+    <link rel="canonical" href="#"/>
+
+    <title>User Manager | Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
+
+    <!-- Choose your prefered color scheme -->
+    <link href="/admin/css/light.css" rel="stylesheet">
+    <!-- <link href="css/dark.css" rel="stylesheet"> -->
+
+    <link href="/admin/css/custom.css" rel="stylesheet">
+
+    <!-- BEGIN SETTINGS -->
+    <!-- Remove this after purchasing -->
+    <link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
+    <script src="/admin/js/settings.js"></script>
+
+    <!-- END SETTINGS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
+    </script>
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+<div class="wrapper">
+    <div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="main">
+        <div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+
+        <main class="content">
+            <div class="container-fluid p-0">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title" style="color: black; font-size: 23px;">User List</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 d-flex justify-content-start">
+                                    <input type="text" id="userSearchBox"
+                                           class="form-control form-control-sm w-auto" placeholder="Search users..."
+                                           style="min-width: 300px; font-size: 16px;">
+                                    <select id="sortSelect" class="form-select form-select-sm w-auto ms-2"
+                                            style="font-size: 16px; min-width: 180px;">
+                                        <option value="">Sort by</option>
+                                        <option value="username-asc">Username (A-Z)</option>
+                                        <option value="username-desc">Username (Z-A)</option>
+                                        <option value="fullname-asc">Full Name (A-Z)</option>
+                                        <option value="fullname-desc">Full Name (Z-A)</option>
+                                        <option value="email-asc">Email (A-Z)</option>
+                                        <option value="email-desc">Email (Z-A)</option>
+                                        <option value="role-asc">Role (A-Z)</option>
+                                        <option value="role-desc">Role (Z-A)</option>
+                                    </select>
+                                    <select id="roleFilter" class="form-select form-select-sm w-auto ms-2"
+                                            style="font-size: 16px; min-width: 150px;">
+                                        <option value="">All Roles</option>
+                                        <option value="USER">User</option>
+                                        <option value="ADMIN">Admin</option>
+                                        <option value="MODERATOR">Moderator</option>
+                                    </select>
+                                    <select id="providerFilter" class="form-select form-select-sm w-auto ms-2"
+                                            style="font-size: 16px; min-width: 150px;">
+                                        <option value="">All Providers</option>
+                                        <option value="LOCAL">Local</option>
+                                        <option value="GOOGLE">Google</option>
+                                        <option value="FACEBOOK">Facebook</option>
+                                    </select>
+                                    <div class="ms-auto">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="location.href='/admin/add-user';">
+                                            <i data-feather="plus"></i> Add New User
+                                        </button>
+                                    </div>
+                                </div>
+                                <div th:if="${#lists.isEmpty(users)}">
+                                    <div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
+                                </div>
+                                <table id="datatables-column-search-text-inputs" class="table"
+                                       style="width:100%; text-align: center;"
+                                       th:if="${users != null and !#lists.isEmpty(users)}">
+                                    <thead>
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Role</th>
+                                        <th>Provider</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}"
+                                        th:classappend="${!user.status} ? 'opacity-50'"
+                                        style="cursor: pointer;"
+                                        th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'">
+                                        <td>
+                                            <div class="user-avatar"
+                                                 th:text="${#strings.substring(user.fullname != null ? user.fullname : user.username, 0, 1).toUpperCase()}">
+                                            </div>
+                                        </td>
+                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.fullname ?: 'N/A'}"></td>
+                                        <td th:text="${user.email}"></td>
+                                        <td th:text="${user.phone ?: 'N/A'}"></td>
+                                        <td th:text="${user.role != null ? user.role.name : 'N/A'}"></td>
+                                        <td>
+													<span class="provider-badge"
+                                                          th:classappend="${user.provider == 'LOCAL'} ? 'provider-local' : (${user.provider == 'GOOGLE'} ? 'provider-google' : 'provider-facebook')"
+                                                          th:text="${user.provider}">
+													</span>
+                                        </td>
+                                        <td>
+													<span class="align-middle" onclick="event.stopPropagation();">
+														<i class="align-middle" th:if="${user.status}"
+                                                           data-feather="toggle-right"
+                                                           style="cursor:pointer; color: green;"
+                                                           th:attr="data-id=${user.id}, data-status=${user.status}"
+                                                           onclick="toggleStatus(this)">
+														</i>
+														<i class="align-middle" th:unless="${user.status}"
+                                                           data-feather="toggle-left"
+                                                           style="cursor:pointer; color: red;"
+                                                           th:attr="data-id=${user.id}, data-status=${user.status}"
+                                                           onclick="toggleStatus(this)">
+														</i>
+													</span>
+                                        </td>
+                                        <td style="width: 10px;">
+                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"
+                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"
+                                                    th:if="${user.role.name != 'ADMIN'}">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm ms-2"
+                                                    onclick="location.reload(); event.stopPropagation();">
+                                                <i data-feather="refresh-cw"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">
+                                        <td colspan="9" style="text-align: center;">
+                                            <i data-feather="plus"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div th:replace="~{component/admin-footer :: admin-footer}"></div>
+    </div>
+</div>
+
+<script src="/admin/js/app.js"></script>
+<script src="/admin/js/datatables.js"></script>
+<script src="/admin/js/custom.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
+
+</body>
+</html>

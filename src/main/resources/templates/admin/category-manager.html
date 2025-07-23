@@ -41,17 +41,6 @@
 
         gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
     </script>
-
-    <style>
-        .opacity-50 {
-            opacity: 0.5;
-        }
-
-        tbody tr:hover {
-            background-color: #ebebeb;
-
-        }
-    </style>
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
@@ -78,8 +67,8 @@
                             <div class="card-header">
                                 <h5 class="card-title" style="color: black; font-size: 23px;">Category List</h5>
                             </div>
-                            <div class="card-body">
-                                <div class="mb-3 d-flex justify-content-start">
+                            <div class="card-body d-flex flex-column align-items-start">
+                                <div class="mb-3 ">
                                     <div class="ms-auto">
                                         <button type="button" class="btn btn-primary"
                                                 data-bs-toggle="modal" data-bs-target="#addCategoryModal">
@@ -87,33 +76,37 @@
                                         </button>
                                     </div>
                                 </div>
-                                <table id="datatables-column-search-text-inputs" class="table"
-                                       style="width:100%; text-align: center;">
+                                <div  th:if="${#lists.isEmpty(categories)}">
+                                    <div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
+                                </div>
+                                <table id="datatables-column-search-text-inputs" class="table table-striped"
+                                       style="width:100%; text-align: center;" th:if="${categories != null and !#lists.isEmpty(categories)}">
                                     <thead>
                                     <tr>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Category name</th>
-                                        <th scope="col">Action</th>
+                                        <th style="width: 25%">Image</th>
+                                        <th style="width: 40%">Category name</th>
+                                        <th style="width: 25%">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="category : ${categories}"
-                                        style="cursor: pointer;">
+                                    <tr th:each="category : ${categories}">
                                         <td>
                                             <img th:src="${category.image}"
                                                  alt="Category Image"
-                                                 class="img-fluid img-thumbnail rounded mx-auto d-block"
-                                                 style="max-width: 120px; height: auto; object-fit: cover;">
+                                                 width="60" height="60" class="rounded-circle me-2">
+<!--                                            class="img-fluid img-thumbnail rounded mx-auto d-block"-->
+<!--                                            style="max-width: 120px; height: auto; object-fit: cover;"-->
                                         </td>
                                         <td th:text="${category.name}"></td>
                                         <td>
-                                            <a class="btn btn-danger"
-                                               th:href="@{/admin/delete-category/{id}(id=${category.id})}">Delete</a>
-                                            <button class="btn btn-primary"
+                                            <a class="text-decoration-none " th:href="@{/admin/delete-category/{id}(id=${category.id})}">
+                                                <i class="align-middle text-danger" data-feather="trash"></i>
+                                            </a>
+                                            <button class="btn btn-link text-decoration-none"
                                                     type="button"
                                                     th:attr="data-id=${category.id}, data-name=${category.name}, data-image=@{${category.image}}"
                                                     onclick="handleEditClick(this)">
-                                                Update
+                                                <i class="align-middle text-primary" data-feather="edit-2"></i>
                                             </button>
 
                                         </td>
