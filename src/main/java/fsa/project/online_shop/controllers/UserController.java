@@ -4,6 +4,7 @@ import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.CategoryService;
+import fsa.project.online_shop.services.FileService;
 import fsa.project.online_shop.services.ProductService;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,7 @@ public class UserController {
     private final ProductService productService;
     private final ProductRepository productRepository;
     public final CategoryService categoryService;
+    public final FileService fileService;
 
     @PostMapping("/admin/product/{id}/status")
     @ResponseBody
@@ -54,7 +56,7 @@ public class UserController {
         return "admin/admin-product-manager";
     }
 
-    @GetMapping("admin/update/{pid}")
+    @GetMapping("admin/products/update/{pid}")
     public String updateProductPage(@PathVariable Long pid, Model model) {
         List<Category> categories = categoryService.getAllCategories();
         Product product = productService.getProductById(pid);
@@ -63,15 +65,13 @@ public class UserController {
         return "admin/admin-product-update";
     }
 
-    @PostMapping("/admin/update/{id}")
+    @PostMapping("/admin/products/update/{id}")
     public String handleUpdateProduct(
             @PathVariable Long id,
             @RequestParam String name,
             @RequestParam Double price,
             @RequestParam Integer quantity,
-            @RequestParam Integer sold,
             @RequestParam String description,
-            @RequestParam(required = false) Boolean status,
             @RequestParam Long categoryId,
             @RequestParam(required = false) MultipartFile image
 
@@ -80,79 +80,53 @@ public class UserController {
         product.setName(name);
         product.setPrice(price);
         product.setQuantity(quantity);
-        product.setSold(sold);
         product.setDescription(description);
-        product.setStatus(status != null ? status : false);
-
         Category category = categoryService.getCategoryById(categoryId);
         product.setCategory(category);
 
-        Path uploadPath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "productImg");
-
         try {
-            // Create uploads folder if it doesn't exist
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+            if (image != null && !image.isEmpty()) {
+                String fileName = fileService.handleUploadImage(image);
+                product.setImage(fileName);
             }
-            // Get safe file name and save path
-            Path filePath = uploadPath.resolve(Paths.get(image.getOriginalFilename()).getFileName());
-
-            // Save the file to the path
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
+            productRepository.save(product);
         } catch (IOException e) {
-            e.getMessage();
         }
-        if (image != null && !image.isEmpty()) {
-            product.setImage(image.getOriginalFilename());
-        }
-        productRepository.save(product);
+
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/admin/add-product")
+    @GetMapping("/admin/products/add-product")
     public String addProductPage(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("product", new Product());
         return "admin/admin-product-add";
     }
 
-    @PostMapping("/admin/add-product")
+    @PostMapping("/admin/products/add-product")
     public String handleAddProduct(
             @RequestParam String name,
             @RequestParam Double price,
             @RequestParam Integer quantity,
-            @RequestParam Integer sold,
             @RequestParam String description,
-            @RequestParam(required = false) Boolean status,
             @RequestParam Long categoryId,
             @RequestParam(required = false) MultipartFile image) {
         Product product = new Product();
         product.setName(name);
         product.setPrice(price);
         product.setQuantity(quantity);
-        product.setSold(sold);
         product.setDescription(description);
-        product.setStatus(status != null ? status : false);
-
+        product.setStatus(true);
         Category category = categoryService.getCategoryById(categoryId);
         product.setCategory(category);
 
-        if (image != null && !image.isEmpty()) {
-            Path uploadPath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "productImg");
-            try {
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                Path filePath = uploadPath.resolve(Paths.get(image.getOriginalFilename()).getFileName());
-                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                product.setImage(image.getOriginalFilename());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            String fileName = fileService.handleUploadImage(image);
+            product.setImage(fileName);
+            productRepository.save(product);
+        } catch (IOException e) {
         }
 
-        productRepository.save(product);
         return "redirect:/admin/products";
     }
 
