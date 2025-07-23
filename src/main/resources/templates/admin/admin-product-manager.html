@@ -49,15 +49,9 @@
 			opacity: 0.5;
 		}
 
-		tbody tr:hover {
-			background-color: #ebebeb;
-
-		}
-
-		tbody tr.opacity-50:hover {
-			background-color: inherit;
-			color: inherit;
-			box-shadow: none;
+		.addrow:hover {
+			background-color: #dddddd;
+			cursor: pointer;
 		}
 	</style>
 </head>
@@ -101,16 +95,18 @@
 										</select>
 										<div class="ms-auto">
 											<button type="button" class="btn btn-primary"
-												onclick="location.href='/admin/add-product';">
+												onclick="location.href='/admin/products/add-product';">
 												<i data-feather="plus"></i> Add New Product
 											</button>
 										</div>
 									</div>
-									<div  th:if="${#lists.isEmpty(products)}">
-										<div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
+									<div th:if="${#lists.isEmpty(products)}">
+										<div th:replace="~{component/no-item-notification :: no-item-notification}">
+										</div>
 									</div>
 									<table id="datatables-column-search-text-inputs" class="table"
-										style="width:100%; text-align: center;" th:if="${products != null and !#lists.isEmpty(products)}">
+										style="width:100%; text-align: center;"
+										th:if="${products != null and !#lists.isEmpty(products)}">
 										<thead>
 											<tr>
 												<th>Image</th>
@@ -119,17 +115,15 @@
 												<th>Price</th>
 												<th>Quantity</th>
 												<th>Sold</th>
+												<th></th>
 												<th>Status</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="product : ${products}"
-												th:classappend="${!product.status} ? 'opacity-50'"
-												style="cursor: pointer;"
-												th:onclick="'location.href=\'/admin/update/' + ${product.id} + '\';'">
+												th:classappend="${product.status == null or !product.status} ? 'opacity-50'">
 												<td>
-													<img th:src="@{'/productImg/' + ${product.image}}"
-														alt="Product Image"
+													<img th:src="${product.image}" alt="Product Image"
 														style="width: 120px; height: 120px; object-fit: cover;">
 												</td>
 												<td th:text="${product.name}"></td>
@@ -137,6 +131,12 @@
 												<td th:text="${product.price}"></td>
 												<td th:text="${product.quantity}"></td>
 												<td th:text="${product.sold}"></td>
+												<td>
+													<button class="btn btn-link text-decoration-none" type="button"
+														th:onclick="'location.href=\'/admin/products/update/' + ${product.id} + '\';'">
+														<i class="align-middle text-primary" data-feather="edit-2"></i>
+													</button>
+												</td>
 												<td>
 													<span class="align-middle" onclick="event.stopPropagation();">
 														<i class="align-middle" th:if="${product.status}"
@@ -153,14 +153,8 @@
 														</i>
 													</span>
 												</td>
-												<td style="width: 10px;">
-													<button type="button" class="btn btn-sm ms-2"
-														onclick="location.reload(); event.stopPropagation();">
-														<i data-feather="refresh-cw"></i>
-													</button>
-												</td>
 											</tr>
-											<tr style="cursor: pointer;" onclick="location.href='/admin/add-product';">
+											<tr class="addrow" onclick="location.href='/admin/products/add-product';">
 												<td colspan="8" style="text-align: center;">
 													<i data-feather="plus"></i>
 												</td>
