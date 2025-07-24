@@ -92,189 +92,189 @@
         </div>
     </div>
 
-    <!--Chat widget with AI-->
+        <!--Chat widget with AI-->
 
-    <!--    <script>-->
-    <!--        document.addEventListener('DOMContentLoaded', function() {-->
-    <!--            // Chat widget elements-->
-    <!--            const chatWidget = document.getElementById('gosChatWidget');-->
-    <!--            const chatToggle = document.getElementById('gosChatToggle');-->
-    <!--            const chatWindow = document.getElementById('gosChatWindow');-->
-    <!--            const chatClose = document.getElementById('gosChatClose');-->
-    <!--            const chatMessages = document.getElementById('gosChatMessages');-->
-    <!--            const chatInput = document.getElementById('gosChatInput');-->
-    <!--            const chatSend = document.getElementById('gosChatSend');-->
-    <!--            const loadingIndicator = document.getElementById('gosLoadingIndicator');-->
-    <!--            const connectionStatus = document.getElementById('connectionStatus');-->
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            // Chat widget elements-->
+<!--            const chatWidget = document.getElementById('gosChatWidget');-->
+<!--            const chatToggle = document.getElementById('gosChatToggle');-->
+<!--            const chatWindow = document.getElementById('gosChatWindow');-->
+<!--            const chatClose = document.getElementById('gosChatClose');-->
+<!--            const chatMessages = document.getElementById('gosChatMessages');-->
+<!--            const chatInput = document.getElementById('gosChatInput');-->
+<!--            const chatSend = document.getElementById('gosChatSend');-->
+<!--            const loadingIndicator = document.getElementById('gosLoadingIndicator');-->
+<!--            const connectionStatus = document.getElementById('connectionStatus');-->
 
-    <!--            // API endpoint - adjust this to match your server-->
-    <!--            const CHAT_API_URL = '/api/chat/message';-->
+<!--            // API endpoint - adjust this to match your server-->
+<!--            const CHAT_API_URL = '/api/chat/message';-->
 
-    <!--            let isLoading = false;-->
+<!--            let isLoading = false;-->
 
-    <!--            // Toggle chat window-->
-    <!--            function toggleChat() {-->
-    <!--                const isVisible = chatWindow.style.display !== 'none';-->
-    <!--                chatWindow.style.display = isVisible ? 'none' : 'block';-->
+<!--            // Toggle chat window-->
+<!--            function toggleChat() {-->
+<!--                const isVisible = chatWindow.style.display !== 'none';-->
+<!--                chatWindow.style.display = isVisible ? 'none' : 'block';-->
 
-    <!--                if (!isVisible) {-->
-    <!--                    chatInput.focus();-->
-    <!--                }-->
-    <!--            }-->
+<!--                if (!isVisible) {-->
+<!--                    chatInput.focus();-->
+<!--                }-->
+<!--            }-->
 
-    <!--            // Add message to chat-->
-    <!--            function addMessage(message, isUser = false, timestamp = null) {-->
-    <!--                const messageDiv = document.createElement('div');-->
-    <!--                messageDiv.style.cssText = 'margin-bottom: 15px;';-->
+<!--            // Add message to chat-->
+<!--            function addMessage(message, isUser = false, timestamp = null) {-->
+<!--                const messageDiv = document.createElement('div');-->
+<!--                messageDiv.style.cssText = 'margin-bottom: 15px;';-->
 
-    <!--                const time = timestamp ? new Date(timestamp).toLocaleTimeString('vi-VN', {-->
-    <!--                    hour: '2-digit',-->
-    <!--                    minute: '2-digit'-->
-    <!--                }) : new Date().toLocaleTimeString('vi-VN', {-->
-    <!--                    hour: '2-digit',-->
-    <!--                    minute: '2-digit'-->
-    <!--                });-->
+<!--                const time = timestamp ? new Date(timestamp).toLocaleTimeString('vi-VN', {-->
+<!--                    hour: '2-digit',-->
+<!--                    minute: '2-digit'-->
+<!--                }) : new Date().toLocaleTimeString('vi-VN', {-->
+<!--                    hour: '2-digit',-->
+<!--                    minute: '2-digit'-->
+<!--                });-->
 
-    <!--                if (isUser) {-->
-    <!--                    messageDiv.innerHTML = `-->
-    <!--                        <div style="display: flex; justify-content: flex-end;">-->
-    <!--                            <div style="-->
-    <!--                                max-width: 80%; padding: 12px 16px; border-radius: 18px;-->
-    <!--                                background: linear-gradient(135deg, #28a745, #1e7e34); color: white;-->
-    <!--                                border-bottom-right-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-    <!--                                font-size: 14px; line-height: 1.4;-->
-    <!--                            ">${escapeHtml(message)}</div>-->
-    <!--                        </div>-->
-    <!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px; text-align: right;">${time}</div>-->
-    <!--                    `;-->
-    <!--                } else {-->
-    <!--                    messageDiv.innerHTML = `-->
-    <!--                        <div style="-->
-    <!--                            max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;-->
-    <!--                            border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-    <!--                            font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;-->
-    <!--                        ">${message}</div>-->
-    <!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>-->
-    <!--                    `;-->
-    <!--                }-->
+<!--                if (isUser) {-->
+<!--                    messageDiv.innerHTML = `-->
+<!--                        <div style="display: flex; justify-content: flex-end;">-->
+<!--                            <div style="-->
+<!--                                max-width: 80%; padding: 12px 16px; border-radius: 18px;-->
+<!--                                background: linear-gradient(135deg, #28a745, #1e7e34); color: white;-->
+<!--                                border-bottom-right-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+<!--                                font-size: 14px; line-height: 1.4;-->
+<!--                            ">${escapeHtml(message)}</div>-->
+<!--                        </div>-->
+<!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px; text-align: right;">${time}</div>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    messageDiv.innerHTML = `-->
+<!--                        <div style="-->
+<!--                            max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;-->
+<!--                            border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+<!--                            font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;-->
+<!--                        ">${message}</div>-->
+<!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>-->
+<!--                    `;-->
+<!--                }-->
 
-    <!--                chatMessages.appendChild(messageDiv);-->
-    <!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
-    <!--            }-->
+<!--                chatMessages.appendChild(messageDiv);-->
+<!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
+<!--            }-->
 
-    <!--            // Escape HTML to prevent XSS-->
-    <!--            function escapeHtml(unsafe) {-->
-    <!--                return unsafe-->
-    <!--                    .replace(/&/g, "&amp;")-->
-    <!--                    .replace(/</g, "&lt;")-->
-    <!--                    .replace(/>/g, "&gt;")-->
-    <!--                    .replace(/"/g, "&quot;")-->
-    <!--                    .replace(/'/g, "&#039;");-->
-    <!--            }-->
+<!--            // Escape HTML to prevent XSS-->
+<!--            function escapeHtml(unsafe) {-->
+<!--                return unsafe-->
+<!--                    .replace(/&/g, "&amp;")-->
+<!--                    .replace(/</g, "&lt;")-->
+<!--                    .replace(/>/g, "&gt;")-->
+<!--                    .replace(/"/g, "&quot;")-->
+<!--                    .replace(/'/g, "&#039;");-->
+<!--            }-->
 
-    <!--            // Show/hide loading indicator-->
-    <!--            function setLoading(loading) {-->
-    <!--                isLoading = loading;-->
-    <!--                loadingIndicator.style.display = loading ? 'block' : 'none';-->
-    <!--                chatSend.disabled = loading;-->
-    <!--                chatSend.style.opacity = loading ? '0.6' : '1';-->
-    <!--                chatSend.style.cursor = loading ? 'not-allowed' : 'pointer';-->
+<!--            // Show/hide loading indicator-->
+<!--            function setLoading(loading) {-->
+<!--                isLoading = loading;-->
+<!--                loadingIndicator.style.display = loading ? 'block' : 'none';-->
+<!--                chatSend.disabled = loading;-->
+<!--                chatSend.style.opacity = loading ? '0.6' : '1';-->
+<!--                chatSend.style.cursor = loading ? 'not-allowed' : 'pointer';-->
 
-    <!--                if (loading) {-->
-    <!--                    connectionStatus.textContent = '● Đang phản hồi...';-->
-    <!--                } else {-->
-    <!--                    connectionStatus.textContent = '● Trực tuyến';-->
-    <!--                }-->
-    <!--            }-->
+<!--                if (loading) {-->
+<!--                    connectionStatus.textContent = '● Đang phản hồi...';-->
+<!--                } else {-->
+<!--                    connectionStatus.textContent = '● Trực tuyến';-->
+<!--                }-->
+<!--            }-->
 
-    <!--            // Send message to AI-->
-    <!--            async function sendMessage(message) {-->
-    <!--                if (!message.trim() || isLoading) return;-->
+<!--            // Send message to AI-->
+<!--            async function sendMessage(message) {-->
+<!--                if (!message.trim() || isLoading) return;-->
 
-    <!--                // Add user message to chat-->
-    <!--                addMessage(message, true);-->
-    <!--                chatInput.value = '';-->
-    <!--                setLoading(true);-->
+<!--                // Add user message to chat-->
+<!--                addMessage(message, true);-->
+<!--                chatInput.value = '';-->
+<!--                setLoading(true);-->
 
-    <!--                try {-->
-    <!--                    const response = await fetch(CHAT_API_URL, {-->
-    <!--                        method: 'POST',-->
-    <!--                        headers: {-->
-    <!--                            'Content-Type': 'application/json',-->
-    <!--                        },-->
-    <!--                        body: JSON.stringify({-->
-    <!--                            message: message-->
-    <!--                        })-->
-    <!--                    });-->
+<!--                try {-->
+<!--                    const response = await fetch(CHAT_API_URL, {-->
+<!--                        method: 'POST',-->
+<!--                        headers: {-->
+<!--                            'Content-Type': 'application/json',-->
+<!--                        },-->
+<!--                        body: JSON.stringify({-->
+<!--                            message: message-->
+<!--                        })-->
+<!--                    });-->
 
-    <!--                    const data = await response.json();-->
+<!--                    const data = await response.json();-->
 
-    <!--                    if (data.success) {-->
-    <!--                        // Add AI response to chat-->
-    <!--                        addMessage(data.message, false, data.timestamp);-->
-    <!--                    } else {-->
-    <!--                        // Handle error response-->
-    <!--                        addMessage(-->
-    <!--                            data.message || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',-->
-    <!--                            false-->
-    <!--                        );-->
-    <!--                    }-->
-    <!--                } catch (error) {-->
-    <!--                    console.error('Chat API Error:', error);-->
-    <!--                    addMessage(-->
-    <!--                        '❌ Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng và thử lại.',-->
-    <!--                        false-->
-    <!--                    );-->
-    <!--                    connectionStatus.textContent = '● Mất kết nối';-->
-    <!--                } finally {-->
-    <!--                    setLoading(false);-->
-    <!--                }-->
-    <!--            }-->
+<!--                    if (data.success) {-->
+<!--                        // Add AI response to chat-->
+<!--                        addMessage(data.message, false, data.timestamp);-->
+<!--                    } else {-->
+<!--                        // Handle error response-->
+<!--                        addMessage(-->
+<!--                            data.message || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',-->
+<!--                            false-->
+<!--                        );-->
+<!--                    }-->
+<!--                } catch (error) {-->
+<!--                    console.error('Chat API Error:', error);-->
+<!--                    addMessage(-->
+<!--                        '❌ Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng và thử lại.',-->
+<!--                        false-->
+<!--                    );-->
+<!--                    connectionStatus.textContent = '● Mất kết nối';-->
+<!--                } finally {-->
+<!--                    setLoading(false);-->
+<!--                }-->
+<!--            }-->
 
-    <!--            // Event listeners-->
-    <!--            chatToggle.addEventListener('click', toggleChat);-->
-    <!--            chatClose.addEventListener('click', toggleChat);-->
+<!--            // Event listeners-->
+<!--            chatToggle.addEventListener('click', toggleChat);-->
+<!--            chatClose.addEventListener('click', toggleChat);-->
 
-    <!--            chatSend.addEventListener('click', () => {-->
-    <!--                sendMessage(chatInput.value);-->
-    <!--            });-->
+<!--            chatSend.addEventListener('click', () => {-->
+<!--                sendMessage(chatInput.value);-->
+<!--            });-->
 
-    <!--            chatInput.addEventListener('keypress', (e) => {-->
-    <!--                if (e.key === 'Enter' && !e.shiftKey) {-->
-    <!--                    e.preventDefault();-->
-    <!--                    sendMessage(chatInput.value);-->
-    <!--                }-->
-    <!--            });-->
+<!--            chatInput.addEventListener('keypress', (e) => {-->
+<!--                if (e.key === 'Enter' && !e.shiftKey) {-->
+<!--                    e.preventDefault();-->
+<!--                    sendMessage(chatInput.value);-->
+<!--                }-->
+<!--            });-->
 
-    <!--            // Auto-resize input on focus-->
-    <!--            chatInput.addEventListener('focus', () => {-->
-    <!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
-    <!--            });-->
+<!--            // Auto-resize input on focus-->
+<!--            chatInput.addEventListener('focus', () => {-->
+<!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
+<!--            });-->
 
-    <!--            // Test connection on load-->
-    <!--            setTimeout(async () => {-->
-    <!--                try {-->
-    <!--                    const response = await fetch(CHAT_API_URL, {-->
-    <!--                        method: 'POST',-->
-    <!--                        headers: {-->
-    <!--                            'Content-Type': 'application/json',-->
-    <!--                        },-->
-    <!--                        body: JSON.stringify({-->
-    <!--                            message: 'test connection'-->
-    <!--                        })-->
-    <!--                    });-->
+<!--            // Test connection on load-->
+<!--            setTimeout(async () => {-->
+<!--                try {-->
+<!--                    const response = await fetch(CHAT_API_URL, {-->
+<!--                        method: 'POST',-->
+<!--                        headers: {-->
+<!--                            'Content-Type': 'application/json',-->
+<!--                        },-->
+<!--                        body: JSON.stringify({-->
+<!--                            message: 'test connection'-->
+<!--                        })-->
+<!--                    });-->
 
-    <!--                    if (!response.ok) {-->
-    <!--                        connectionStatus.textContent = '● Offline';-->
-    <!--                        connectionStatus.style.opacity = '0.6';-->
-    <!--                    }-->
-    <!--                } catch (error) {-->
-    <!--                    connectionStatus.textContent = '● Offline';-->
-    <!--                    connectionStatus.style.opacity = '0.6';-->
-    <!--                }-->
-    <!--            }, 1000);-->
-    <!--        });-->
-    <!--    </script>-->
+<!--                    if (!response.ok) {-->
+<!--                        connectionStatus.textContent = '● Offline';-->
+<!--                        connectionStatus.style.opacity = '0.6';-->
+<!--                    }-->
+<!--                } catch (error) {-->
+<!--                    connectionStatus.textContent = '● Offline';-->
+<!--                    connectionStatus.style.opacity = '0.6';-->
+<!--                }-->
+<!--            }, 1000);-->
+<!--        });-->
+<!--    </script>-->
 
     <!-- Chat Widget JavaScript -->
     <script th:inline="javascript">
