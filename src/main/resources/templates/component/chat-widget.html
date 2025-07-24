@@ -92,186 +92,351 @@
         </div>
     </div>
 
-    <script>
+    <!--Chat widget with AI-->
+
+    <!--    <script>-->
+    <!--        document.addEventListener('DOMContentLoaded', function() {-->
+    <!--            // Chat widget elements-->
+    <!--            const chatWidget = document.getElementById('gosChatWidget');-->
+    <!--            const chatToggle = document.getElementById('gosChatToggle');-->
+    <!--            const chatWindow = document.getElementById('gosChatWindow');-->
+    <!--            const chatClose = document.getElementById('gosChatClose');-->
+    <!--            const chatMessages = document.getElementById('gosChatMessages');-->
+    <!--            const chatInput = document.getElementById('gosChatInput');-->
+    <!--            const chatSend = document.getElementById('gosChatSend');-->
+    <!--            const loadingIndicator = document.getElementById('gosLoadingIndicator');-->
+    <!--            const connectionStatus = document.getElementById('connectionStatus');-->
+
+    <!--            // API endpoint - adjust this to match your server-->
+    <!--            const CHAT_API_URL = '/api/chat/message';-->
+
+    <!--            let isLoading = false;-->
+
+    <!--            // Toggle chat window-->
+    <!--            function toggleChat() {-->
+    <!--                const isVisible = chatWindow.style.display !== 'none';-->
+    <!--                chatWindow.style.display = isVisible ? 'none' : 'block';-->
+
+    <!--                if (!isVisible) {-->
+    <!--                    chatInput.focus();-->
+    <!--                }-->
+    <!--            }-->
+
+    <!--            // Add message to chat-->
+    <!--            function addMessage(message, isUser = false, timestamp = null) {-->
+    <!--                const messageDiv = document.createElement('div');-->
+    <!--                messageDiv.style.cssText = 'margin-bottom: 15px;';-->
+
+    <!--                const time = timestamp ? new Date(timestamp).toLocaleTimeString('vi-VN', {-->
+    <!--                    hour: '2-digit',-->
+    <!--                    minute: '2-digit'-->
+    <!--                }) : new Date().toLocaleTimeString('vi-VN', {-->
+    <!--                    hour: '2-digit',-->
+    <!--                    minute: '2-digit'-->
+    <!--                });-->
+
+    <!--                if (isUser) {-->
+    <!--                    messageDiv.innerHTML = `-->
+    <!--                        <div style="display: flex; justify-content: flex-end;">-->
+    <!--                            <div style="-->
+    <!--                                max-width: 80%; padding: 12px 16px; border-radius: 18px;-->
+    <!--                                background: linear-gradient(135deg, #28a745, #1e7e34); color: white;-->
+    <!--                                border-bottom-right-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+    <!--                                font-size: 14px; line-height: 1.4;-->
+    <!--                            ">${escapeHtml(message)}</div>-->
+    <!--                        </div>-->
+    <!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px; text-align: right;">${time}</div>-->
+    <!--                    `;-->
+    <!--                } else {-->
+    <!--                    messageDiv.innerHTML = `-->
+    <!--                        <div style="-->
+    <!--                            max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;-->
+    <!--                            border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+    <!--                            font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;-->
+    <!--                        ">${message}</div>-->
+    <!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>-->
+    <!--                    `;-->
+    <!--                }-->
+
+    <!--                chatMessages.appendChild(messageDiv);-->
+    <!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
+    <!--            }-->
+
+    <!--            // Escape HTML to prevent XSS-->
+    <!--            function escapeHtml(unsafe) {-->
+    <!--                return unsafe-->
+    <!--                    .replace(/&/g, "&amp;")-->
+    <!--                    .replace(/</g, "&lt;")-->
+    <!--                    .replace(/>/g, "&gt;")-->
+    <!--                    .replace(/"/g, "&quot;")-->
+    <!--                    .replace(/'/g, "&#039;");-->
+    <!--            }-->
+
+    <!--            // Show/hide loading indicator-->
+    <!--            function setLoading(loading) {-->
+    <!--                isLoading = loading;-->
+    <!--                loadingIndicator.style.display = loading ? 'block' : 'none';-->
+    <!--                chatSend.disabled = loading;-->
+    <!--                chatSend.style.opacity = loading ? '0.6' : '1';-->
+    <!--                chatSend.style.cursor = loading ? 'not-allowed' : 'pointer';-->
+
+    <!--                if (loading) {-->
+    <!--                    connectionStatus.textContent = '● Đang phản hồi...';-->
+    <!--                } else {-->
+    <!--                    connectionStatus.textContent = '● Trực tuyến';-->
+    <!--                }-->
+    <!--            }-->
+
+    <!--            // Send message to AI-->
+    <!--            async function sendMessage(message) {-->
+    <!--                if (!message.trim() || isLoading) return;-->
+
+    <!--                // Add user message to chat-->
+    <!--                addMessage(message, true);-->
+    <!--                chatInput.value = '';-->
+    <!--                setLoading(true);-->
+
+    <!--                try {-->
+    <!--                    const response = await fetch(CHAT_API_URL, {-->
+    <!--                        method: 'POST',-->
+    <!--                        headers: {-->
+    <!--                            'Content-Type': 'application/json',-->
+    <!--                        },-->
+    <!--                        body: JSON.stringify({-->
+    <!--                            message: message-->
+    <!--                        })-->
+    <!--                    });-->
+
+    <!--                    const data = await response.json();-->
+
+    <!--                    if (data.success) {-->
+    <!--                        // Add AI response to chat-->
+    <!--                        addMessage(data.message, false, data.timestamp);-->
+    <!--                    } else {-->
+    <!--                        // Handle error response-->
+    <!--                        addMessage(-->
+    <!--                            data.message || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',-->
+    <!--                            false-->
+    <!--                        );-->
+    <!--                    }-->
+    <!--                } catch (error) {-->
+    <!--                    console.error('Chat API Error:', error);-->
+    <!--                    addMessage(-->
+    <!--                        '❌ Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng và thử lại.',-->
+    <!--                        false-->
+    <!--                    );-->
+    <!--                    connectionStatus.textContent = '● Mất kết nối';-->
+    <!--                } finally {-->
+    <!--                    setLoading(false);-->
+    <!--                }-->
+    <!--            }-->
+
+    <!--            // Event listeners-->
+    <!--            chatToggle.addEventListener('click', toggleChat);-->
+    <!--            chatClose.addEventListener('click', toggleChat);-->
+
+    <!--            chatSend.addEventListener('click', () => {-->
+    <!--                sendMessage(chatInput.value);-->
+    <!--            });-->
+
+    <!--            chatInput.addEventListener('keypress', (e) => {-->
+    <!--                if (e.key === 'Enter' && !e.shiftKey) {-->
+    <!--                    e.preventDefault();-->
+    <!--                    sendMessage(chatInput.value);-->
+    <!--                }-->
+    <!--            });-->
+
+    <!--            // Auto-resize input on focus-->
+    <!--            chatInput.addEventListener('focus', () => {-->
+    <!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
+    <!--            });-->
+
+    <!--            // Test connection on load-->
+    <!--            setTimeout(async () => {-->
+    <!--                try {-->
+    <!--                    const response = await fetch(CHAT_API_URL, {-->
+    <!--                        method: 'POST',-->
+    <!--                        headers: {-->
+    <!--                            'Content-Type': 'application/json',-->
+    <!--                        },-->
+    <!--                        body: JSON.stringify({-->
+    <!--                            message: 'test connection'-->
+    <!--                        })-->
+    <!--                    });-->
+
+    <!--                    if (!response.ok) {-->
+    <!--                        connectionStatus.textContent = '● Offline';-->
+    <!--                        connectionStatus.style.opacity = '0.6';-->
+    <!--                    }-->
+    <!--                } catch (error) {-->
+    <!--                    connectionStatus.textContent = '● Offline';-->
+    <!--                    connectionStatus.style.opacity = '0.6';-->
+    <!--                }-->
+    <!--            }, 1000);-->
+    <!--        });-->
+    <!--    </script>-->
+
+    <!-- Chat Widget JavaScript -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
-            // Chat widget elements
-            const chatWidget = document.getElementById('gosChatWidget');
+            const pageType = /*[[${pageType}]]*/ 'general';
             const chatToggle = document.getElementById('gosChatToggle');
             const chatWindow = document.getElementById('gosChatWindow');
             const chatClose = document.getElementById('gosChatClose');
-            const chatMessages = document.getElementById('gosChatMessages');
-            const chatInput = document.getElementById('gosChatInput');
             const chatSend = document.getElementById('gosChatSend');
-            const loadingIndicator = document.getElementById('gosLoadingIndicator');
-            const connectionStatus = document.getElementById('connectionStatus');
+            const chatInput = document.getElementById('gosChatInput');
+            const chatMessages = document.getElementById('gosChatMessages');
 
-            // API endpoint - adjust this to match your server
-            const CHAT_API_URL = '/api/chat/message';
+            let isOpen = false;
 
-            let isLoading = false;
+            // Toggle chat
+            chatToggle?.addEventListener('click', function() {
+                isOpen = !isOpen;
+                chatWindow.style.display = isOpen ? 'block' : 'none';
+                if (isOpen) chatInput.focus();
+            });
 
-            // Toggle chat window
-            function toggleChat() {
-                const isVisible = chatWindow.style.display !== 'none';
-                chatWindow.style.display = isVisible ? 'none' : 'block';
+            // Close chat
+            chatClose?.addEventListener('click', function() {
+                isOpen = false;
+                chatWindow.style.display = 'none';
+            });
 
-                if (!isVisible) {
-                    chatInput.focus();
+            // Send message
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                addMessage('user', message);
+                chatInput.value = '';
+
+                setTimeout(() => {
+                    const response = getBotResponse(message, pageType);
+                    addMessage('bot', response);
+                }, 1000);
+            }
+
+            // Get bot response based on page type and message
+            function getBotResponse(message, pageType) {
+                const msg = message.toLowerCase();
+
+                // Common responses
+                if (msg.includes('chào') || msg.includes('hello') || msg.includes('hi')) {
+                    return getGreeting(pageType);
+                } else if (msg.includes('cảm ơn') || msg.includes('thanks')) {
+                    return '🙏 Không có gì! Rất vui được hỗ trợ bạn. Chúc bạn có trải nghiệm tuyệt vời! 🎮✨';
+                }
+
+                // Page-specific responses
+                switch(pageType) {
+                    case 'home':
+                        return getHomeResponse(msg);
+                    case 'shop':
+                        return getShopResponse(msg);
+                    case 'about':
+                        return getAboutResponse(msg);
+                    case 'contact':
+                        return getContactResponse(msg);
+                    default:
+                        return 'Cảm ơn bạn đã liên hệ! Tôi sẽ hỗ trợ bạn ngay. 😊';
                 }
             }
 
-            // Add message to chat
-            function addMessage(message, isUser = false, timestamp = null) {
-                const messageDiv = document.createElement('div');
-                messageDiv.style.cssText = 'margin-bottom: 15px;';
+            function getGreeting(pageType) {
+                const greetings = {
+                    home: '👋 Chào mừng đến GOS Gaming! Tôi có thể tư vấn PC, laptop, gaming gear. Bạn cần gì?',
+                    shop: '🛒 Chào bạn! Tôi có thể giúp bạn tìm sản phẩm phù hợp và so sánh giá cả!',
+                    about: 'ℹ️ Chào bạn! Bạn muốn biết gì về GOS Gaming? Lịch sử, đội ngũ, hay tầm nhìn của chúng tôi?',
+                    contact: '📞 Chào bạn! Tôi có thể cung cấp thông tin liên hệ, địa chỉ showroom và giờ làm việc!'
+                };
+                return greetings[pageType] || greetings.home;
+            }
 
-                const time = timestamp ? new Date(timestamp).toLocaleTimeString('vi-VN', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : new Date().toLocaleTimeString('vi-VN', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                if (isUser) {
-                    messageDiv.innerHTML = `
-                        <div style="display: flex; justify-content: flex-end;">
-                            <div style="
-                                max-width: 80%; padding: 12px 16px; border-radius: 18px;
-                                background: linear-gradient(135deg, #28a745, #1e7e34); color: white;
-                                border-bottom-right-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                                font-size: 14px; line-height: 1.4;
-                            ">${escapeHtml(message)}</div>
-                        </div>
-                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px; text-align: right;">${time}</div>
-                    `;
-                } else {
-                    messageDiv.innerHTML = `
-                        <div style="
-                            max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;
-                            border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                            font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;
-                        ">${message}</div>
-                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>
-                    `;
+            function getHomeResponse(msg) {
+                if (msg.includes('pc') || msg.includes('gaming')) {
+                    return '🎮 PC Gaming từ entry đến high-end:\n• Gaming PC phổ thông: 15-25 triệu\n• Gaming PC cao cấp: 30-50 triệu\n• Workstation Gaming: 50+ triệu\n\nBudget của bạn khoảng bao nhiêu?';
+                } else if (msg.includes('laptop')) {
+                    return '💻 Laptop gaming hot:\n• Entry: ASUS TUF, Acer Nitro\n• Mid-range: MSI Katana, Lenovo Legion\n• High-end: ASUS ROG, MSI GE\n\nBạn chơi game gì chủ yếu?';
+                } else if (msg.includes('giá')) {
+                    return '💰 Giá cả cạnh tranh nhất thị trường! Sản phẩm nào bạn quan tâm để tôi báo giá chi tiết?';
                 }
+                return 'Tôi có thể tư vấn PC gaming, laptop, gear và giá cả. Bạn quan tâm sản phẩm nào? 🎮';
+            }
 
+            function getShopResponse(msg) {
+                if (msg.includes('pc')) {
+                    return '🎮 PC gaming tuyệt vời đang chờ bạn! Budget khoảng bao nhiêu để tôi recommend phù hợp?';
+                } else if (msg.includes('laptop')) {
+                    return '💻 Laptop gaming nào phù hợp? Gaming hay làm việc chủ yếu?';
+                } else if (msg.includes('giá')) {
+                    return '💰 Giá cả rất cạnh tranh! Sản phẩm nào bạn đang xem để tôi tư vấn?';
+                }
+                return 'Tôi có thể giúp bạn tìm sản phẩm phù hợp và so sánh giá cả! 🛒';
+            }
+
+            function getAboutResponse(msg) {
+                if (msg.includes('lịch sử') || msg.includes('thành lập')) {
+                    return '🏢 GOS Gaming thành lập 2020, phục vụ 10,000+ khách hàng với niềm đam mê gaming!';
+                } else if (msg.includes('đội ngũ')) {
+                    return '👥 50+ chuyên gia IT & gaming enthusiasts, kinh nghiệm 5+ năm, hỗ trợ 24/7!';
+                } else if (msg.includes('showroom')) {
+                    return '🏪 3 showroom: HCM (Q1), Hà Nội (Cầu Giấy), Đà Nẵng (Hải Châu)';
+                }
+                return 'Bạn muốn biết gì về GOS? Lịch sử, đội ngũ, showroom hay tầm nhìn? ℹ️';
+            }
+
+            function getContactResponse(msg) {
+                if (msg.includes('hotline') || msg.includes('điện thoại')) {
+                    return '📞 Hotline 24/7:\n• Bán hàng: 1900-GOS-SALE\n• Kỹ thuật: 1900-GOS-TECH\n• Bảo hành: 1900-GOS-WARRANTY';
+                } else if (msg.includes('địa chỉ') || msg.includes('showroom')) {
+                    return '🏪 Showroom:\n• HCM: 123 Gaming Street, Q1\n• Hà Nội: 456 Tech Avenue\n• Đà Nẵng: 789 Digital Road';
+                } else if (msg.includes('email')) {
+                    return '📧 Email:\n• Tổng đài: info@gos.com\n• Bán hàng: sales@gos.com\n• Kỹ thuật: support@gos.com';
+                }
+                return 'Tôi có thể cung cấp hotline, địa chỉ showroom, email liên hệ! 📞';
+            }
+
+            // Add message to chat
+            function addMessage(sender, text) {
+                const time = new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                const isBot = sender === 'bot';
+                const messageDiv = document.createElement('div');
+                messageDiv.style.cssText = 'margin-bottom: 15px; display: flex; flex-direction: column; align-items: ' + (isBot ? 'flex-start' : 'flex-end') + ';';
+                messageDiv.innerHTML = `
+                    <div style="
+                        max-width: 80%; padding: 12px 16px; border-radius: 18px;
+                        background: ${isBot ? 'white' : '#28a745'}; color: ${isBot ? '#333' : 'white'};
+                        border-bottom-${isBot ? 'left' : 'right'}-radius: 4px;
+                        ${isBot ? 'box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 3px solid #28a745;' : ''}
+                        font-size: 14px; line-height: 1.4; word-wrap: break-word; white-space: pre-line;
+                    ">${text}</div>
+                    <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>
+                `;
                 chatMessages.appendChild(messageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            // Escape HTML to prevent XSS
-            function escapeHtml(unsafe) {
-                return unsafe
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-
-            // Show/hide loading indicator
-            function setLoading(loading) {
-                isLoading = loading;
-                loadingIndicator.style.display = loading ? 'block' : 'none';
-                chatSend.disabled = loading;
-                chatSend.style.opacity = loading ? '0.6' : '1';
-                chatSend.style.cursor = loading ? 'not-allowed' : 'pointer';
-
-                if (loading) {
-                    connectionStatus.textContent = '● Đang phản hồi...';
-                } else {
-                    connectionStatus.textContent = '● Trực tuyến';
-                }
-            }
-
-            // Send message to AI
-            async function sendMessage(message) {
-                if (!message.trim() || isLoading) return;
-
-                // Add user message to chat
-                addMessage(message, true);
-                chatInput.value = '';
-                setLoading(true);
-
-                try {
-                    const response = await fetch(CHAT_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            message: message
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        // Add AI response to chat
-                        addMessage(data.message, false, data.timestamp);
-                    } else {
-                        // Handle error response
-                        addMessage(
-                            data.message || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',
-                            false
-                        );
-                    }
-                } catch (error) {
-                    console.error('Chat API Error:', error);
-                    addMessage(
-                        '❌ Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng và thử lại.',
-                        false
-                    );
-                    connectionStatus.textContent = '● Mất kết nối';
-                } finally {
-                    setLoading(false);
-                }
-            }
-
             // Event listeners
-            chatToggle.addEventListener('click', toggleChat);
-            chatClose.addEventListener('click', toggleChat);
-
-            chatSend.addEventListener('click', () => {
-                sendMessage(chatInput.value);
+            chatSend?.addEventListener('click', sendMessage);
+            chatInput?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendMessage();
             });
 
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage(chatInput.value);
-                }
-            });
-
-            // Auto-resize input on focus
-            chatInput.addEventListener('focus', () => {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            });
-
-            // Test connection on load
-            setTimeout(async () => {
-                try {
-                    const response = await fetch(CHAT_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            message: 'test connection'
-                        })
-                    });
-
-                    if (!response.ok) {
-                        connectionStatus.textContent = '● Offline';
-                        connectionStatus.style.opacity = '0.6';
-                    }
-                } catch (error) {
-                    connectionStatus.textContent = '● Offline';
-                    connectionStatus.style.opacity = '0.6';
-                }
-            }, 1000);
+            // Welcome animation
+            setTimeout(() => {
+                if (!isOpen) chatToggle.style.animation = 'bounce 1s ease-in-out 2';
+            }, 2000);
         });
+
+        // Add CSS animations
+        if (!document.getElementById('gosChatStyles')) {
+            const style = document.createElement('style');
+            style.id = 'gosChatStyles';
+            style.textContent = '@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }';
+            document.head.appendChild(style);
+        }
+        /*]]>*/
     </script>
 </div>
 
