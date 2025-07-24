@@ -4,8 +4,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="_csrf" th:content="${_csrf.token}" />
-	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
@@ -95,7 +93,7 @@
 										</select>
 										<div class="ms-auto">
 											<button type="button" class="btn btn-primary"
-												onclick="location.href='/admin/products/add-product';">
+												onclick="location.href='/admin/products/add';">
 												<i data-feather="plus"></i> Add New Product
 											</button>
 										</div>
@@ -154,7 +152,7 @@
 													</span>
 												</td>
 											</tr>
-											<tr class="addrow" onclick="location.href='/admin/products/add-product';">
+											<tr class="addrow" onclick="location.href='/admin/products/add';">
 												<td colspan="8" style="text-align: center;">
 													<i data-feather="plus"></i>
 												</td>
