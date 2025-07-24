@@ -11,6 +11,7 @@ import fsa.project.online_shop.utils.SessionUtil;
 import fsa.project.online_shop.utils.VnPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/payment/api")
 @CrossOrigin("*")
@@ -114,10 +116,11 @@ public class VnPayController {
             int paymentStatus = vnPayService.vnPayReturn(request);
             if (paymentStatus == 1) {
                 // Xử lý logic khi thanh toán thành công
-                // Ví dụ: cập nhật database, gửi email, etc.
                 String vnp_TxnRef = request.getParameter("vnp_TxnRef");
                 String vnp_Amount = request.getParameter("vnp_Amount");
-                // TODO: Implement your business logic here
+
+                // Process successful payment
+                log.info("✅ VNPay payment successful - TxnRef: {}, Amount: {}", vnp_TxnRef, vnp_Amount);
 
                 response.put("RspCode", "00");
                 response.put("Message", "Confirm Success");

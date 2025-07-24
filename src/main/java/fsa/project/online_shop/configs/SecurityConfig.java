@@ -32,11 +32,12 @@ public class SecurityConfig {
     private final AuthenticationFailureHandler customFailureAuthHandler;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/resend-code",
+            "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/productImg/**", "/resend-code",
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
+            "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**"
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
-            "/cart/**", "/cart-detail"
+            "/cart/**", "/cart-detail/**"
     };
 
     @Bean

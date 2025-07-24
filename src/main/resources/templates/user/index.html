@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <title>Gaming Online Shop</title>
+    <title>GOS - Gaming Online Shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Include the CSRF token for security -->
@@ -58,16 +58,16 @@
                         </div>
                         <div class="col-lg-6 mb-0 d-flex align-items-center">
                             <div class="text-align-left align-self-center">
-                                <h1 class="h1 text-success"><b>Gamer</b> Mouse</h1>
-                                <h3 class="h2">Gaming mouse</h3>
+                                <h1 class="h1 text-success"><b>Gaming</b> PCs</h1>
+                                <h3 class="h2">Ultimate Gaming Experience</h3>
                                 <p>
-                                    A gaming mouse is a specialized input device designed for gamers, offering enhanced
-                                    precision, customizable buttons, and ergonomic designs for improved control and
-                                    comfort during gameplay.
-                                    <a rel="sponsored" class="text-success" href="https://www.logitech.com/vi-vn"
-                                        target="_blank">Logitech</a>,
-                                    <a rel="sponsored" class="text-success" href="https://www.razer.com/"
-                                        target="_blank">Razer</a>
+                                    Discover our premium collection of gaming PCs, laptops, and accessories designed for
+                                    serious gamers. From high-performance custom builds to professional workstations,
+                                    we have everything you need to dominate the game.
+                                    <a rel="sponsored" class="text-success" href="https://www.nvidia.com/"
+                                        target="_blank">NVIDIA</a>,
+                                    <a rel="sponsored" class="text-success" href="https://www.amd.com/"
+                                        target="_blank">AMD</a>
                                 </p>
                             </div>
                         </div>
@@ -82,12 +82,12 @@
                         </div>
                         <div class="col-lg-6 mb-0 d-flex align-items-center">
                             <div class="text-align-left">
-                                <h1 class="h1"><b>Monitor</b></h1>
-                                <h3 class="h2">We have the best monitor in the world</h3>
+                                <h1 class="h1"><b>Gaming</b> Monitors</h1>
+                                <h3 class="h2">Crystal Clear Gaming Displays</h3>
                                 <p>
-                                    A gaming monitor is a display device specifically designed for gaming, featuring
-                                    high refresh rates, low response times, and technologies like Adaptive Sync to
-                                    provide smooth, tear-free visuals and a competitive edge.
+                                    Experience gaming like never before with our premium gaming monitors. Featuring
+                                    ultra-high refresh rates, 4K resolution, HDR support, and lightning-fast response
+                                    times for the ultimate competitive advantage.
                                 </p>
                             </div>
                         </div>
@@ -102,13 +102,12 @@
                         </div>
                         <div class="col-lg-6 mb-0 d-flex align-items-center">
                             <div class="text-align-left">
-                                <h1 class="h1"><b>Keyboard</b></h1>
-                                <h3 class="h2">Our keyboards are smooth as butter</h3>
+                                <h1 class="h1"><b>Gaming</b> Accessories</h1>
+                                <h3 class="h2">Complete Your Gaming Setup</h3>
                                 <p>
-                                    A keyboard is an essential input device used to enter text and commands into a
-                                    computer system, featuring an arrangement of keys that correspond to letters,
-                                    numbers, symbols, and functions, enabling users to interact with software and
-                                    control various aspects of the system.
+                                    From mechanical keyboards and precision mice to high-quality headsets and RGB lighting,
+                                    we offer a complete range of gaming accessories to enhance your performance and
+                                    create the perfect gaming environment.
                                 </p>
                             </div>
                         </div>
@@ -173,10 +172,10 @@
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Latest Product</h1>
+                    <h1 class="h1">Latest Gaming PCs</h1>
                     <p>
-                        Explore our latest product arrivals, featuring innovative designs, cutting-edge technology, and
-                        exceptional quality to meet your evolving needs and elevate your experience.
+                        Discover our newest gaming PCs and components, featuring the latest processors, graphics cards,
+                        and cutting-edge technology designed to deliver unmatched gaming performance and reliability.
                     </p>
                 </div>
             </div>
@@ -230,10 +229,10 @@
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Products</h1>
+                    <h1 class="h1">Featured Gaming Rigs</h1>
                     <p>
-                        Discover our premium selection of high-end gaming products, featuring top-tier performance and
-                        exceptional build quality for the most demanding gamers.
+                        Explore our handpicked selection of premium gaming PCs and workstations, featuring flagship
+                        components and custom configurations for professional gamers and content creators.
                     </p>
                 </div>
             </div>
@@ -281,9 +280,13 @@
         </div>
     </section>
     <!-- End Featured Product -->
+
     <!-- Start Footer -->
     <div th:replace="~{component/user-footer :: user-footer}"></div>
     <!-- End Footer -->
+
+    <!-- GOS Chat Widget Component -->
+    <div th:replace="~{component/chat-widget :: chat-widget('home', '🎮', 'GOS Gaming Support', '● Tư vấn gaming', '🎮 <strong>Chào mừng đến GOS Gaming!</strong><br>Tôi có thể giúp bạn tư vấn về:<br>• PC Gaming & Laptop<br>• Gaming Gear & Phụ kiện<br>• Giá cả & Khuyến mãi<br><br>Bạn cần hỗ trợ gì hôm nay? 😊')}"></div>
 
     <!-- Start Script -->
     <script src="user/js/jquery-1.11.0.min.js"></script>

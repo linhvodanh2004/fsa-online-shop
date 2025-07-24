@@ -6,6 +6,7 @@ import fsa.project.online_shop.repositories.CartRepository;
 import fsa.project.online_shop.repositories.UserRepository;
 import fsa.project.online_shop.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -77,6 +79,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User findByPhone(String phone) {
+        if (!StringUtils.hasText(phone)) {
+            return null; // Phone is optional, so return null instead of throwing exception
+        }
+
+        try {
+            return userRepository.findByPhone(phone).orElse(null);
+        } catch (Exception e) {
+            log.error("Error finding user by phone '{}': {}", phone, e.getMessage(), e);
+            throw new RuntimeException("Error finding user by phone: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public User save(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
@@ -98,10 +115,22 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("Username already exists: " + user.getUsername());
             }
 
+            // Check for duplicate phone (excluding current user if updating)
+            if (StringUtils.hasText(user.getPhone())) {
+                User existingUserWithPhone = findByPhone(user.getPhone());
+                if (existingUserWithPhone != null && !existingUserWithPhone.getId().equals(user.getId())) {
+                    throw new RuntimeException("Phone number already exists: " + user.getPhone());
+                }
+            }
+
             // Encode password if it's a new user or password is being updated
-            if (user.getId() == null || StringUtils.hasText(user.getPassword())) {
+            // Skip password encoding for OAuth2 users (they don't have passwords)
+            if (StringUtils.hasText(user.getPassword()) && !"GOOGLE".equals(user.getProvider())) {
                 PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
                 user.setPassword(encoder.encode(user.getPassword()));
+            } else if ("GOOGLE".equals(user.getProvider())) {
+                // OAuth2 users don't need password
+                user.setPassword(null);
             }
 
             // Set default status if null

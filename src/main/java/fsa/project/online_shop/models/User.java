@@ -18,7 +18,10 @@ public class User {
     private Long id;
 
     private String username;
+
+    @Column(nullable = true) // OAuth2 users don't have password
     private String password;
+
     private String fullname;
 
     @Column(unique = true)
@@ -27,6 +30,16 @@ public class User {
     private String phone;
     private Boolean status;
     private String provider;
+
+    // Default delivery address fields
+    @Column(name = "receiver_name")
+    private String receiverName;
+
+    @Column(name = "receiver_phone")
+    private String receiverPhone;
+
+    @Column(columnDefinition = "TEXT")
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

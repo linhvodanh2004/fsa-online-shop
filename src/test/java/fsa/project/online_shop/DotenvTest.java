@@ -18,9 +18,6 @@ public class DotenvTest {
 
     @Test
     public void testDotenvVariablesAreLoaded() {
-        System.out.println("DB_URL: " + dbUrl);
-        System.out.println("GOOGLE_CLIENT_ID: " + googleClientId);
-        
         // Kiểm tra xem các biến từ .env có được load không
         assertNotNull(dbUrl, "DB_URL should be loaded from .env file");
         assertNotNull(googleClientId, "GOOGLE_CLIENT_ID should be loaded from .env file");
