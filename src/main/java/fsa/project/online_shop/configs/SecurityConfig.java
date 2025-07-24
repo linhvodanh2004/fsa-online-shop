@@ -36,7 +36,7 @@ public class SecurityConfig {
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
-            "/cart/**",
+            "/cart/**", "/cart-detail"
     };
 
     @Bean

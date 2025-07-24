@@ -45,7 +45,76 @@
         .border-warning {
             border: 2px dashed orange !important;
         }
+        .payment-option {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
 
+        .payment-option:hover {
+            border-color: #6c757d;
+            transform: translateY(-1px);
+        }
+
+        .payment-option.selected {
+            border-color: #0d6efd;
+            background-color: #f0f7ff;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .vnpay-icon, .cash-icon {
+            background-color: transparent;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .payment-title {
+            color: #212529;
+            margin-bottom: 4px;
+            font-size: 20px;
+        }
+        .payment-subtitle {
+            color: #6c757d;
+            font-size: 12px;
+            margin: 0;
+        }
+        .radio-indicator {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .payment-option.selected .radio-indicator {
+            border-color: #0d6efd;
+            background-color: #0d6efd;
+        }
+        .radio-indicator i {
+            color: white;
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .payment-option.selected .radio-indicator i {
+            opacity: 1;
+        }
     </style>
 
 </head>
@@ -100,12 +169,37 @@
                             <label>Note</label>
                             <textarea name="note" class="form-control"></textarea>
                         </div>
-                        <div class="form-group mb-3">
-                            <label>Payment Method</label>
-                            <select name="paymentMethod" class="form-control" required>
-                                <option value="COD">COD</option>
-                                <option value="VNPAY">VNPAY</option>
-                            </select>
+                        <input type="hidden" name="paymentMethod" id="paymentMethodInput" required>
+                        <!-- Cash on Delivery -->
+                        <div class="payment-option cash-delivery" data-method="COD" onclick="selectPayment('COD', this)">
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon cash-icon me-3">
+                                <img src="/user/img/cash-on-delivery_16589524.png" width="40" height="40" />
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="payment-title fw-bold">COD</div>
+                                    <p class="payment-subtitle">Cash On Delivery</p>
+                                </div>
+                                <div class="radio-indicator">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VNPAY -->
+                        <div class="payment-option" data-method="VNPAY" onclick="selectPayment('VNPAY', this)">
+                            <div class="d-flex align-items-center">
+                                <div class="payment-icon vnpay-icon me-3">
+                                    <img src="/user/img/vnpay-logo-vinadesign-25-12-59-16.jpg" alt="VNPAY"
+                                         width="50" height="50" />
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="payment-title fw-bold">VnPay</div>
+                                    <p class="payment-subtitle">VnPay E-wallet</p>
+                                </div>
+                                <div class="radio-indicator">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group mb-3">
                             <label>Total:</label>
@@ -136,17 +230,80 @@
 <script src="/toastify-message.js"></script>
 <script src="/cart-service.js"></script>
 <script>
+    let selectedPaymentMethod = null;
     document.addEventListener("DOMContentLoaded", () => {
+        selectPayment('COD', document.querySelector('.cash-delivery'))
         reloadCart();
-    });
+        document.getElementById("checkout-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-    function stepQuantity(button, delta) {
-        const input = button.parentNode.querySelector('input[type="number"]');
-        let value = parseInt(input.value) || 1;
-        value = Math.max(1, value + delta);
-        input.value = value;
-        // TODO: Call update quantity API
+            const form = e.target;
+            const formData = new FormData(form);
+            const paymentMethod = formData.get("paymentMethod");
+
+            // Convert formData to object
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            if (paymentMethod === "COD") {
+                // Nộp đơn hàng qua form bình thường (POST tới /cart/checkout)
+                form.action = "/cart/checkout";
+                form.method = "POST";
+                form.submit();
+            } else if (paymentMethod === "VNPAY") {
+                try {
+                    const response = await fetch("/payment/api/create", {
+                        method: "POST", // dùng GET vì controller là @GetMapping
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            amount: getCartTotal(), // dùng tổng giỏ hàng
+                            receiverName: data.receiverName,
+                            receiverPhone: data.receiverPhone,
+                            receiverEmail: data.receiverEmail,
+                            receiverAddress: data.receiverAddress,
+                            note: data.note,
+                            returnUrl: window.location.origin + "/cart-detail/checkout-vnpay-success",
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.status === "success" && result.url) {
+                        // Lưu thông tin đơn hàng tạm vào localStorage (sau thanh toán thành công sẽ submit tiếp)
+                        // localStorage.setItem("pendingOrder", JSON.stringify(data));
+                        window.location.href = result.url;
+                    } else {
+                        showToast(result.message);
+                    }
+                } catch (err) {
+                    console.error("Error fetching API:", err);
+                    showToast("An error occurred while processing VnPay payment.")
+                }
+            }
+        });
+    });
+    function selectPayment(method, element) {
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        element.classList.add('selected');
+        selectedPaymentMethod = method;
+        document.getElementById('paymentMethodInput').value = method;
     }
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = 'translateY(-2px)';
+            }
+        });
+        option.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
     function reloadCart() {
         fetch('/cart/api/get-cart')
             .then(res => res.json())
@@ -233,9 +390,17 @@
                 document.getElementById("total-sum").innerText = `${total.toLocaleString('vi-VN')} VND`;
             })
             .catch(err => {
-                console.error('Lỗi khi lấy giỏ hàng:', err);
+                showToast(err)
             });
     }
+
+    function getCartTotal() {
+        const totalText = document.getElementById("total-sum").innerText;
+        return parseInt(totalText.replace(/[^\d]/g, "")) || 0;
+    }
+</script>
+<script>
+
 </script>
 
 </body>

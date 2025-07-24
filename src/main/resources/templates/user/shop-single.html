@@ -148,7 +148,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="col-lg-5 mt-5">
                     <div class="card mb-3">
                         <img class="card-img img-fluid"
-                             th:src="@{'/productImg/' + ${product.image}}"
+                             th:src="${product.image}"
                              th:alt="${product.name}"
                              id="product-detail"
                              onerror="this.src='/user/img/default-pc.jpg'">

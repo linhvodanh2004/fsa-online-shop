@@ -22,13 +22,13 @@ public class VnPayServiceImpl implements VnPayService {
     private final VnPayConfig vnPayConfig;
 
     @Override
-    public String createVnPayPayment(VnPayRequest vnPayRequest, String ipAddress) {
+    public String createVnPayPayment(VnPayRequest vnPayRequest, String ipAddress, String txtRef) {
         String vnp_Version = vnPayConfig.getVersion();
         String vnp_Command = vnPayConfig.getCommand();
         String vnp_TmnCode = vnPayConfig.getTmnCode();
         String vnp_CurrCode = vnPayConfig.getCurrencyCode();
-        String vnp_TxnRef = VnPayUtil.getRandomNumber(8);
-        String vnp_OrderInfo = vnPayRequest.getOrderInfo();
+        String vnp_TxnRef = txtRef;
+        String vnp_OrderInfo = "Order payment for Gaming Online Shop";
         String vnp_OrderType = vnPayConfig.getOrderType();
         String vnp_Locale = vnPayConfig.getLocale();
         String vnp_ReturnUrl = vnPayConfig.getReturnUrl();

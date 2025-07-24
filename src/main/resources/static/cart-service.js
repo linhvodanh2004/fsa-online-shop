@@ -221,3 +221,8 @@ window.decreaseQuantity = (productId, callback = null) => {
         return window.cartAPI.decreaseQuantity(productId, callback);
     }
 };
+window.showToast = (msg, type = 'error') => {
+    if (window.cartAPI) {
+        return window.cartAPI.showToast(msg, type);
+    }
+}

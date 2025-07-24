@@ -1,0 +1,104 @@
+package fsa.project.online_shop.services.implement;
+
+import fsa.project.online_shop.models.Cart;
+import fsa.project.online_shop.models.Order;
+import fsa.project.online_shop.models.OrderItem;
+import fsa.project.online_shop.models.Product;
+import fsa.project.online_shop.models.constant.OrderStatus;
+import fsa.project.online_shop.repositories.*;
+import fsa.project.online_shop.services.OrderService;
+import fsa.project.online_shop.utils.OrderMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Set;
+
+@RequiredArgsConstructor
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+
+    @Override
+    @Transactional
+    public Order createOrder(Cart cart) {
+        if(!cartRepository.areAllCartItemsValid(cart.getId()) || cart.getCartItems().isEmpty()){
+            throw new IllegalArgumentException("Cart is not valid");
+        }
+        Order order = OrderMapper.fromCartToOrder(cart);
+        orderRepository.save(order);
+        Set<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(orderItem -> {
+            orderItem.setOrder(order);
+            orderItemRepository.save(orderItem);
+            Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
+            if(product != null){
+                product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+                product.setSold(product.getSold() + orderItem.getQuantity());
+                productRepository.save(product);
+            }
+            else{
+                throw new IllegalArgumentException("Product is not available");
+            }
+        });
+        order.setOrderItems(orderItems);
+        order.setCreationTime(LocalDateTime.now());
+        order.setPaymentMethod("COD");
+        order.setStatus(OrderStatus.PENDING);
+        order.setPaymentStatus(false);
+
+        cartItemRepository.deleteByCartId(cart.getId());
+        cart.setCartItems(null);
+        cartRepository.save(cart);
+
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order handleSaveOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void handlePaymentSuccess(Long orderId, String transactionId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        order.setPaymentStatus(true);
+        order.setPaymentTransactionId(transactionId);
+        order.setPaymentDate(LocalDateTime.now());
+        orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void handlePaymentFailed(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        order.setPaymentStatus(false);
+        order.setPaymentTransactionId(null);
+        order.setPaymentDate(null);
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setCancellationTime(LocalDateTime.now());
+        orderRepository.save(order);
+
+        Set<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(orderItem -> {
+            Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
+            if(product != null){
+                product.setQuantity(product.getQuantity() + orderItem.getQuantity());
+                product.setSold(product.getSold() - orderItem.getQuantity());
+                productRepository.save(product);
+            }
+        });
+    }
+}
