@@ -19,4 +19,7 @@ public interface ProductService {
 
     Product saveProduct(Product product);
 
+    Product getProductBySlug(String slug);
+
+    String generateUniqueSlug(String productName, Long productId);
 }

@@ -27,4 +27,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.status = true ORDER BY p.id DESC")
     List<Product> findByCategoryIdAndStatusTrueOrderByIdDesc(@Param("categoryId") Long categoryId);
 
+    Product findBySlug(String slug);
 }

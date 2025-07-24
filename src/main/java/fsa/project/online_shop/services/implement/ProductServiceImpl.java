@@ -3,6 +3,7 @@ package fsa.project.online_shop.services.implement;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.ProductService;
+import fsa.project.online_shop.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,26 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product saveProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public Product getProductBySlug(String slug) {
+        return productRepository.findBySlug(slug);
+    }
+
+    @Override
+    public String generateUniqueSlug(String productName, Long productId) {
+        String baseSlug = SlugUtils.generateSlug(productName);
+
+        // Check if base slug already exists (excluding current product)
+        Product existingProduct = productRepository.findBySlug(baseSlug);
+
+        if (existingProduct == null || existingProduct.getId().equals(productId)) {
+            // Base slug is available, use it
+            return baseSlug;
+        } else {
+            // Base slug exists, append ID for uniqueness
+            return baseSlug + "-" + productId;
+        }
     }
 }

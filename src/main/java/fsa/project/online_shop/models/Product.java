@@ -15,6 +15,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Column(unique = true)
+    private String slug;
+
     private Double price;
     private String image;
 
