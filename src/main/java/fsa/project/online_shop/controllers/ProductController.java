@@ -67,4 +67,9 @@ public class ProductController {
     public String showAboutPage() {
         return "user/about";
     }
+
+    @GetMapping("/privacy")
+    public String showPrivacyPage() {
+        return "user/privacy";
+    }
 }
