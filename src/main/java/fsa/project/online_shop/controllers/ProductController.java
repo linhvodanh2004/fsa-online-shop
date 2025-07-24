@@ -6,6 +6,7 @@ import fsa.project.online_shop.services.CategoryService;
 import fsa.project.online_shop.services.FileService;
 import fsa.project.online_shop.services.ProductService;
 import fsa.project.online_shop.services.UserService;
+import fsa.project.online_shop.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ public class ProductController {
         model.addAttribute("latestProducts", productService.getLatestProducts(9));
         model.addAttribute("featuredProducts", productService.getLatestProducts(3));
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("pageType", "home");
         return "user/index";
     }
 
@@ -131,6 +133,7 @@ public class ProductController {
         model.addAttribute("inStock", inStock);
         model.addAttribute("currentSort", sort);
         model.addAttribute("searchQuery", search);
+        model.addAttribute("pageType", "shop");
 
         return "user/shop";
     }
@@ -142,23 +145,61 @@ public class ProductController {
             return "redirect:/shop";
         }
 
-        model.addAttribute("product", product);
-        List<Product> relatedProducts = productService.getRelatedProducts(
-                product.getCategory().getId(),
-                product.getId()
-        );
-        model.addAttribute("relatedProducts", relatedProducts);
+        // Generate slug if not exists
+        if (product.getSlug() == null || product.getSlug().isEmpty()) {
+            String slug = productService.generateUniqueSlug(product.getName(), product.getId());
+            product.setSlug(slug);
+            productService.saveProduct(product);
+            // Redirect to SEO-friendly URL after generating slug
+            return "redirect:/product/" + product.getSlug();
+        }
 
-        return "user/shop-single";
+        // If slug exists, redirect to SEO-friendly URL
+        return "redirect:/product/" + product.getSlug();
+    }
+
+    @GetMapping("/product/{slug}")
+    public String showProductDetailBySlug(@PathVariable String slug, Model model) {
+        try {
+            Product product = productService.getProductBySlug(slug);
+            if (product == null) {
+                return "redirect:/shop?error=product-not-found";
+            }
+
+            model.addAttribute("product", product);
+
+            // Safe handling of related products
+            List<Product> relatedProducts = null;
+            if (product.getCategory() != null && product.getCategory().getId() != null) {
+                relatedProducts = productService.getRelatedProducts(
+                        product.getCategory().getId(),
+                        product.getId()
+                );
+            }
+
+            if (relatedProducts == null) {
+                relatedProducts = new java.util.ArrayList<>();
+            }
+
+            model.addAttribute("relatedProducts", relatedProducts);
+
+            return "user/shop-single-simple";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/shop?error=server-error";
+        }
     }
 
     @GetMapping("/contact")
-    public String showContactPage() {
+    public String showContactPage(Model model) {
+        model.addAttribute("pageType", "contact");
         return "user/contact";
     }
 
     @GetMapping("/about")
-    public String showAboutPage() {
+    public String showAboutPage(Model model) {
+        model.addAttribute("pageType", "about");
         return "user/about";
     }
 
@@ -279,7 +320,24 @@ public class ProductController {
             e.printStackTrace();
         }
 
-        productService.saveProduct(product);
+        // Save first to get ID, then generate slug
+        Product savedProduct = productService.saveProduct(product);
+        String slug = productService.generateUniqueSlug(name, savedProduct.getId());
+        savedProduct.setSlug(slug);
+        productService.saveProduct(savedProduct);
         return "redirect:/admin/products";
+    }
+
+    @PostMapping("/admin/products/generate-slugs")
+    public String generateSlugsForExistingProducts() {
+        List<Product> products = productService.getAllProducts();
+        for (Product product : products) {
+            if (product.getSlug() == null || product.getSlug().isEmpty()) {
+                String slug = productService.generateUniqueSlug(product.getName(), product.getId());
+                product.setSlug(slug);
+                productService.saveProduct(product);
+            }
+        }
+        return "redirect:/admin/products?success=slugs-generated";
     }
 }
