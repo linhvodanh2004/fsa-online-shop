@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -37,103 +36,6 @@ public class UserController {
     public final CategoryService categoryService;
     private final UserService userService;
     private final FileService fileService;
-
-    @PostMapping("/product/{id}/status")
-    @ResponseBody
-    public ResponseEntity<?> updateProductStatus(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> payload) {
-        Boolean status = (Boolean) payload.get("status");
-        Product product = productService.getProductById(id);
-        product.setStatus(status);
-        productRepository.save(product);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/products")
-    public String adminProductPage(Model model, org.springframework.security.web.csrf.CsrfToken csrfToken) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        model.addAttribute("_csrf", csrfToken);
-        return "admin/admin-product-manager";
-    }
-
-    @GetMapping("products/update/{pid}")
-    public String updateProductPage(@PathVariable Long pid, Model model) {
-        List<Category> categories = categoryService.getAllCategories();
-        Product product = productService.getProductById(pid);
-        model.addAttribute("product", product);
-        model.addAttribute("categories", categories);
-        return "admin/admin-product-update";
-    }
-
-    @PostMapping("products/update/{id}")
-    public String handleUpdateProduct(
-            @PathVariable Long id,
-            @RequestParam String name,
-            @RequestParam Double price,
-            @RequestParam Integer quantity,
-            @RequestParam String description,
-            @RequestParam Long categoryId,
-            @RequestParam(required = false) MultipartFile image
-
-    ) {
-        Product product = productService.getProductById(id);
-        product.setName(name);
-        product.setPrice(price);
-        product.setQuantity(quantity);
-        product.setDescription(description);
-
-        Category category = categoryService.getCategoryById(categoryId);
-        product.setCategory(category);
-
-        try{
-            String fileName = fileService.handleUploadImage(image);
-            product.setImage(fileName);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-
-        productRepository.save(product);
-        return "redirect:/admin/products";
-    }
-
-    @GetMapping("products/add")
-    public String addProductPage(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("product", new Product());
-        return "admin/admin-product-add";
-    }
-
-    @PostMapping("products/add")
-    public String handleAddProduct(
-            @RequestParam String name,
-            @RequestParam Double price,
-            @RequestParam Integer quantity,
-            @RequestParam String description,
-            @RequestParam Long categoryId,
-            @RequestParam(required = false) MultipartFile image) {
-        Product product = new Product();
-        product.setName(name);
-        product.setPrice(price);
-        product.setQuantity(quantity);
-        product.setDescription(description);
-        product.setStatus(true);
-
-        Category category = categoryService.getCategoryById(categoryId);
-        product.setCategory(category);
-
-        try{
-            String fileName = fileService.handleUploadImage(image);
-            product.setImage(fileName);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-        productRepository.save(product);
-        return "redirect:/admin/products";
-    }
 
     // GET mapping for user management page
     @GetMapping("/users")
@@ -330,6 +232,7 @@ public class UserController {
 
         return "admin/admin-user-manager";
     }
+
     
     @GetMapping("/login-ok")
     public String loginOk() {
