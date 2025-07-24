@@ -34,7 +34,9 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/productImg/**", "/resend-code",
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
-            "/cart/**", "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**"
+            "/cart/**", "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**",
+            "/api/**",  // Allow API endpoints for chat
+            "/product/**"  // Allow product slug URLs with /product/ prefix
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
     };
@@ -70,12 +72,8 @@ public class SecurityConfig {
                         auth -> auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers("/admin/**")
-//                                .hasRole(UserRole.ADMIN)
-                                .permitAll()
-                                .anyRequest()
-//                                .authenticated()
-                                .permitAll()
+                                .requestMatchers("/admin/**").permitAll()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(
                         (sessionManagement) -> sessionManagement

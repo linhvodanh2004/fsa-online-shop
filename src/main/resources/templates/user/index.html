@@ -201,7 +201,7 @@
                                 <div class="position-absolute top-0 end-0 m-2">
                                     <span class="badge bg-danger">Latest</span>
                                 </div>
-                                <a th:href="@{/shop-single/{id}(id=${product.id})}"
+                                <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
                                    class="text-decoration-none">
                                     <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
                                         th:text="${product.name}">Product Name</h5>
@@ -258,7 +258,7 @@
                         </div>
                         <div class="card-body p-4">
                             <div class="mb-3">
-                                <a th:href="@{/shop-single/{id}(id=${product.id})}"
+                                <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
                                    class="text-decoration-none">
                                     <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
                                         th:text="${product.name}">Product Name</h5>
