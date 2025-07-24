@@ -8,5 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 public class VnPayRequest {
     private Long amount;
-    private String orderInfo;
+//    private String orderInfo;
+    private String receiverName;
+    private String receiverPhone;
+    private String receiverEmail;
+    private String receiverAddress;
+    private String note;
 }

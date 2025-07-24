@@ -54,4 +54,17 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderItem> orderItems;
+
+    @Column(name = "payment_method")
+    private String paymentMethod; // e.g., "VNPAY", "COD", "MOMO", etc.
+
+    @Column(name = "payment_status")
+    private Boolean paymentStatus;
+
+    @Column(name = "payment_transaction_id")
+    private String paymentTransactionId; // vnp_TransactionNo
+
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
+
 }

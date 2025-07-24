@@ -2,7 +2,12 @@ package fsa.project.online_shop.controllers;
 
 import fsa.project.online_shop.dtos.VnPayRequest;
 import fsa.project.online_shop.dtos.VnPayResponse;
+import fsa.project.online_shop.models.Cart;
+import fsa.project.online_shop.models.Order;
+import fsa.project.online_shop.models.User;
+import fsa.project.online_shop.services.OrderService;
 import fsa.project.online_shop.services.VnPayService;
+import fsa.project.online_shop.utils.SessionUtil;
 import fsa.project.online_shop.utils.VnPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +22,30 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/payment/api")
 @CrossOrigin("*")
 @RequiredArgsConstructor
 public class VnPayController {
     private final VnPayService vnPayService;
-
-    @GetMapping("/create")
+    private final OrderService orderService;
+    private final SessionUtil sessionUtil;
+    @PostMapping("/create")
     public ResponseEntity<?> createPayment(HttpServletRequest request,
                                            @RequestBody VnPayRequest paymentRequest) {
         try {
+            User user = sessionUtil.getUserFromSession();
+            Cart cart = user.getCart();
+            Order order = orderService.createOrder(cart);
+            order.setReceiverEmail(paymentRequest.getReceiverEmail());
+            order.setReceiverName(paymentRequest.getReceiverName());
+            order.setReceiverPhone(paymentRequest.getReceiverPhone());
+            order.setReceiverAddress(paymentRequest.getReceiverAddress());
+            order.setNote(paymentRequest.getNote());
+            order.setPaymentMethod("VNPAY");
+            orderService.handleSaveOrder(order);
             String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
             String vnpayUrl = vnPayService.createVnPayPayment(paymentRequest,
-                    VnPayUtil.getIpAddress(request.getRemoteAddr()));
+                    VnPayUtil.getIpAddress(request.getRemoteAddr()), String.valueOf(order.getId()));
 
             VnPayResponse response = VnPayResponse.builder()
                     .status("success")
@@ -71,18 +87,20 @@ public class VnPayController {
             response.put("transactionStatus", vnp_TransactionStatus);
             switch (paymentStatus) {
                 case 1:
+                    orderService.handlePaymentSuccess(Long.parseLong(vnp_TxnRef), vnp_TransactionNo);
                     response.put("status", "success");
                     response.put("message", "Payment successful");
                     break;
                 case 0:
+                    orderService.handlePaymentFailed(Long.parseLong(vnp_TxnRef));
                     response.put("status", "failed");
                     response.put("message", "Payment failed");
                     break;
                 default:
+                    orderService.handlePaymentFailed(Long.parseLong(vnp_TxnRef));
                     response.put("status", "invalid");
                     response.put("message", "Invalid signature");
             }
-
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("status", "error");

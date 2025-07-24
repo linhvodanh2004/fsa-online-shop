@@ -23,5 +23,14 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             """, nativeQuery = true)
     void updateCartSumById(@Param("cartId") Long cartId);
 
+    @Query("""
+                SELECT COUNT(ci) = 0
+                FROM CartItem ci
+                WHERE ci.cart.id = :cartId
+                AND (ci.quantity > ci.product.quantity OR ci.product.status = false)
+            """)
+    boolean areAllCartItemsValid(@Param("cartId") Long cartId);
+
     Cart findByUser(User user);
+
 }

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Privacy - Gaming Online Shop</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/user/img/favicon.ico">
+
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
+
+    <!-- Slick -->
+    <link rel="stylesheet" type="text/css" href="/user/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Embedded CSS -->
+    <style>
+        /* Privacy Section Styling */
+        .privacy-section {
+            background-color: #f0f4f8; /* Lighter soft white background */
+            color: #000000; /* Black text for contrast on light background */
+            padding: 40px 0;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Soft white glow */
+            position: relative;
+            overflow: hidden; /* Contain floating sparkles */
+        }
+
+        .privacy-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #000000, #000000); /* Solid black gradient */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .privacy-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #000000; /* Black text for readability */
+            margin-bottom: 20px;
+        }
+
+        .privacy-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000000; /* Black for headings */
+            margin-top: 30px;
+            border-bottom: 2px solid #000000; /* Black underline */
+            padding-bottom: 5px;
+        }
+
+        .privacy-section .row > div {
+            transition: transform 0.3s ease; /* Retain float hover effect */
+        }
+
+        .privacy-section .row > div:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Black shadow on hover */
+        }
+
+        /* Floating Sparkles Animation */
+        .privacy-section::before,
+        .privacy-section::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.7); /* White sparkles */
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out; /* Gentler motion */
+        }
+
+        .privacy-section::before {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .privacy-section::after {
+            bottom: 30%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-10px) scale(1.1); opacity: 0.6; }
+            100% { transform: translateY(0) scale(1); opacity: 0.8; }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .privacy-section h1 {
+                font-size: 2rem;
+            }
+            .privacy-section h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .privacy-section h1 {
+                font-size: 1.8rem;
+            }
+            .privacy-section p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Start Top Nav -->
+<div th:replace="~{component/user-navbar :: user-navbar}"></div>
+<!-- Close Top Nav -->
+
+<!-- Header -->
+<div th:replace="~{component/user-header :: user-header}"></div>
+<!-- Close Header -->
+
+<!-- Modal -->
+<div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
+
+<!-- Start Privacy Section -->
+<section class="container py-5 privacy-section">
+    <div class="row text-center pt-5 pb-3">
+        <div class="col-lg-6 m-auto">
+            <h1 class="h1 text-success"><b>Privacy Policy</b></h1>
+            <p>
+                At Gaming Online Shop, we are committed to protecting your privacy while you explore our gaming products. This policy outlines how we collect, use, and safeguard your personal information.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 m-auto">
+            <h2 class="h4">Information Collection</h2>
+            <p>
+                We collect details such as your name, email address, shipping information, and payment details when you place orders, create an account, or subscribe to our gaming newsletter.
+            </p>
+            <h2 class="h4">Usage of Information</h2>
+            <p>
+                Your information is used to process transactions, personalize your shopping experience, send gaming updates, and offer exclusive promotions (with your consent).
+            </p>
+            <h2 class="h4">Data Security</h2>
+            <p>
+                We employ advanced security measures, including encrypted connections, to protect your data and comply with global privacy regulations, ensuring a safe gaming shopping environment.
+            </p>
+            <h2 class="h4">Your Rights</h2>
+            <p>
+                You have the right to access, update, or delete your personal data. Contact us at Group5@gmail.com to exercise these rights or for any privacy concerns.
+            </p>
+        </div>
+    </div>
+</section>
+<!-- End Privacy Section -->
+
+<!-- Start Footer -->
+<div th:replace="~{component/user-footer :: user-footer}"></div>
+<!-- End Footer -->
+
+<!-- Start Script -->
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
+<!-- End Script -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
+</body>
+</html>
