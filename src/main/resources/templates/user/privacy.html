@@ -28,7 +28,7 @@
         /* Privacy Section Styling */
         .privacy-section {
             background-color: #f0f4f8; /* Lighter soft white background */
-            color: #333333; /* Darker text for contrast on light background */
+            color: #000000; /* Black text for contrast on light background */
             padding: 40px 0;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Soft white glow */
@@ -39,7 +39,7 @@
         .privacy-section h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(90deg, #00ff00, #00ccff); /* Neon gradient */
+            background: linear-gradient(90deg, #000000, #000000); /* Solid black gradient */
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -49,31 +49,26 @@
         .privacy-section p {
             font-size: 1.1rem;
             line-height: 1.6;
-            color: #555555; /* Medium gray for readability */
+            color: #000000; /* Black text for readability */
             margin-bottom: 20px;
         }
 
         .privacy-section h2 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #00ff00; /* Neon green for headings */
+            color: #000000; /* Black for headings */
             margin-top: 30px;
-            border-bottom: 2px solid #00ccff; /* Neon blue underline */
+            border-bottom: 2px solid #000000; /* Black underline */
             padding-bottom: 5px;
         }
 
         .privacy-section .row > div {
-            background-color: #ffffff; /* White card background */
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: transform 0.3s ease; /* Retain float hover effect */
         }
 
         .privacy-section .row > div:hover {
             transform: translateY(-5px); /* Lift effect on hover */
-            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.2); /* Enhanced neon shadow on hover */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Black shadow on hover */
         }
 
         /* Floating Sparkles Animation */
@@ -85,7 +80,7 @@
             height: 10px;
             background: rgba(255, 255, 255, 0.7); /* White sparkles */
             border-radius: 50%;
-            animation: float 6s infinite;
+            animation: float 8s infinite ease-in-out; /* Gentler motion */
         }
 
         .privacy-section::before {
@@ -102,7 +97,7 @@
 
         @keyframes float {
             0% { transform: translateY(0) scale(1); opacity: 0.8; }
-            50% { transform: translateY(-20px) scale(1.2); opacity: 0.5; }
+            50% { transform: translateY(-10px) scale(1.1); opacity: 0.6; }
             100% { transform: translateY(0) scale(1); opacity: 0.8; }
         }
 
@@ -113,9 +108,6 @@
             }
             .privacy-section h2 {
                 font-size: 1.3rem;
-            }
-            .privacy-section .row > div {
-                padding: 15px;
             }
         }
 

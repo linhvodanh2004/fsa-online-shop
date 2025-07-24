@@ -162,6 +162,11 @@ public class ProductController {
         return "user/about";
     }
 
+    @GetMapping("/privacy")
+    public String showPrivacyPage() {
+        return "user/privacy";
+    }
+
     // Add missing endpoints for better navigation
     @GetMapping("/shop-category/{id}")
     public String showShopByCategory(@PathVariable Long id, Model model) {
