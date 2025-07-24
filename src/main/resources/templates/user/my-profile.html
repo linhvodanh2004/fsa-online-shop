@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>My Profile - GOS Gaming</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/user/img/favicon.ico">
+
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
+</head>
+
+<body>
+    <!-- Start Top Nav -->
+    <div th:replace="~{component/user-navbar :: user-navbar}"></div>
+    <!-- Close Top Nav -->
+
+    <!-- Header -->
+    <div th:replace="~{component/user-header :: user-header}"></div>
+    <!-- Close Header -->
+
+    <!-- Modal -->
+    <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
+
+    <!-- Start Content Page -->
+    <div class="container-fluid bg-light py-5">
+        <div class="col-md-6 m-auto text-center">
+            <h1 class="h1">My Profile</h1>
+            <p>Manage your personal information and account settings</p>
+        </div>
+    </div>
+
+    <!-- Start Profile Content -->
+    <div class="container py-5">
+        <div class="row">
+            <!-- Profile Sidebar -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="profile-avatar mb-3">
+                            <i class="fas fa-user-circle fa-5x text-success"></i>
+                        </div>
+                        <h5 class="card-title" th:text="${user.fullname}">Full Name</h5>
+                        <p class="card-text text-muted" th:text="${user.email}">email@example.com</p>
+                        <span class="badge bg-success" th:if="${user.provider == 'GOOGLE'}">
+                            <i class="fab fa-google me-1"></i>Google Account
+                        </span>
+                        <span class="badge bg-primary" th:if="${user.provider == null or user.provider == ''}">
+                            <i class="fas fa-user me-1"></i>Local Account
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Account Summary -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Account Summary</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Account Status:</span>
+                            <span class="badge bg-success" th:if="${user.status}">
+                                <i class="fas fa-check-circle me-1"></i>Active
+                            </span>
+                            <span class="badge bg-warning" th:unless="${user.status}">
+                                <i class="fas fa-pause-circle me-1"></i>Suspended
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Member Since:</span>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>2024
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Success/Error Messages -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span th:text="${success}">Success message</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span th:text="${error}">Error message</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Profile Information Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i>Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/my-profile/update}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fullname" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Full Name *
+                                    </label>
+                                    <input type="text" class="form-control" id="fullname" name="fullname"
+                                           th:value="${user.fullname}" required
+                                           placeholder="Enter your full name">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone me-2"></i>Phone Number
+                                    </label>
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                           th:value="${user.phone}"
+                                           placeholder="Enter your phone number (optional)">
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Used for order delivery and support contact
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email Display (Read-only) -->
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" id="email"
+                                               th:value="${user.email}" readonly>
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock text-muted" title="Cannot be changed"></i>
+                                        </span>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Your email is protected and cannot be changed for security reasons
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save me-2"></i>Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Address Management Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Delivery Addresses</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Manage your delivery addresses for faster checkout. You can add multiple addresses and set a default one.
+                        </div>
+
+                        <!-- Default Address Form -->
+                        <form th:action="@{/my-profile/address/update}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="receiverName" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Receiver Name *
+                                    </label>
+                                    <input type="text" class="form-control" id="receiverName" name="receiverName"
+                                           th:value="${user.receiverName != null ? user.receiverName : user.fullname}" required
+                                           placeholder="Full name of receiver">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="receiverPhone" class="form-label">
+                                        <i class="fas fa-phone me-2"></i>Receiver Phone *
+                                    </label>
+                                    <input type="tel" class="form-control" id="receiverPhone" name="receiverPhone"
+                                           th:value="${user.receiverPhone != null ? user.receiverPhone : user.phone}" required
+                                           placeholder="Phone number for delivery">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">
+                                    <i class="fas fa-home me-2"></i>Full Address *
+                                </label>
+                                <textarea class="form-control" id="address" name="address" rows="3" required
+                                          th:text="${user.address}"
+                                          placeholder="Enter your full delivery address (Street, Ward, District, City)"></textarea>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Please provide complete address including street number, ward, district, and city
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary" disabled>
+                                    <i class="fas fa-plus me-2"></i>Add New Address
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save me-2"></i>Save Default Address
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Address List (Future feature) -->
+                        <div class="mt-4">
+                            <h6 class="text-muted mb-3">Saved Addresses</h6>
+                            <div class="alert alert-light">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Multiple address management will be available soon. Currently, you can save one default address.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Change Card (Only for local accounts) -->
+                <div class="card mt-4" th:if="${user.provider == null or user.provider == ''}">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Change Password</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Security Notice:</strong> Password change requires email verification for your account security.
+                        </div>
+
+                        <form th:action="@{/my-profile/change-password}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="currentPassword" class="form-label">
+                                        <i class="fas fa-key me-2"></i>Current Password *
+                                    </label>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                           required placeholder="Enter your current password">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="newPassword" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>New Password *
+                                    </label>
+                                    <input type="password" class="form-control" id="newPassword" name="newPassword"
+                                           required placeholder="Enter new password" minlength="6">
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Minimum 6 characters, include letters and numbers
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">
+                                    <i class="fas fa-check-double me-2"></i>Confirm New Password *
+                                </label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                       required placeholder="Confirm your new password" minlength="6">
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-envelope me-2"></i>
+                                <strong>Email Verification Required:</strong>
+                                After submitting, we'll send a verification email to <strong th:text="${user.email}">your email</strong>.
+                                Click the link in the email to confirm your password change.
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary" onclick="clearPasswordForm()">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Verification Email
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                function clearPasswordForm() {
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                }
+
+                // Password confirmation validation
+                document.getElementById('confirmPassword').addEventListener('input', function() {
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = this.value;
+
+                    if (newPassword !== confirmPassword) {
+                        this.setCustomValidity('Passwords do not match');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+                </script>
+
+                <!-- Account Linking & Security -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-link me-2"></i>Account & Security</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Current Login Method -->
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-3">Current Login Method</h6>
+                            <div class="d-flex align-items-center p-3 border rounded" th:if="${user.provider == 'GOOGLE'}">
+                                <div class="me-3">
+                                    <i class="fab fa-google fa-2x text-danger"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Google Account</h6>
+                                    <small class="text-muted">
+                                        Signed in with <span th:text="${user.email}">email@gmail.com</span>
+                                    </small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>Connected
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center p-3 border rounded" th:if="${user.provider == null or user.provider == ''}">
+                                <div class="me-3">
+                                    <i class="fas fa-user-shield fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">GOS Account</h6>
+                                    <small class="text-muted">
+                                        Local account with <span th:text="${user.email}">email@example.com</span>
+                                    </small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-shield-alt me-1"></i>Secure
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Linking Options -->
+                        <div class="mb-3" th:if="${user.provider == null or user.provider == ''}">
+                            <h6 class="text-muted mb-3">Link Google Account</h6>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Coming Soon:</strong> Link your Google account for easier login access.
+                            </div>
+
+                            <button class="btn btn-outline-danger" disabled>
+                                <i class="fab fa-google me-2"></i>Link Google Account
+                            </button>
+                        </div>
+
+                        <!-- Security Notice -->
+                        <div class="alert alert-light">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Security:</strong> Your account is protected with industry-standard security measures.
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- End Profile Content -->
+
+    <!-- Start Footer -->
+    <div th:replace="~{component/user-footer :: user-footer}"></div>
+    <!-- End Footer -->
+
+    <!-- GOS Chat Widget Component -->
+    <div th:replace="~{component/chat-widget :: chat-widget('profile', '👤', 'GOS Profile Support', '● Hỗ trợ tài khoản', '👤 <strong>Hỗ trợ tài khoản GOS!</strong><br>Tôi có thể giúp bạn:<br>• Cập nhật thông tin cá nhân<br>• Quản lý tài khoản<br>• Bảo mật & quyền riêng tư<br>• Liên kết tài khoản<br><br>Bạn cần hỗ trợ gì? 😊')}"></div>
+
+    <!-- Start Script -->
+    <script src="/user/js/jquery-1.11.0.min.js"></script>
+    <script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/user/js/bootstrap.bundle.min.js"></script>
+    <script src="/user/js/templatemo.js"></script>
+    <script src="/user/js/custom.js"></script>
+    <!-- End Script -->
+</body>
+
+</html>

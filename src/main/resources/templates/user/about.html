@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <title>About Us - Gaming Online Shop</title>
+    <title>About GOS - Gaming Online Shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -179,6 +179,9 @@
 <!-- Start Footer -->
 <div th:replace="~{component/user-footer :: user-footer}"></div>
 <!-- End Footer -->
+
+<!-- GOS Chat Widget Component -->
+<div th:replace="~{component/chat-widget :: chat-widget('about', 'ℹ️', 'GOS About Support', '● Thông tin công ty', 'ℹ️ <strong>Chào mừng đến GOS Gaming!</strong><br>Bạn muốn biết thêm về chúng tôi?<br>• Lịch sử phát triển<br>• Đội ngũ chuyên nghiệp<br>• Tầm nhìn & sứ mệnh<br>• Cơ sở vật chất<br><br>Hãy hỏi tôi bất cứ điều gì! 😊')}"></div>
 
 <!-- Start Script -->
 <script src="/user/js/jquery-1.11.0.min.js"></script>

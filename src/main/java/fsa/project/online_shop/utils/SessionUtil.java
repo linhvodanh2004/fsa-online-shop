@@ -39,4 +39,16 @@ public class SessionUtil {
         HttpSession session = request.getSession(true);
         session.setAttribute("cart", cartMap);
     }
+
+    /**
+     * Update session user information after profile update
+     */
+    public void updateSessionUserInfo(User user) {
+        HttpSession session = request.getSession(false);
+        if (session != null && user != null) {
+            session.setAttribute("fullname", user.getFullname());
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("userId", user.getId());
+        }
+    }
 }

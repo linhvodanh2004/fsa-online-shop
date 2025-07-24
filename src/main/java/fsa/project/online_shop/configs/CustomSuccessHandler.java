@@ -64,10 +64,12 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             user = userService.findByEmail(email);
         }
         else {
-            String username = authentication.getName();
-            user = userService.findByUsername(username);
+            // For form login, authentication.getName() returns the email (from CustomUserDetailsService)
+            String email = authentication.getName();
+            user = userService.findByEmail(email);
         }
-        logger.info("User '{}' logged in with authorities: {}", user.getUsername(), authentication.getAuthorities());
+        logger.info("User '{}' (ID: {}, Email: {}, Provider: {}) logged in with authorities: {}",
+                user.getUsername(), user.getId(), user.getEmail(), user.getProvider(), authentication.getAuthorities());
         session.setAttribute("fullname", user.getFullname());
         session.setAttribute("username", user.getUsername());
         session.setAttribute("userId", user.getId());

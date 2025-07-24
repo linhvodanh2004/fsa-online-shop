@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>PC World - Product Listing Page</title>
+    <title>GOS - Gaming PCs & Accessories</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,6 +12,113 @@
     <link rel="stylesheet" href="/user/css/bootstrap.min.css">
     <link rel="stylesheet" href="/user/css/templatemo.css">
     <link rel="stylesheet" href="/user/css/custom.css">
+
+    <!-- Shop Page Custom Styles -->
+    <style>
+        .product-item {
+            transition: all 0.3s ease;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .filter-section {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-check-input:checked {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        /* Price Range Slider Styles */
+        .price-range-container {
+            padding: 10px 0;
+        }
+
+        .range-slider {
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .range-slider input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 5px 0;
+        }
+
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #59ab6e;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .range-slider input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #59ab6e;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .badge {
+            font-size: 0.75em;
+        }
+
+        .product-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-wap:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .opacity-50 {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        #sortSelect {
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+        }
+
+        #sortSelect:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+        .card-img {
+            height: 250px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .card-img {
+                height: 200px;
+            }
+        }
+    </style>
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
@@ -35,12 +142,26 @@ https://templatemo.com/tm-559-zay-shop
     <div th:replace="~{component/user-header :: user-header}"></div>
     <!-- Close Header -->
 
-    <!-- Modal -->
+    <!-- Search Modal -->
     <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
+
 
 
     <!-- Start Content -->
     <div class="container py-5">
+        <!-- Breadcrumb -->
+        <div class="row" th:if="${selectedCategory != null}">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/shop}">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" th:text="${selectedCategory.name}">Category</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
         <div class="row">
 
             <div class="col-lg-3">
@@ -67,24 +188,22 @@ https://templatemo.com/tm-559-zay-shop
                     </div>
                 </div>
 
-                <!-- Price Range Filter -->
+                <!-- Price Range Slider -->
                 <div class="filter-section mb-4">
                     <h5 class="mb-3">Price Range</h5>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input price-filter" type="checkbox" value="0-500" id="price1">
-                        <label class="form-check-label" for="price1">Under $500</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input price-filter" type="checkbox" value="500-1000" id="price2">
-                        <label class="form-check-label" for="price2">$500 - $1000</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input price-filter" type="checkbox" value="1000-2000" id="price3">
-                        <label class="form-check-label" for="price3">$1000 - $2000</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input price-filter" type="checkbox" value="2000-999999" id="price4">
-                        <label class="form-check-label" for="price4">Above $2000</label>
+                    <div class="price-range-container">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span id="minPriceLabel">$0</span>
+                            <span id="maxPriceLabel">$3000</span>
+                        </div>
+                        <div class="range-slider">
+                            <input type="range" id="minPrice" min="0" max="3000" value="0" step="50" class="form-range">
+                            <input type="range" id="maxPrice" min="0" max="3000" value="3000" step="50" class="form-range">
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted">Min: $<span id="minPriceValue">0</span></small>
+                            <small class="text-muted">Max: $<span id="maxPriceValue">3000</span></small>
+                        </div>
                     </div>
                 </div>
 
@@ -102,37 +221,17 @@ https://templatemo.com/tm-559-zay-shop
                 </div>
 
                 <!-- Clear Filters Button -->
-                <button type="button" class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                <button type="button" class="btn btn-outline-secondary btn-sm w-100" id="clearFilters">
                     <i class="fa fa-refresh"></i> Clear All Filters
                 </button>
 
-                <ul class="list-unstyled templatemo-accordion mt-4">
-                    <li class="pb-3">
-                    <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                            Price Range
-                            <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
-                        </a>
-                        <ul id="collapseTwo" class="collapse list-unstyled pl-3">
-                            <li><a class="text-decoration-none" href="#">Under $500</a></li>
-                            <li><a class="text-decoration-none" href="#">$500 - $1000</a></li>
-                            <li><a class="text-decoration-none" href="#">$1000 - $2000</a></li>
-                            <li><a class="text-decoration-none" href="#">Above $2000</a></li>
-                        </ul>
-                    </li>
-                    <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                            Brands
-                            <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
-                        </a>
-                        <ul id="collapseThree" class="collapse list-unstyled pl-3">
-                            <li><a class="text-decoration-none" href="#">ASUS</a></li>
-                            <li><a class="text-decoration-none" href="#">MSI</a></li>
-                            <li><a class="text-decoration-none" href="#">Intel</a></li>
-                            <li><a class="text-decoration-none" href="#">AMD</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                <!-- Filter Results Summary -->
+                <div class="mt-3 p-2 bg-light rounded" id="filterSummary" style="display: none;">
+                    <small class="text-muted">
+                        <i class="fa fa-filter"></i>
+                        <span id="filteredCount">0</span> products found
+                    </small>
+                </div>
             </div>
 
             <div class="col-lg-9">
@@ -142,21 +241,23 @@ https://templatemo.com/tm-559-zay-shop
                             <li class="list-inline-item">
                                 <a class="h3 text-dark text-decoration-none mr-3" th:href="@{/shop}">All Products</a>
                             </li>
-                            <li class="list-inline-item">
-                                <a class="h3 text-dark text-decoration-none mr-3" href="#">Gaming PCs</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="h3 text-dark text-decoration-none" href="#">Laptops</a>
+                            <li class="list-inline-item" th:if="${selectedCategory != null}">
+                                <span class="h3 text-success mr-3" th:text="'> ' + ${selectedCategory.name}">Selected Category</span>
                             </li>
                         </ul>
+                        <div class="text-muted">
+                            <small>
+                                Showing <span id="visibleCount" th:text="${#lists.size(products)}">0</span>
+                                of <span id="totalCount" th:text="${#lists.size(products)}">0</span> products
+                            </small>
+                        </div>
                     </div>
                     <div class="col-md-6 pb-4">
-                        <div class="d-flex">
-                            <select class="form-control">
-                                <option>Featured</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
-                                <option>Name: A to Z</option>
+                        <div class="d-flex align-items-center">
+                            <label class="me-2 text-muted">Sort by:</label>
+                            <select class="form-control" id="sortSelect">
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
                             </select>
                         </div>
                     </div>
@@ -169,7 +270,23 @@ https://templatemo.com/tm-559-zay-shop
                          th:data-category="${product.category.id}"
                          th:data-price="${product.price}"
                          th:data-stock="${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}">
-                        <div class="card mb-4 product-wap rounded-0">
+                        <div class="card mb-4 product-wap rounded-0 position-relative">
+                            <!-- Stock Badge -->
+                            <div class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+                                <span th:if="${product.quantity > 0}"
+                                      class="badge bg-success">
+                                    <i class="fa fa-check"></i> In Stock
+                                </span>
+                                <span th:if="${product.quantity == 0}"
+                                      class="badge bg-danger">
+                                    <i class="fa fa-times"></i> Out of Stock
+                                </span>
+                                <span th:if="${product.quantity > 0 && product.quantity <= 5}"
+                                      class="badge bg-warning text-dark mt-1 d-block">
+                                    <i class="fa fa-exclamation-triangle"></i> Low Stock
+                                </span>
+                            </div>
+
                             <div class="card rounded-0">
                                 <img class="card-img rounded-0 img-fluid"
                                      th:src="@{'/productImg/' + ${product.image}}"
@@ -177,38 +294,64 @@ https://templatemo.com/tm-559-zay-shop
                                      onerror="this.src='/user/img/shop_01.jpg'">
                                 <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                     <ul class="list-unstyled">
-                                        <li><a class="btn btn-success text-white" href="#"><i class="far fa-heart"></i></a></li>
-                                        <li><a class="btn btn-success text-white mt-2" th:href="@{'/shop-single/' + ${product.id}}"><i class="far fa-eye"></i></a></li>
-                                        <li><a class="btn btn-success text-white mt-2" href="#"><i class="fas fa-cart-plus"></i></a></li>
+                                        <li><a class="btn btn-success text-white" href="#" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                        <li><a class="btn btn-success text-white mt-2" th:href="@{'/shop-single/' + ${product.id}}" title="View Details"><i class="far fa-eye"></i></a></li>
+                                        <li><a class="btn btn-success text-white mt-2" href="#" title="Add to Cart"
+                                               th:class="${product.quantity > 0} ? 'btn btn-success text-white mt-2' : 'btn btn-secondary text-white mt-2'"
+                                               th:onclick="${product.quantity > 0} ? '' : 'return false;'">
+                                            <i class="fas fa-cart-plus"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <a th:href="@{'/shop-single/' + ${product.id}}" class="h3 text-decoration-none" th:text="${product.name}">Product Name</a>
-                                <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
-                                    <li th:text="${product.category.name}">Category</li>
-                                    <li class="pt-2">
-                                        <span class="badge bg-info text-dark">In Stock: <span th:text="${product.quantity}">0</span></span>
-                                    </li>
-                                </ul>
-                                <ul class="w-100 list-unstyled d-flex justify-content-between mb-0 mt-2">
-                                    <li><span class="badge bg-success">Sold: <span th:text="${product.sold}">0</span></span></li>
-                                    <li class="pt-2">
-                                        <span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
-                                        <span class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
-                                        <span class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
-                                    </li>
-                                </ul>
-                                <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                    <li>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
+                                <a th:href="@{'/shop-single/' + ${product.id}}"
+                                   class="h5 text-decoration-none d-block mb-2"
+                                   th:text="${product.name}"
+                                   th:title="${product.name}">Product Name</a>
+
+                                <!-- Category & Stock Info -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted" th:text="${product.category.name}">Category</small>
+                                    <small class="text-muted">
+                                        <span th:if="${product.quantity > 0}" class="text-success">
+                                            <i class="fa fa-check-circle"></i> <span th:text="${product.quantity}">0</span> left
+                                        </span>
+                                        <span th:if="${product.quantity == 0}" class="text-danger">
+                                            <i class="fa fa-times-circle"></i> Out of stock
+                                        </span>
+                                    </small>
+                                </div>
+
+                                <!-- Sales Info -->
+                                <div class="mb-2">
+                                    <span class="badge bg-success me-1">
+                                        <i class="fa fa-shopping-cart"></i> <span th:text="${product.sold ?: 0}">0</span> sold
+                                    </span>
+                                    <span th:if="${product.quantity > 0 && product.quantity <= 5}"
+                                          class="badge bg-warning text-dark">
+                                        <i class="fa fa-fire"></i> Almost gone!
+                                    </span>
+                                </div>
+
+                                <!-- Rating -->
+                                <div class="d-flex justify-content-center mb-2">
+                                    <div class="text-warning">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
                                         <i class="text-muted fa fa-star"></i>
-                                    </li>
-                                </ul>
-                                <p class="text-center mb-0" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}">$0.00</p>
+                                        <small class="text-muted ms-1">(4.0)</small>
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="text-center">
+                                    <h5 class="text-success mb-0 fw-bold"
+                                        th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}">$0.00</h5>
+                                    <!-- Add discount price if needed -->
+                                    <!--<small class="text-muted text-decoration-line-through">$1,999.99</small>-->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -343,12 +486,340 @@ https://templatemo.com/tm-559-zay-shop
     <div th:replace="~{component/user-footer :: user-footer}"></div>
     <!-- End Footer -->
 
+    <!-- GOS Chat Widget Component -->
+    <div th:replace="~{component/chat-widget :: chat-widget('shop', '🛒', 'GOS Shop Support', '● Tư vấn mua sắm', '🛒 <strong>Chào mừng đến GOS Shop!</strong><br>Tôi có thể giúp bạn:<br>• Tìm sản phẩm phù hợp<br>• So sánh giá cả<br>• Thông tin khuyến mãi<br>• Hỗ trợ đặt hàng<br><br>Bạn đang tìm sản phẩm gì? 😊')}"></div>
+
+
     <!-- Start Script -->
     <script src="/user/js/jquery-1.11.0.min.js"></script>
     <script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
     <script src="/user/js/bootstrap.bundle.min.js"></script>
     <script src="/user/js/templatemo.js"></script>
     <script src="/user/js/custom.js"></script>
+
+    <!-- Vanilla JS Shop Filter Script (No jQuery conflicts) -->
+    <script>
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Test basic functionality
+            const products = document.querySelectorAll('.product-item');
+            const categoryFilters = document.querySelectorAll('.category-filter');
+
+            const stockFilters = document.querySelectorAll('.stock-filter');
+            const priceFilters = document.querySelectorAll('.price-filter'); // Add missing priceFilters
+
+
+
+            // Test if elements exist
+            if (products.length === 0) {
+                console.error('❌ No products found! Check HTML structure.');
+                return;
+            }
+
+            if (categoryFilters.length === 0) {
+                console.error('❌ No category filters found! Check HTML structure.');
+                return;
+            }
+
+
+
+            // Price range slider functionality
+            const minPriceSlider = document.getElementById('minPrice');
+            const maxPriceSlider = document.getElementById('maxPrice');
+            const minPriceLabel = document.getElementById('minPriceLabel');
+            const maxPriceLabel = document.getElementById('maxPriceLabel');
+            const minPriceValue = document.getElementById('minPriceValue');
+            const maxPriceValue = document.getElementById('maxPriceValue');
+
+            function updatePriceLabels() {
+                const minVal = parseInt(minPriceSlider.value);
+                const maxVal = parseInt(maxPriceSlider.value);
+
+                // Ensure min doesn't exceed max
+                if (minVal >= maxVal) {
+                    minPriceSlider.value = maxVal - 50;
+                }
+
+                // Ensure max doesn't go below min
+                if (maxVal <= minVal) {
+                    maxPriceSlider.value = minVal + 50;
+                }
+
+                const finalMin = parseInt(minPriceSlider.value);
+                const finalMax = parseInt(maxPriceSlider.value);
+
+                minPriceLabel.textContent = '$' + finalMin;
+                maxPriceLabel.textContent = '$' + finalMax;
+                minPriceValue.textContent = finalMin;
+                maxPriceValue.textContent = finalMax;
+            }
+
+            minPriceSlider.addEventListener('input', function() {
+                updatePriceLabels();
+                filterProducts();
+            });
+
+            maxPriceSlider.addEventListener('input', function() {
+                updatePriceLabels();
+                filterProducts();
+            });
+
+            // Initialize
+            updatePriceLabels();
+            updateProductCount();
+
+
+
+
+
+            // Category filter functionality - FIXED LOGIC
+            categoryFilters.forEach(function(filter) {
+                filter.addEventListener('change', function() {
+                    // Handle "All Categories" special case
+                    if (this.value === 'all') {
+                        if (this.checked) {
+                            // Uncheck all other category filters
+                            categoryFilters.forEach(function(f) {
+                                if (f.value !== 'all') {
+                                    f.checked = false;
+                                }
+                            });
+                        }
+                    } else {
+                        // If any specific category is selected, uncheck "All Categories"
+                        const allCategoriesFilter = document.getElementById('categoryAll');
+                        if (allCategoriesFilter && this.checked) {
+                            allCategoriesFilter.checked = false;
+                        }
+                    }
+
+                    // Immediate trigger like sort
+                    filterProducts();
+                });
+            });
+
+            // Price and stock filter functionality
+            const allFilters = [...priceFilters, ...stockFilters];
+            allFilters.forEach(function(filter) {
+                filter.addEventListener('change', function() {
+                    setTimeout(function() {
+                        filterProducts();
+                    }, 100);
+                });
+            });
+
+            // Sort functionality - Direct trigger
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    // Directly trigger sort for immediate response
+                    sortProducts();
+                });
+            }
+
+            // Backup event delegation
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.id === 'sortSelect') {
+                    sortProducts();
+                }
+            });
+
+            // Clear filters
+            const clearButton = document.getElementById('clearFilters');
+            if (clearButton) {
+                clearButton.addEventListener('click', function() {
+
+                    // Clear all filters
+                    [...categoryFilters, ...stockFilters].forEach(function(filter) {
+                        filter.checked = false;
+                    });
+
+                    // Set defaults
+                    const categoryAll = document.getElementById('categoryAll');
+                    const inStock = document.getElementById('inStock');
+                    if (categoryAll) categoryAll.checked = true;
+                    if (inStock) inStock.checked = true;
+                    if (sortSelect) sortSelect.value = 'price-low';
+
+                    // Reset price range
+                    if (minPriceSlider) minPriceSlider.value = 0;
+                    if (maxPriceSlider) maxPriceSlider.value = 3000;
+                    updatePriceLabels();
+
+                    setTimeout(function() {
+                        filterProducts();
+                    }, 100);
+                });
+            }
+
+
+
+            function filterProducts() {
+                // Check if "All Categories" is selected
+                const allCategoriesFilter = document.getElementById('categoryAll');
+                const showAllCategories = allCategoriesFilter && allCategoriesFilter.checked;
+
+                // Get selected filters
+                const selectedCategories = Array.from(categoryFilters)
+                    .filter(f => f.checked && f.value !== 'all')
+                    .map(f => f.value);
+
+                const selectedStock = Array.from(stockFilters)
+                    .filter(f => f.checked)
+                    .map(f => f.value);
+
+                let visibleCount = 0;
+
+                // Filter each product
+                products.forEach(function(product) {
+                    let showProduct = true;
+
+                    // Get product data
+                    const productCategory = product.dataset.category;
+                    const productPrice = parseFloat(product.dataset.price);
+                    const productStock = product.dataset.stock;
+                    const productName = product.querySelector('.card-body a').textContent.trim();
+
+                    // Category filter
+                    if (!showAllCategories && selectedCategories.length > 0) {
+                        // Convert both to strings for comparison
+                        const productCategoryStr = String(productCategory);
+                        const selectedCategoriesStr = selectedCategories.map(String);
+
+                        if (selectedCategoriesStr.indexOf(productCategoryStr) === -1) {
+                            showProduct = false;
+                        }
+                    }
+
+                    // Price range filter (slider)
+                    const minPrice = parseInt(document.getElementById('minPrice').value);
+                    const maxPrice = parseInt(document.getElementById('maxPrice').value);
+
+                    if (showProduct && (productPrice < minPrice || productPrice > maxPrice)) {
+                        showProduct = false;
+                    }
+
+                    // Stock filter
+                    if (selectedStock.length > 0 && showProduct) {
+                        if (selectedStock.indexOf(productStock) === -1) {
+                            showProduct = false;
+                        }
+                    }
+
+                    // Show/hide product
+                    if (showProduct) {
+                        product.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+
+                // Apply sorting immediately after filtering
+                setTimeout(function() {
+                    sortProducts();
+                }, 10); // Tiny delay to ensure DOM is ready
+
+                // Update counts
+                setTimeout(function() {
+                    updateProductCount();
+                    updateFilterSummary();
+                }, 50);
+            }
+
+
+
+            function sortProducts() {
+                const sortSelect = document.getElementById('sortSelect');
+                if (!sortSelect) return;
+
+                const sortValue = sortSelect.value;
+
+                // Try different selectors to find the right container
+                let productContainer = document.querySelector('.col-lg-9 > .row:nth-of-type(2)');
+                if (!productContainer) {
+                    productContainer = document.querySelector('.col-lg-9 .row:last-child');
+                }
+                if (!productContainer) {
+                    productContainer = products[0]?.parentElement;
+                }
+
+                if (!productContainer) return;
+
+                // Get all visible products
+                const visibleProducts = Array.from(products).filter(p => p.style.display !== 'none');
+
+                if (visibleProducts.length === 0) return;
+
+                // Sort products based on selected option
+                visibleProducts.sort(function(a, b) {
+                    const priceA = parseFloat(a.dataset.price);
+                    const priceB = parseFloat(b.dataset.price);
+
+                    if (sortValue === 'price-low') {
+                        return priceA - priceB; // Low to High
+                    } else if (sortValue === 'price-high') {
+                        return priceB - priceA; // High to Low
+                    }
+
+                    return 0; // No sorting
+                });
+
+                // DETACH all products first
+                const allProducts = Array.from(products);
+                allProducts.forEach(function(product) {
+                    if (product.parentNode) {
+                        product.parentNode.removeChild(product);
+                    }
+                });
+
+                // RE-INSERT in sorted order
+                visibleProducts.forEach(function(product) {
+                    productContainer.appendChild(product);
+                });
+
+                // Add hidden products at end
+                const hiddenProducts = Array.from(products).filter(p => p.style.display === 'none');
+                hiddenProducts.forEach(function(product) {
+                    productContainer.appendChild(product);
+                });
+
+                // Force DOM reflow
+                productContainer.offsetHeight;
+            }
+
+            function updateProductCount() {
+                setTimeout(function() {
+                    const visibleCount = Array.from(products).filter(p => p.style.display !== 'none').length;
+                    const totalCount = products.length;
+
+                    const visibleCountEl = document.getElementById('visibleCount');
+                    const totalCountEl = document.getElementById('totalCount');
+
+                    if (visibleCountEl) visibleCountEl.textContent = visibleCount;
+                    if (totalCountEl) totalCountEl.textContent = totalCount;
+                }, 100);
+            }
+
+            function updateFilterSummary() {
+                setTimeout(function() {
+                    const visibleCount = Array.from(products).filter(p => p.style.display !== 'none').length;
+                    const totalCount = products.length;
+
+                    const filteredCountEl = document.getElementById('filteredCount');
+                    const filterSummaryEl = document.getElementById('filterSummary');
+
+                    if (visibleCount < totalCount) {
+                        if (filteredCountEl) filteredCountEl.textContent = visibleCount;
+                        if (filterSummaryEl) filterSummaryEl.style.display = 'block';
+                    } else {
+                        if (filterSummaryEl) filterSummaryEl.style.display = 'none';
+                    }
+                }, 100);
+            }
+        });
+    </script>
     <!-- End Script -->
 </body>
 

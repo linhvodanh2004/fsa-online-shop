@@ -44,4 +44,14 @@ public class ProductServiceImpl implements ProductService {
                 PageRequest.of(0, 4)
         );
     }
+
+    @Override
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productRepository.findByCategoryIdAndStatusTrueOrderByIdDesc(categoryId);
+    }
+
+    @Override
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
 }

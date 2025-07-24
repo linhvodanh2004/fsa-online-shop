@@ -1,6 +1,7 @@
 package fsa.project.online_shop.repositories;
 
 import fsa.project.online_shop.models.Cart;
+import fsa.project.online_shop.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             """, nativeQuery = true)
     void updateCartSumById(@Param("cartId") Long cartId);
 
+    Cart findByUser(User user);
 }
