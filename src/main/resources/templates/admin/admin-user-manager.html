@@ -119,7 +119,7 @@
                                     <tr th:each="user : ${users}"
                                         th:classappend="${!user.status} ? 'opacity-50'"
                                         style="cursor: pointer;"
-                                        th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'">
+                                        th:onclick="'location.href=\'/admin/users/update-user/' + ${user.id} + '\';'">
                                         <td>
                                             <div class="user-avatar"
                                                  th:text="${#strings.substring(user.fullname != null ? user.fullname : user.username, 0, 1).toUpperCase()}">
@@ -164,7 +164,7 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">
+                                    <tr style="cursor: pointer;" onclick="location.href='/admin/users/add-user';">
                                         <td colspan="9" style="text-align: center;">
                                             <i data-feather="plus"></i>
                                         </td>

@@ -1,11 +1,12 @@
 <nav id="sidebar" class="sidebar js-sidebar" th:fragment="admin-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="/admin">
+        <a class="sidebar-brand" href="/admin/dashboard">
 					<span class="sidebar-brand-text align-middle">
 						Gaming Online Shop
 						<sup><small class="badge bg-primary text-uppercase">DASHBOARD</small></sup>
 					</span>
-            <svg class="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5"
+            <svg class="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none"
+                 stroke="#FFFFFF" stroke-width="1.5"
                  stroke-linecap="square" stroke-linejoin="miter" color="#FFFFFF" style="margin-left: -3px">
                 <path d="M12 4L20 8.00004L12 12L4 8.00004L12 4Z"></path>
                 <path d="M20 12L12 16L4 12"></path>
@@ -14,11 +15,31 @@
         </a>
         <div class="sidebar-user">
             <div class="d-flex justify-content-center">
-                <div class="flex-shrink-0">
-                    <img src="/admin/img/avatars/man-round-icon.webp" class="avatar img-fluid rounded me-1" alt="Charles Hall" />
+                <div class="user-avatar" style="width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			object-fit: cover;
+			background-color: #f8f9fa;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+			color: #6c757d;
+			margin: 0 auto;"
+                     th:text="${#strings.substring(session.fullname != null ? session.fullname : session.username, 0, 1)
+                     .toUpperCase()}">
                 </div>
                 <div class="flex-grow-1 ps-2">
-                    <span class="sidebar-user-title">
+                    <span class="sidebar-user-title text-truncate " style="max-width: 120px; display: inline-block;"
+                          th:if="${session.provider == 'LOCAL'}"
+                          th:text="${session.username}"
+                          th:title="${session.username}">>
+                        Username
+                    </span>
+                    <span class="sidebar-user-title text-truncate " style="max-width: 120px; display: inline-block;"
+                          th:if="${session.provider != 'LOCAL'}"
+                          th:text="${session.email}"
+                          th:title="${session.email}">>
                         Username
                     </span>
                     <div class="sidebar-user-subtitle">Administrator</div>
@@ -29,9 +50,9 @@
             <li class="sidebar-header">
                 Facility
             </li>
-            <li class="sidebar-item active">
-                <a href="/admin" class="sidebar-link">
-                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
+            <li class="sidebar-item">
+                <a href="/admin/dashboard" class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                 </a>
             </li>
 
@@ -48,15 +69,16 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/category-manager}">
+                <a class="sidebar-link" th:href="@{/admin/categories}">
                     <i class="align-middle" data-feather="list"></i> <span class="align-middle">Categories</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-invoice.html">
+                <a class="sidebar-link" th:href="@{/admin/orders}">
                     <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Orders</span>
                 </a>
             </li>
+        </ul>
     </div>
 </nav>

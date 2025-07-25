@@ -38,7 +38,7 @@ public class UserController {
     private final FileService fileService;
 
     // GET mapping for user management page
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public String getUserManagementPage(Model model) {
         Page<User> userPage = userService.getAllUsers(Pageable.unpaged());
         List<User> users = userPage.getContent();
@@ -47,14 +47,14 @@ public class UserController {
     }
 
     // GET mapping for add user page
-    @GetMapping("/add-user")
+    @GetMapping("/admin/users/add-user")
     public String getAddUserPage(Model model) {
         model.addAttribute("user", new User());
         return "admin/admin-user-add";
     }
 
     // GET mapping for update user page
-    @GetMapping("/update-user/{id}")
+    @GetMapping("/admin/users/update-user/{id}")
     public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
         User user = userService.findById(id);
         if (user == null) {
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     // POST mapping for updating user status (AJAX)
-    @PostMapping("/user/{id}/status")
+    @PostMapping("/admin/users/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateUserStatus(@PathVariable("id") Long id,
                                               @RequestBody Map<String, Boolean> statusRequest) {
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     // DELETE mapping for deleting user (AJAX)
-    @DeleteMapping("/user/{id}/delete")
+    @DeleteMapping("/admin/users/{id}/delete")
     @ResponseBody
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
@@ -113,7 +113,7 @@ public class UserController {
     }
 
     // POST mapping for creating new user
-    @PostMapping("/add-user")
+    @PostMapping("/admin/users/add-user")
     public String addUser(@ModelAttribute("user") User user,
                           RedirectAttributes redirectAttributes) {
         try {
@@ -133,7 +133,7 @@ public class UserController {
     }
 
     // POST mapping for updating user
-    @PostMapping("/update-user/{id}")
+    @PostMapping("/admin/users/update-user/{id}")
     public String updateUser(@PathVariable("id") Long id,
                              @ModelAttribute("user") User user,
                              RedirectAttributes redirectAttributes) {
@@ -169,7 +169,7 @@ public class UserController {
     }
 
     // GET mapping with search, filter, and pagination parameters
-    @GetMapping("/users/search")
+    @GetMapping("/admin/users/search")
     public String searchUsers(@RequestParam(value = "query", required = false) String query,
                               @RequestParam(value = "role", required = false) String role,
                               @RequestParam(value = "provider", required = false) String provider,
@@ -231,16 +231,5 @@ public class UserController {
         model.addAttribute("isLast", userPage.isLast());
 
         return "admin/admin-user-manager";
-    }
-
-    
-    @GetMapping("/login-ok")
-    public String loginOk() {
-        return "redirect:/?success=login-ok";
-    }
-
-    @GetMapping("/login-failed")
-    public String loginFailed() {
-        return "redirect:/?error=login-failed";
     }
 }

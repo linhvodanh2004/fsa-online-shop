@@ -141,13 +141,13 @@
 															data-feather="toggle-right"
 															style="cursor:pointer; color: green;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 														<i class="align-middle" th:unless="${product.status}"
 															data-feather="toggle-left"
 															style="cursor:pointer; color: red;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 													</span>
 												</td>
@@ -248,7 +248,7 @@
 			}
 		}
 
-		function toggleStatus(icon) {
+		function toggleProductStatus(icon) {
 			const currentStatus = icon.getAttribute('data-status') === 'true';
 			const productId = icon.getAttribute('data-id');
 			const newStatus = !currentStatus;
@@ -256,20 +256,20 @@
 			updateRowOpacity(icon, newStatus);
 
 			// Get CSRF token and header name from meta tags
-			const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
-			const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
-			const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-			const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
+			// const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+			// const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+			// const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+			// const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
 
 			// Build headers object
 			const headers = {
 				'Content-Type': 'application/json'
 			};
-			if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
-				headers[csrfHeader] = csrfToken;
-			}
+			// if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
+			// 	headers[csrfHeader] = csrfToken;
+			// }
 
-			fetch(`/admin/product/${productId}/status`, {
+			fetch(`/admin/products/${productId}/status`, {
 				method: 'POST',
 				headers: headers,
 				body: JSON.stringify({ status: newStatus })
@@ -293,8 +293,8 @@
 					updateRowOpacity(icon, currentStatus);
 				});
 		}
-
 	</script>
+	<script src="/admin/js/custom.js"></script>
 </body>
 
 </html>

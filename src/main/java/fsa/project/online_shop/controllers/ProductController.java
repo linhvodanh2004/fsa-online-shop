@@ -2,10 +2,7 @@ package fsa.project.online_shop.controllers;
 
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
-import fsa.project.online_shop.services.CategoryService;
-import fsa.project.online_shop.services.FileService;
-import fsa.project.online_shop.services.ProductService;
-import fsa.project.online_shop.services.UserService;
+import fsa.project.online_shop.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +22,7 @@ public class ProductController {
     private final ProductService productService;
     private final FileService fileService;
     private final CategoryService categoryService;
+    private final CartItemService cartItemService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -182,7 +180,7 @@ public class ProductController {
         return "user/shop";
     }
 
-    @PostMapping("/admin/product/{id}/status")
+    @PostMapping("/admin/products/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateProductStatus(
             @PathVariable Long id,
@@ -190,6 +188,9 @@ public class ProductController {
         Boolean status = (Boolean) payload.get("status");
         Product product = productService.getProductById(id);
         product.setStatus(status);
+        if (!status) {
+            cartItemService.deleteCartItemByProductId(id);
+        }
         productService.saveProduct(product);
         return ResponseEntity.ok().build();
     }

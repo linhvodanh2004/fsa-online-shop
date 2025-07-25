@@ -71,7 +71,7 @@ public class SecurityConfig {
                         auth -> auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers("/admin/**")
+                                .requestMatchers("/admin/**", "/admin")
 //                                .hasRole(UserRole.ADMIN)
                                 .permitAll()
                                 .requestMatchers(AUTHENTICATED_ENDPOINTS)

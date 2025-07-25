@@ -19,14 +19,14 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final FileService fileService;
 
-    @GetMapping("/admin/category-manager")
+    @GetMapping("/admin/categories")
     public String getCategoryManagementPage(Model model) {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         return "admin/category-manager";
     }
 
-    @PostMapping("/admin/add-category")
+    @PostMapping("/admin/categories/add-category")
     public String handleAddCategory(
             @RequestParam String name,
             @RequestParam("image") MultipartFile image
@@ -47,7 +47,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/admin/edit-category")
+    @PostMapping("/admin/categories/edit-category")
     public String handleEditCategory(
             @RequestParam Long id,
             @RequestParam String name,
@@ -74,7 +74,7 @@ public class CategoryController {
             return "redirect:/admin/category-manager?error=failed-to-upload-category-image";
         }
     }
-    @GetMapping("/admin/delete-category/{id}")
+    @GetMapping("/admin/categories/delete-category/{id}")
     public String handleDeleteCategory(@PathVariable("id") Long id){
         Category category = categoryService.getCategoryById(id);
         if(category == null){
