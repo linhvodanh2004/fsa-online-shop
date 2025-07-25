@@ -117,6 +117,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="user : ${users}"
+                                        th:if="${user.role != null and user.role.id == 2}"
                                         th:classappend="${!user.status} ? 'opacity-50'"
                                         style="cursor: pointer;">
                                             <!--User Updating (add in tr tag if use)-->
@@ -154,11 +155,13 @@
 													</span>
                                         </td>
                                         <td style="width: 10px;">
-                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"
-                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"
-                                                    th:if="${user.role.name != 'ADMIN'}">
-                                                <i data-feather="trash-2"></i>
-                                            </button>
+<!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
+<!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
+<!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
+<!--                                                <i data-feather="trash-2"></i>-->
+<!--                                            </button>-->
+
+
                                             <button type="button" class="btn btn-sm ms-2"
                                                     onclick="location.reload(); event.stopPropagation();">
                                                 <i data-feather="refresh-cw"></i>

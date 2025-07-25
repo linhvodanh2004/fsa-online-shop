@@ -77,30 +77,30 @@ public class UserController {
     }
 
     // DELETE mapping for deleting user (AJAX)
-    @DeleteMapping("/user/{id}/delete")
-    @ResponseBody
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        try {
-            User user = userService.findById(id);
-
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // Prevent deletion of admin users
-            if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("error", "Cannot delete admin users"));
-            }
-
-            userService.deleteById(id);
-            return ResponseEntity.ok().build();
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to delete user"));
-        }
-    }
+//    @DeleteMapping("/user/{id}/delete")
+//    @ResponseBody
+//    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+//        try {
+//            User user = userService.findById(id);
+//
+//            if (user == null) {
+//                return ResponseEntity.notFound().build();
+//            }
+//
+//            // Prevent deletion of admin users
+//            if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                        .body(Map.of("error", "Cannot delete admin users"));
+//            }
+//
+//            userService.deleteById(id);
+//            return ResponseEntity.ok().build();
+//
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(Map.of("error", "Failed to delete user"));
+//        }
+//    }
 
     // POST mapping for creating new user
     @PostMapping("/add-user")
