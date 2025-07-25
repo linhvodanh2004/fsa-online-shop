@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -39,7 +40,7 @@ public class UserController {
     private final FileService fileService;
 
     // GET mapping for user management page
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public String getUserManagementPage(Model model) {
         Page<User> userPage = userService.getAllUsers(Pageable.unpaged());
         List<User> users = userPage.getContent();
@@ -48,14 +49,14 @@ public class UserController {
     }
 
     // GET mapping for add user page
-    @GetMapping("/add-user")
+    @GetMapping("/admin/users/add-user")
     public String getAddUserPage(Model model) {
         model.addAttribute("user", new User());
         return "admin/admin-user-add";
     }
 
     // POST mapping for updating user status (AJAX)
-    @PostMapping("/user/{id}/status")
+    @PostMapping("/admin/users/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateUserStatus(@PathVariable("id") Long id,
                                               @RequestBody Map<String, Boolean> statusRequest) {
@@ -77,33 +78,33 @@ public class UserController {
     }
 
     // DELETE mapping for deleting user (AJAX)
-    @DeleteMapping("/user/{id}/delete")
-    @ResponseBody
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        try {
-            User user = userService.findById(id);
-
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // Prevent deletion of admin users
-            if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("error", "Cannot delete admin users"));
-            }
-
-            userService.deleteById(id);
-            return ResponseEntity.ok().build();
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to delete user"));
-        }
-    }
+//    @DeleteMapping("/user/{id}/delete")
+//    @ResponseBody
+//    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+//        try {
+//            User user = userService.findById(id);
+//
+//            if (user == null) {
+//                return ResponseEntity.notFound().build();
+//            }
+//
+//            // Prevent deletion of admin users
+//            if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                        .body(Map.of("error", "Cannot delete admin users"));
+//            }
+//
+//            userService.deleteById(id);
+//            return ResponseEntity.ok().build();
+//
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(Map.of("error", "Failed to delete user"));
+//        }
+//    }
 
     // POST mapping for creating new user
-    @PostMapping("/add-user")
+    @PostMapping("/admin/users/add-user")
     public String addUser(@ModelAttribute("user") User user,
                           RedirectAttributes redirectAttributes) {
         try {
@@ -121,17 +122,6 @@ public class UserController {
             return "redirect:/admin/add-user";
         }
     }
-
-    // GET mapping for update user page
-//    @GetMapping("/update-user/{id}")
-//    public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            return "redirect:/admin/users?error=User not found";
-//        }
-//        model.addAttribute("user", user);
-//        return "admin/admin-user-update";
-//    }
 
     // POST mapping for updating user
 //    @PostMapping("/update-user/{id}")
@@ -170,7 +160,7 @@ public class UserController {
 //    }
 
     // GET mapping with search, filter, and pagination parameters
-    @GetMapping("/users/search")
+    @GetMapping("/admin/users/search")
     public String searchUsers(@RequestParam(value = "query", required = false) String query,
                               @RequestParam(value = "role", required = false) String role,
                               @RequestParam(value = "provider", required = false) String provider,
@@ -234,14 +224,36 @@ public class UserController {
         return "admin/admin-user-manager";
     }
 
-    
-    @GetMapping("/login-ok")
-    public String loginOk() {
-        return "redirect:/?success=login-ok";
+    @GetMapping("/admin/edit-profile")
+    public String editAdminProfile(Model model, Authentication authentication) {
+        try{
+            User user = getCurrentUser(authentication);
+            if (user == null) {
+                return "redirect:/login";
+            }
+            model.addAttribute("user", user);
+        }catch(Exception e){
+
+        }
+        return "admin/admin-profile";
     }
 
-    @GetMapping("/login-failed")
-    public String loginFailed() {
-        return "redirect:/?error=login-failed";
+    private User getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return null;
+        }
+
+        try {
+            if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
+                String email = oAuth2User.getAttribute("email");
+                return userService.findByEmail(email);
+            }
+
+            String username = authentication.getName();
+            return userService.findByUsername(username);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

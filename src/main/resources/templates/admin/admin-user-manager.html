@@ -96,9 +96,11 @@
                                         </button>
                                     </div>
                                 </div>
+                                
                                 <div th:if="${#lists.isEmpty(users)}">
                                     <div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
                                 </div>
+                                
                                 <table id="datatables-column-search-text-inputs" class="table"
                                        style="width:100%; text-align: center;"
                                        th:if="${users != null and !#lists.isEmpty(users)}">
@@ -115,8 +117,9 @@
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="userTableBody">
                                     <tr th:each="user : ${users}"
+                                        th:if="${user.role != null and user.role.id == 2}"
                                         th:classappend="${!user.status} ? 'opacity-50'"
                                         style="cursor: pointer;">
                                             <!--User Updating (add in tr tag if use)-->
@@ -154,11 +157,13 @@
 													</span>
                                         </td>
                                         <td style="width: 10px;">
-                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"
-                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"
-                                                    th:if="${user.role.name != 'ADMIN'}">
-                                                <i data-feather="trash-2"></i>
-                                            </button>
+										
+<!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
+<!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
+<!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
+<!--                                                <i data-feather="trash-2"></i>-->
+<!--                                            </button>-->
+
                                             <button type="button" class="btn btn-sm ms-2"
                                                     onclick="location.reload(); event.stopPropagation();">
                                                 <i data-feather="refresh-cw"></i>
@@ -172,6 +177,40 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                
+                                <!-- Pagination Controls -->
+                                <div class="pagination-controls" th:if="${users != null and !#lists.isEmpty(users)}">
+                                    <div class="items-per-page-container">
+                                        <label for="itemsPerPage">Show:</label>
+                                        <select id="itemsPerPage" class="form-select form-select-sm">
+                                            <option value="5" selected>5</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                        <span>items per page</span>
+                                    </div>
+                                    
+                                    <div class="pagination-info">
+                                        <span id="paginationInfo">Showing 1 to 10 of 100 entries</span>
+                                    </div>
+                                    
+                                    <nav aria-label="User list pagination">
+                                        <ul class="pagination pagination-sm" id="paginationNav">
+                                            <li class="page-item" id="prevPage">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <!-- Page numbers will be dynamically generated -->
+                                            <li class="page-item" id="nextPage">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,6 +220,7 @@
         <div th:replace="~{component/admin-footer :: admin-footer}"></div>
     </div>
 </div>
+
 
 <script src="/admin/js/app.js"></script>
 <script src="/admin/js/datatables.js"></script>

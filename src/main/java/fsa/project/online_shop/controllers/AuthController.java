@@ -137,7 +137,7 @@ public class AuthController implements ErrorController {
         }
     }
 
-    @GetMapping({"/admin", "/admin/dashboard"})
+    @GetMapping("/admin/dashboard")
     public String getAdminDashboardPage(
     ){
         return "admin/dashboard";
