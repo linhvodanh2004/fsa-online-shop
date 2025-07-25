@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+  <meta name="author" content="AdminKit">
+  <meta name="keywords"
+    content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png" />
+
+  <link rel="canonical" href="#" />
+
+  <title>Profile | Admin</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
+
+  <!-- Choose your prefered color scheme -->
+  <link href="/admin/css/light.css" rel="stylesheet">
+  <!-- <link href="css/dark.css" rel="stylesheet"> -->
+
+  <!-- BEGIN SETTINGS -->
+  <!-- Remove this after purchasing -->
+  <link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
+  <script src="/admin/js/settings.js"></script>
+  <style>
+    body {
+      opacity: 0;
+    }
+  </style>
+  <!-- END SETTINGS -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
+  </script>
+</head>
+
+<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+  <div class="wrapper">
+    <div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="main">
+      <div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+
+      <main class="content">
+        <div class="container-fluid p-0">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title" style="color: black; font-size: 23px;">Profile</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3 d-flex justify-content-start">
+                    <form>
+                      <div class="mb-3 row">
+                        <div class="col-md-6">
+                          <label class="form-label">Avatar:</label>
+                          <input style="width: 500px;" type="file" class="form-control" name="image" accept="image/*"
+                            onchange="previewImage(this, '#addPreview')">
+                          <img id="addPreview" src="#" alt="Image Preview"
+                            style="display:none; width: 200px; height: 200px; object-fit: cover; margin-top: 10px;">
+                        </div>
+                      </div>
+                      <div class="mb-3 row">
+                        <div class="col-md-6">
+                          <label class="form-label">First Name:<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="firstName">
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Last Name:<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="lastName">
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Email:<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Phone Number:<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name">
+                      </div>
+
+                      <button type="submit" class="btn btn-primary">Save</button>
+                      <a href="" class="btn btn-danger">Go Back</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div th:replace="~{component/admin-footer :: admin-footer}"></div>
+    </div>
+  </div>
+
+  <script>
+    function previewImage(input, previewId) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const preview = document.querySelector(previewId);
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+
+</html>

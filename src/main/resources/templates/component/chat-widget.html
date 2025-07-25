@@ -35,14 +35,21 @@
                     " th:text="${icon ?: '🎮'}"></div>
                     <div>
                         <h4 style="margin: 0; font-size: 16px; font-weight: bold;" th:text="${title ?: 'GOS Gaming Support'}"></h4>
-                        <span id="connectionStatus" style="font-size: 12px; opacity: 0.8;" th:text="${subtitle ?: '● Trực tuyến'}"></span>
+                        <span style="font-size: 12px; opacity: 0.8;" th:text="${subtitle ?: '● Online'}"></span>
                     </div>
                 </div>
-                <button id="gosChatClose" style="
-                    background: none; border: none; color: white; font-size: 20px; cursor: pointer;
-                    padding: 5px; border-radius: 50%; width: 30px; height: 30px;
-                    display: flex; align-items: center; justify-content: center;
-                " onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">✕</button>
+                <div style="display: flex; gap: 5px;">
+                    <button id="gosChatNew" title="New Chat" style="
+                        background: none; border: none; color: white; font-size: 16px; cursor: pointer;
+                        padding: 5px; border-radius: 50%; width: 30px; height: 30px;
+                        display: flex; align-items: center; justify-content: center;
+                    " onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">🔄</button>
+                    <button id="gosChatClose" title="Close Chat" style="
+                        background: none; border: none; color: white; font-size: 20px; cursor: pointer;
+                        padding: 5px; border-radius: 50%; width: 30px; height: 30px;
+                        display: flex; align-items: center; justify-content: center;
+                    " onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">✕</button>
+                </div>
             </div>
 
             <!-- Chat Messages -->
@@ -52,14 +59,27 @@
                         max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;
                         border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                         font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;
-                    " th:utext="${welcomeMessage ?: '🎮 <strong>Chào mừng đến GOS Gaming!</strong><br>Tôi có thể giúp gì cho bạn? 😊'}"></div>
-                    <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">Vừa xong</div>
+                    " th:utext="${welcomeMessage ?: '🎮 <strong>Welcome to GOS Gaming!</strong><br>How can I help you today? 😊'}"></div>
+                    <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">Just now</div>
                 </div>
             </div>
 
+            <!-- Chat Controls -->
+            <div style="padding: 10px 15px; border-top: 1px solid #eee; background: #f8f9fa; display: flex; gap: 10px; align-items: center;">
+                <button id="gosNewChatBtn" style="
+                    padding: 8px 12px; background: #6c757d; color: white; border: none; border-radius: 15px;
+                    font-size: 12px; cursor: pointer; transition: background 0.2s ease;
+                " onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">
+                    🔄 New Chat
+                </button>
+                <div style="flex: 1;"></div>
+                <span style="font-size: 11px; color: #6c757d;">💡 Tip: Start new chat to reset context</span>
+            </div>
+
             <!-- Chat Input -->
-            <div style="padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white;">
-                <input type="text" id="gosChatInput" placeholder="Nhập tin nhắn của bạn..." style="
+            <div style="padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; align-items: flex-end;">
+
+                <input type="text" id="gosChatInput" placeholder="Type your message..." style="
                     flex: 1; padding: 12px 16px; border: 2px solid #e9ecef; border-radius: 25px;
                     outline: none; font-size: 14px; transition: border-color 0.2s ease;
                 " onfocus="this.style.borderColor='#28a745'" onblur="this.style.borderColor='#e9ecef'">
@@ -69,374 +89,314 @@
                     align-items: center; justify-content: center; transition: background 0.2s ease;
                 " onmouseover="this.style.background='#1e7e34'" onmouseout="this.style.background='#28a745'">➤</button>
             </div>
-
-            <!-- Loading Indicator -->
-            <div id="gosLoadingIndicator" style="
-                display: none; position: absolute; bottom: 80px; left: 15px;
-                background: white; padding: 8px 12px; border-radius: 15px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 12px; color: #666;
-            ">
-                <span>●</span> <span>●</span> <span>●</span> GOS Assistant đang soạn tin...
-                <style>
-                    #gosLoadingIndicator span {
-                        animation: pulse 1.4s ease-in-out infinite both;
-                    }
-                    #gosLoadingIndicator span:nth-child(1) { animation-delay: -0.32s; }
-                    #gosLoadingIndicator span:nth-child(2) { animation-delay: -0.16s; }
-                    @keyframes pulse {
-                        0%, 80%, 100% { opacity: 0.3; }
-                        40% { opacity: 1; }
-                    }
-                </style>
-            </div>
         </div>
     </div>
 
-        <!--Chat widget with AI-->
 
-<!--    <script>-->
-<!--        document.addEventListener('DOMContentLoaded', function() {-->
-<!--            // Chat widget elements-->
-<!--            const chatWidget = document.getElementById('gosChatWidget');-->
-<!--            const chatToggle = document.getElementById('gosChatToggle');-->
-<!--            const chatWindow = document.getElementById('gosChatWindow');-->
-<!--            const chatClose = document.getElementById('gosChatClose');-->
-<!--            const chatMessages = document.getElementById('gosChatMessages');-->
-<!--            const chatInput = document.getElementById('gosChatInput');-->
-<!--            const chatSend = document.getElementById('gosChatSend');-->
-<!--            const loadingIndicator = document.getElementById('gosLoadingIndicator');-->
-<!--            const connectionStatus = document.getElementById('connectionStatus');-->
-
-<!--            // API endpoint - adjust this to match your server-->
-<!--            const CHAT_API_URL = '/api/chat/message';-->
-
-<!--            let isLoading = false;-->
-
-<!--            // Toggle chat window-->
-<!--            function toggleChat() {-->
-<!--                const isVisible = chatWindow.style.display !== 'none';-->
-<!--                chatWindow.style.display = isVisible ? 'none' : 'block';-->
-
-<!--                if (!isVisible) {-->
-<!--                    chatInput.focus();-->
-<!--                }-->
-<!--            }-->
-
-<!--            // Add message to chat-->
-<!--            function addMessage(message, isUser = false, timestamp = null) {-->
-<!--                const messageDiv = document.createElement('div');-->
-<!--                messageDiv.style.cssText = 'margin-bottom: 15px;';-->
-
-<!--                const time = timestamp ? new Date(timestamp).toLocaleTimeString('vi-VN', {-->
-<!--                    hour: '2-digit',-->
-<!--                    minute: '2-digit'-->
-<!--                }) : new Date().toLocaleTimeString('vi-VN', {-->
-<!--                    hour: '2-digit',-->
-<!--                    minute: '2-digit'-->
-<!--                });-->
-
-<!--                if (isUser) {-->
-<!--                    messageDiv.innerHTML = `-->
-<!--                        <div style="display: flex; justify-content: flex-end;">-->
-<!--                            <div style="-->
-<!--                                max-width: 80%; padding: 12px 16px; border-radius: 18px;-->
-<!--                                background: linear-gradient(135deg, #28a745, #1e7e34); color: white;-->
-<!--                                border-bottom-right-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-<!--                                font-size: 14px; line-height: 1.4;-->
-<!--                            ">${escapeHtml(message)}</div>-->
-<!--                        </div>-->
-<!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px; text-align: right;">${time}</div>-->
-<!--                    `;-->
-<!--                } else {-->
-<!--                    messageDiv.innerHTML = `-->
-<!--                        <div style="-->
-<!--                            max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;-->
-<!--                            border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-<!--                            font-size: 14px; line-height: 1.4; border-left: 3px solid #28a745;-->
-<!--                        ">${message}</div>-->
-<!--                        <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>-->
-<!--                    `;-->
-<!--                }-->
-
-<!--                chatMessages.appendChild(messageDiv);-->
-<!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
-<!--            }-->
-
-<!--            // Escape HTML to prevent XSS-->
-<!--            function escapeHtml(unsafe) {-->
-<!--                return unsafe-->
-<!--                    .replace(/&/g, "&amp;")-->
-<!--                    .replace(/</g, "&lt;")-->
-<!--                    .replace(/>/g, "&gt;")-->
-<!--                    .replace(/"/g, "&quot;")-->
-<!--                    .replace(/'/g, "&#039;");-->
-<!--            }-->
-
-<!--            // Show/hide loading indicator-->
-<!--            function setLoading(loading) {-->
-<!--                isLoading = loading;-->
-<!--                loadingIndicator.style.display = loading ? 'block' : 'none';-->
-<!--                chatSend.disabled = loading;-->
-<!--                chatSend.style.opacity = loading ? '0.6' : '1';-->
-<!--                chatSend.style.cursor = loading ? 'not-allowed' : 'pointer';-->
-
-<!--                if (loading) {-->
-<!--                    connectionStatus.textContent = '● Đang phản hồi...';-->
-<!--                } else {-->
-<!--                    connectionStatus.textContent = '● Trực tuyến';-->
-<!--                }-->
-<!--            }-->
-
-<!--            // Send message to AI-->
-<!--            async function sendMessage(message) {-->
-<!--                if (!message.trim() || isLoading) return;-->
-
-<!--                // Add user message to chat-->
-<!--                addMessage(message, true);-->
-<!--                chatInput.value = '';-->
-<!--                setLoading(true);-->
-
-<!--                try {-->
-<!--                    const response = await fetch(CHAT_API_URL, {-->
-<!--                        method: 'POST',-->
-<!--                        headers: {-->
-<!--                            'Content-Type': 'application/json',-->
-<!--                        },-->
-<!--                        body: JSON.stringify({-->
-<!--                            message: message-->
-<!--                        })-->
-<!--                    });-->
-
-<!--                    const data = await response.json();-->
-
-<!--                    if (data.success) {-->
-<!--                        // Add AI response to chat-->
-<!--                        addMessage(data.message, false, data.timestamp);-->
-<!--                    } else {-->
-<!--                        // Handle error response-->
-<!--                        addMessage(-->
-<!--                            data.message || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.',-->
-<!--                            false-->
-<!--                        );-->
-<!--                    }-->
-<!--                } catch (error) {-->
-<!--                    console.error('Chat API Error:', error);-->
-<!--                    addMessage(-->
-<!--                        '❌ Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng và thử lại.',-->
-<!--                        false-->
-<!--                    );-->
-<!--                    connectionStatus.textContent = '● Mất kết nối';-->
-<!--                } finally {-->
-<!--                    setLoading(false);-->
-<!--                }-->
-<!--            }-->
-
-<!--            // Event listeners-->
-<!--            chatToggle.addEventListener('click', toggleChat);-->
-<!--            chatClose.addEventListener('click', toggleChat);-->
-
-<!--            chatSend.addEventListener('click', () => {-->
-<!--                sendMessage(chatInput.value);-->
-<!--            });-->
-
-<!--            chatInput.addEventListener('keypress', (e) => {-->
-<!--                if (e.key === 'Enter' && !e.shiftKey) {-->
-<!--                    e.preventDefault();-->
-<!--                    sendMessage(chatInput.value);-->
-<!--                }-->
-<!--            });-->
-
-<!--            // Auto-resize input on focus-->
-<!--            chatInput.addEventListener('focus', () => {-->
-<!--                chatMessages.scrollTop = chatMessages.scrollHeight;-->
-<!--            });-->
-
-<!--            // Test connection on load-->
-<!--            setTimeout(async () => {-->
-<!--                try {-->
-<!--                    const response = await fetch(CHAT_API_URL, {-->
-<!--                        method: 'POST',-->
-<!--                        headers: {-->
-<!--                            'Content-Type': 'application/json',-->
-<!--                        },-->
-<!--                        body: JSON.stringify({-->
-<!--                            message: 'test connection'-->
-<!--                        })-->
-<!--                    });-->
-
-<!--                    if (!response.ok) {-->
-<!--                        connectionStatus.textContent = '● Offline';-->
-<!--                        connectionStatus.style.opacity = '0.6';-->
-<!--                    }-->
-<!--                } catch (error) {-->
-<!--                    connectionStatus.textContent = '● Offline';-->
-<!--                    connectionStatus.style.opacity = '0.6';-->
-<!--                }-->
-<!--            }, 1000);-->
-<!--        });-->
-<!--    </script>-->
 
     <!-- Chat Widget JavaScript -->
     <script th:inline="javascript">
-        /*<![CDATA[*/
-        document.addEventListener('DOMContentLoaded', function() {
-            const pageType = /*[[${pageType}]]*/ 'general';
-            const chatToggle = document.getElementById('gosChatToggle');
-            const chatWindow = document.getElementById('gosChatWindow');
-            const chatClose = document.getElementById('gosChatClose');
-            const chatSend = document.getElementById('gosChatSend');
-            const chatInput = document.getElementById('gosChatInput');
-            const chatMessages = document.getElementById('gosChatMessages');
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageType = /*[[${pageType}]]*/ 'general';
+        const chatToggle = document.getElementById('gosChatToggle');
+        const chatWindow = document.getElementById('gosChatWindow');
+        const chatClose = document.getElementById('gosChatClose');
+        const chatSend = document.getElementById('gosChatSend');
+        const chatInput = document.getElementById('gosChatInput');
+        const chatMessages = document.getElementById('gosChatMessages');
+        const newChatBtn = document.getElementById('gosNewChatBtn');
 
-            let isOpen = false;
 
-            // Toggle chat
-            chatToggle?.addEventListener('click', function() {
-                isOpen = !isOpen;
-                chatWindow.style.display = isOpen ? 'block' : 'none';
-                if (isOpen) chatInput.focus();
-            });
+        let isOpen = false;
+        let conversationId = sessionStorage.getItem('gosConversationId'); // Persist across F5
+        let chatHistory = []; // Store conversation history (max 6 messages)
 
-            // Close chat
-            chatClose?.addEventListener('click', function() {
-                isOpen = false;
-                chatWindow.style.display = 'none';
-            });
+        // Load chat history on page load if conversationId exists
+        if (conversationId) {
+            loadChatHistory();
+        }
 
-            // Send message
-            function sendMessage() {
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                addMessage('user', message);
-                chatInput.value = '';
-
-                setTimeout(() => {
-                    const response = getBotResponse(message, pageType);
-                    addMessage('bot', response);
-                }, 1000);
-            }
-
-            // Get bot response based on page type and message
-            function getBotResponse(message, pageType) {
-                const msg = message.toLowerCase();
-
-                // Common responses
-                if (msg.includes('chào') || msg.includes('hello') || msg.includes('hi')) {
-                    return getGreeting(pageType);
-                } else if (msg.includes('cảm ơn') || msg.includes('thanks')) {
-                    return '🙏 Không có gì! Rất vui được hỗ trợ bạn. Chúc bạn có trải nghiệm tuyệt vời! 🎮✨';
-                }
-
-                // Page-specific responses
-                switch(pageType) {
-                    case 'home':
-                        return getHomeResponse(msg);
-                    case 'shop':
-                        return getShopResponse(msg);
-                    case 'about':
-                        return getAboutResponse(msg);
-                    case 'contact':
-                        return getContactResponse(msg);
-                    default:
-                        return 'Cảm ơn bạn đã liên hệ! Tôi sẽ hỗ trợ bạn ngay. 😊';
+        // Toggle chat
+        chatToggle?.addEventListener('click', function() {
+            isOpen = !isOpen;
+            chatWindow.style.display = isOpen ? 'block' : 'none';
+            if (isOpen) {
+                chatInput.focus();
+                // Load chat history if not already loaded
+                if (chatMessages.children.length <= 1) {
+                    if (conversationId) {
+                        loadChatHistory();
+                    } else {
+                        loadAllChatHistory();
+                    }
                 }
             }
-
-            function getGreeting(pageType) {
-                const greetings = {
-                    home: '👋 Chào mừng đến GOS Gaming! Tôi có thể tư vấn PC, laptop, gaming gear. Bạn cần gì?',
-                    shop: '🛒 Chào bạn! Tôi có thể giúp bạn tìm sản phẩm phù hợp và so sánh giá cả!',
-                    about: 'ℹ️ Chào bạn! Bạn muốn biết gì về GOS Gaming? Lịch sử, đội ngũ, hay tầm nhìn của chúng tôi?',
-                    contact: '📞 Chào bạn! Tôi có thể cung cấp thông tin liên hệ, địa chỉ showroom và giờ làm việc!'
-                };
-                return greetings[pageType] || greetings.home;
-            }
-
-            function getHomeResponse(msg) {
-                if (msg.includes('pc') || msg.includes('gaming')) {
-                    return '🎮 PC Gaming từ entry đến high-end:\n• Gaming PC phổ thông: 15-25 triệu\n• Gaming PC cao cấp: 30-50 triệu\n• Workstation Gaming: 50+ triệu\n\nBudget của bạn khoảng bao nhiêu?';
-                } else if (msg.includes('laptop')) {
-                    return '💻 Laptop gaming hot:\n• Entry: ASUS TUF, Acer Nitro\n• Mid-range: MSI Katana, Lenovo Legion\n• High-end: ASUS ROG, MSI GE\n\nBạn chơi game gì chủ yếu?';
-                } else if (msg.includes('giá')) {
-                    return '💰 Giá cả cạnh tranh nhất thị trường! Sản phẩm nào bạn quan tâm để tôi báo giá chi tiết?';
-                }
-                return 'Tôi có thể tư vấn PC gaming, laptop, gear và giá cả. Bạn quan tâm sản phẩm nào? 🎮';
-            }
-
-            function getShopResponse(msg) {
-                if (msg.includes('pc')) {
-                    return '🎮 PC gaming tuyệt vời đang chờ bạn! Budget khoảng bao nhiêu để tôi recommend phù hợp?';
-                } else if (msg.includes('laptop')) {
-                    return '💻 Laptop gaming nào phù hợp? Gaming hay làm việc chủ yếu?';
-                } else if (msg.includes('giá')) {
-                    return '💰 Giá cả rất cạnh tranh! Sản phẩm nào bạn đang xem để tôi tư vấn?';
-                }
-                return 'Tôi có thể giúp bạn tìm sản phẩm phù hợp và so sánh giá cả! 🛒';
-            }
-
-            function getAboutResponse(msg) {
-                if (msg.includes('lịch sử') || msg.includes('thành lập')) {
-                    return '🏢 GOS Gaming thành lập 2020, phục vụ 10,000+ khách hàng với niềm đam mê gaming!';
-                } else if (msg.includes('đội ngũ')) {
-                    return '👥 50+ chuyên gia IT & gaming enthusiasts, kinh nghiệm 5+ năm, hỗ trợ 24/7!';
-                } else if (msg.includes('showroom')) {
-                    return '🏪 3 showroom: HCM (Q1), Hà Nội (Cầu Giấy), Đà Nẵng (Hải Châu)';
-                }
-                return 'Bạn muốn biết gì về GOS? Lịch sử, đội ngũ, showroom hay tầm nhìn? ℹ️';
-            }
-
-            function getContactResponse(msg) {
-                if (msg.includes('hotline') || msg.includes('điện thoại')) {
-                    return '📞 Hotline 24/7:\n• Bán hàng: 1900-GOS-SALE\n• Kỹ thuật: 1900-GOS-TECH\n• Bảo hành: 1900-GOS-WARRANTY';
-                } else if (msg.includes('địa chỉ') || msg.includes('showroom')) {
-                    return '🏪 Showroom:\n• HCM: 123 Gaming Street, Q1\n• Hà Nội: 456 Tech Avenue\n• Đà Nẵng: 789 Digital Road';
-                } else if (msg.includes('email')) {
-                    return '📧 Email:\n• Tổng đài: info@gos.com\n• Bán hàng: sales@gos.com\n• Kỹ thuật: support@gos.com';
-                }
-                return 'Tôi có thể cung cấp hotline, địa chỉ showroom, email liên hệ! 📞';
-            }
-
-            // Add message to chat
-            function addMessage(sender, text) {
-                const time = new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
-                const isBot = sender === 'bot';
-                const messageDiv = document.createElement('div');
-                messageDiv.style.cssText = 'margin-bottom: 15px; display: flex; flex-direction: column; align-items: ' + (isBot ? 'flex-start' : 'flex-end') + ';';
-                messageDiv.innerHTML = `
-                    <div style="
-                        max-width: 80%; padding: 12px 16px; border-radius: 18px;
-                        background: ${isBot ? 'white' : '#28a745'}; color: ${isBot ? '#333' : 'white'};
-                        border-bottom-${isBot ? 'left' : 'right'}-radius: 4px;
-                        ${isBot ? 'box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 3px solid #28a745;' : ''}
-                        font-size: 14px; line-height: 1.4; word-wrap: break-word; white-space: pre-line;
-                    ">${text}</div>
-                    <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>
-                `;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            // Event listeners
-            chatSend?.addEventListener('click', sendMessage);
-            chatInput?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            // Welcome animation
-            setTimeout(() => {
-                if (!isOpen) chatToggle.style.animation = 'bounce 1s ease-in-out 2';
-            }, 2000);
         });
 
-        // Add CSS animations
-        if (!document.getElementById('gosChatStyles')) {
-            const style = document.createElement('style');
-            style.id = 'gosChatStyles';
-            style.textContent = '@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }';
-            document.head.appendChild(style);
+        // Close chat
+        chatClose?.addEventListener('click', function() {
+            isOpen = false;
+            chatWindow.style.display = 'none';
+        });
+
+        // New Chat button
+        newChatBtn?.addEventListener('click', function() {
+            startNewChat();
+        });
+
+
+
+        // Send message
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage('user', message);
+            chatInput.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Call Gemini API with conversation context
+            fetch('/api/chat/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    pageType: pageType,
+                    conversationId: conversationId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+
+                // Update conversation ID from server and save to sessionStorage
+                if (data.conversationId) {
+                    conversationId = data.conversationId;
+                    sessionStorage.setItem('gosConversationId', conversationId);
+                }
+
+                if (data.success) {
+                    addMessage('bot', data.message);
+                } else {
+                    // Fallback to local responses
+                    const fallbackResponse = getBotResponse(message, pageType);
+                    addMessage('bot', fallbackResponse);
+                }
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                // Fallback to local responses
+                const fallbackResponse = getBotResponse(message, pageType);
+                addMessage('bot', fallbackResponse);
+            });
         }
-        /*]]>*/
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.style.cssText = 'margin-bottom: 15px; display: flex; flex-direction: column; align-items: flex-start;';
+            typingDiv.innerHTML = `
+                <div style="
+                    max-width: 80%; padding: 12px 16px; border-radius: 18px; background: white; color: #333;
+                    border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    border-left: 3px solid #28a745; font-size: 14px; line-height: 1.4;
+                ">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Start new chat
+        function startNewChat() {
+            fetch('/api/chat/new-chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    conversationId = data.conversationId;
+                    sessionStorage.setItem('gosConversationId', conversationId);
+
+                    // Add separator to chat
+                    addChatSeparator();
+
+                    console.log('🔄 Started new chat:', conversationId);
+                } else {
+                    console.error('Failed to start new chat');
+                }
+            })
+            .catch(error => {
+                console.error('Error starting new chat:', error);
+            });
+        }
+
+
+
+        // Add chat separator
+        function addChatSeparator() {
+            const separatorDiv = document.createElement('div');
+            separatorDiv.style.cssText = 'margin: 20px 0; text-align: center;';
+            separatorDiv.innerHTML = `
+                <div style="
+                    display: flex; align-items: center; margin: 15px 0;
+                ">
+                    <div style="flex: 1; height: 1px; background: #ddd;"></div>
+                    <span style="
+                        padding: 0 15px; font-size: 12px; color: #999; background: #f8f9fa;
+                        border: 1px solid #ddd; border-radius: 15px;
+                    ">🔄 New Chat</span>
+                    <div style="flex: 1; height: 1px; background: #ddd;"></div>
+                </div>
+            `;
+            chatMessages.appendChild(separatorDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Load ALL chat history from server
+        function loadAllChatHistory() {
+            fetch('/api/chat/history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}) // Empty body to get all conversations
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.messages && data.messages.length > 0) {
+                    // Clear welcome message
+                    chatMessages.innerHTML = '';
+
+                    // Add all messages with separators
+                    data.messages.forEach(msg => {
+                        if (msg.type === 'separator') {
+                            addChatSeparator();
+                        } else {
+                            addMessage(msg.type, msg.message, msg.timestamp);
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.log('Could not load chat history:', error);
+            });
+        }
+
+        // Load chat history from server (single conversation)
+        function loadChatHistory() {
+            if (!conversationId) return;
+
+            fetch('/api/chat/history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    conversationId: conversationId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.messages && data.messages.length > 0) {
+                    // Clear welcome message
+                    chatMessages.innerHTML = '';
+
+                    // Add history messages
+                    data.messages.forEach(msg => {
+                        addMessage(msg.type, msg.message, msg.timestamp);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log('Could not load chat history:', error);
+            });
+        }
+
+        // Simple fallback response when API fails
+        function getBotResponse(message, pageType) {
+            return '🤖 Sorry, I\'m experiencing technical difficulties. Please try again later or contact our hotline for direct support. Thank you! 😊';
+        }
+
+        // Add message to chat
+        function addMessage(sender, text, timestamp) {
+            const time = timestamp
+                ? new Date(timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'})
+                : new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+            const isBot = sender === 'bot';
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = 'margin-bottom: 15px; display: flex; flex-direction: column; align-items: ' + (isBot ? 'flex-start' : 'flex-end') + ';';
+            messageDiv.innerHTML = `
+                <div style="
+                    max-width: 80%; padding: 12px 16px; border-radius: 18px;
+                    background: ${isBot ? 'white' : '#28a745'}; color: ${isBot ? '#333' : 'white'};
+                    border-bottom-${isBot ? 'left' : 'right'}-radius: 4px;
+                    ${isBot ? 'box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 3px solid #28a745;' : ''}
+                    font-size: 14px; line-height: 1.4; word-wrap: break-word; white-space: pre-line;
+                ">${text}</div>
+                <div style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 15px;">${time}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners
+        chatSend?.addEventListener('click', sendMessage);
+        chatInput?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Welcome animation
+        setTimeout(() => {
+            if (!isOpen) chatToggle.style.animation = 'bounce 1s ease-in-out 2';
+        }, 2000);
+    });
+
+    // Add CSS animations
+    if (!document.getElementById('gosChatStyles')) {
+        const style = document.createElement('style');
+        style.id = 'gosChatStyles';
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+                60% { transform: translateY(-5px); }
+            }
+            .typing-dots {
+                display: flex; gap: 4px; padding: 8px 0;
+            }
+            .typing-dots span {
+                width: 8px; height: 8px; border-radius: 50%; background: #28a745;
+                animation: bounce 1.4s infinite ease-in-out both;
+            }
+            .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+            .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+        `;
+        document.head.appendChild(style);
+    }
+    /*]]>*/
     </script>
 </div>
 
