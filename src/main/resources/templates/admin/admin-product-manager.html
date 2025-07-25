@@ -8,7 +8,7 @@
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
 	<meta name="keywords"
-		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+		  content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png" />
@@ -62,214 +62,216 @@
 -->
 
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
-	<div class="wrapper">
-		<div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+<div class="wrapper">
+	<div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
 
-		<div class="main">
-			<div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+	<div class="main">
+		<div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
 
-			<main class="content">
-				<div class="container-fluid p-0">
-					<div class="row">
-						<div class="col-12">
-							<div class="card">
-								<div class="card-header">
-									<h5 class="card-title" style="color: black; font-size: 23px;">Product List</h5>
-								</div>
-								<div class="card-body">
-									<div class="mb-3 d-flex justify-content-start">
-										<input type="text" id="productSearchBox"
-											class="form-control form-control-sm w-auto" placeholder="Search products..."
-											style="min-width: 300px; font-size: 16px;">
-										<select id="sortSelect" class="form-select form-select-sm w-auto ms-2"
+		<main class="content">
+			<div class="container-fluid p-0">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h5 class="card-title" style="color: black; font-size: 23px;">Product List</h5>
+							</div>
+							<div class="card-body">
+								<div class="mb-3 d-flex justify-content-start">
+									<input type="text" id="productSearchBox"
+										   class="form-control form-control-sm w-auto" placeholder="Search products..."
+										   style="min-width: 300px; font-size: 16px;">
+									<select id="sortSelect" class="form-select form-select-sm w-auto ms-2"
 											style="font-size: 16px; min-width: 180px;">
-											<option value="">Sort by</option>
-											<option value="name-asc">Name (A-Z)</option>
-											<option value="name-desc">Name (Z-A)</option>
-											<option value="price-asc">Price ↑</option>
-											<option value="price-desc">Price ↓</option>
-											<option value="quantity-asc">Quantity ↑</option>
-											<option value="quantity-desc">Quantity ↓</option>
-										</select>
-										<div class="ms-auto">
-											<button type="button" class="btn btn-primary"
+										<option value="">Sort by</option>
+										<option value="name-asc">Name (A-Z)</option>
+										<option value="name-desc">Name (Z-A)</option>
+										<option value="price-asc">Price ↑</option>
+										<option value="price-desc">Price ↓</option>
+										<option value="quantity-asc">Quantity ↑</option>
+										<option value="quantity-desc">Quantity ↓</option>
+									</select>
+									<div class="ms-auto">
+										<button type="button" class="btn btn-primary"
 												onclick="location.href='/admin/products/add';">
-												<i data-feather="plus"></i> Add New Product
+											<i data-feather="plus"></i> Add New Product
+										</button>
+									</div>
+								</div>
+								<div th:if="${#lists.isEmpty(products)}">
+									<div th:replace="~{component/no-item-notification :: no-item-notification}">
+									</div>
+								</div>
+								<table id="datatables-column-search-text-inputs" class="table"
+									   style="width:100%; text-align: center;"
+									   th:if="${products != null and !#lists.isEmpty(products)}">
+									<thead>
+									<tr>
+										<th>Image</th>
+										<th>Name</th>
+										<th>Category</th>
+										<th>Price</th>
+										<th>Quantity</th>
+										<th>Sold</th>
+										<th></th>
+										<th>Status</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="product : ${products}"
+										th:classappend="${product.status == null or !product.status} ? 'opacity-50'">
+										<td>
+											<img th:src="${product.image}" alt="Product Image"
+												 style="width: 120px; height: 120px; object-fit: cover;">
+										</td>
+										<td th:text="${product.name}"></td>
+										<td th:text="${product.category.name}"></td>
+										<td th:text="${product.price}"></td>
+										<td th:text="${product.quantity}"></td>
+										<td th:text="${product.sold}"></td>
+										<td>
+											<button class="btn btn-link text-decoration-none" type="button"
+													th:onclick="'location.href=\'/admin/products/update/' + ${product.id} + '\';'">
+												<i class="align-middle text-primary" data-feather="edit-2"></i>
 											</button>
-										</div>
-									</div>
-									<div th:if="${#lists.isEmpty(products)}">
-										<div th:replace="~{component/no-item-notification :: no-item-notification}">
-										</div>
-									</div>
-									<table id="datatables-column-search-text-inputs" class="table"
-										style="width:100%; text-align: center;"
-										th:if="${products != null and !#lists.isEmpty(products)}">
-										<thead>
-											<tr>
-												<th>Image</th>
-												<th>Name</th>
-												<th>Category</th>
-												<th>Price</th>
-												<th>Quantity</th>
-												<th>Sold</th>
-												<th></th>
-												<th>Status</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="product : ${products}"
-												th:classappend="${product.status == null or !product.status} ? 'opacity-50'">
-												<td>
-													<img th:src="${product.image}" alt="Product Image"
-														style="width: 120px; height: 120px; object-fit: cover;">
-												</td>
-												<td th:text="${product.name}"></td>
-												<td th:text="${product.category.name}"></td>
-												<td th:text="${product.price}"></td>
-												<td th:text="${product.quantity}"></td>
-												<td th:text="${product.sold}"></td>
-												<td>
-													<button class="btn btn-link text-decoration-none" type="button"
-														th:onclick="'location.href=\'/admin/products/update/' + ${product.id} + '\';'">
-														<i class="align-middle text-primary" data-feather="edit-2"></i>
-													</button>
-												</td>
-												<td>
+										</td>
+										<td>
 													<span class="align-middle" onclick="event.stopPropagation();">
 														<i class="align-middle" th:if="${product.status}"
 															data-feather="toggle-right"
 															style="cursor:pointer; color: green;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 														<i class="align-middle" th:unless="${product.status}"
 															data-feather="toggle-left"
 															style="cursor:pointer; color: red;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 													</span>
-												</td>
-											</tr>
-											<tr class="addrow" onclick="location.href='/admin/products/add';">
-												<td colspan="8" style="text-align: center;">
-													<i data-feather="plus"></i>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+										</td>
+									</tr>
+									<tr class="addrow" onclick="location.href='/admin/products/add';">
+										<td colspan="8" style="text-align: center;">
+											<i data-feather="plus"></i>
+										</td>
+									</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
-
-
 					</div>
+
+
 				</div>
+			</div>
 
 
-			</main>
-			<div th:replace="~{component/admin-footer :: admin-footer}"></div>
+		</main>
+		<div th:replace="~{component/admin-footer :: admin-footer}"></div>
 
-		</div>
 	</div>
+</div>
 
 
-	<script src="/admin/js/app.js"></script>
+<script src="/admin/js/app.js"></script>
 
-	<script src="/admin/js/datatables.js"></script>
-	<script src="https://unpkg.com/feather-icons"></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			if (window.feather) {
-				feather.replace();
-			}
-		});
-	</script>
-
-
-	<script>
-
-		document.addEventListener("DOMContentLoaded", function () {
-			const searchBox = document.getElementById('productSearchBox');
-			const table = document.getElementById('datatables-column-search-text-inputs');
-			searchBox.addEventListener('keyup', function () {
-				const filter = searchBox.value.toLowerCase();
-				const rows = table.querySelectorAll('tbody tr');
-				rows.forEach(row => {
-					const text = row.textContent.toLowerCase();
-					row.style.display = text.includes(filter) ? '' : 'none';
-				});
-			});
-		});
-
-		document.addEventListener("DOMContentLoaded", function () {
-			const sortSelect = document.getElementById('sortSelect');
-			const table = document.getElementById('datatables-column-search-text-inputs');
-			sortSelect.addEventListener('change', function () {
-				const rows = Array.from(table.querySelectorAll('tbody tr'));
-				let compare;
-				switch (sortSelect.value) {
-					case 'name-asc':
-						compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
-						break;
-					case 'name-desc':
-						compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
-						break;
-					case 'price-asc':
-						compare = (a, b) => parseFloat(a.children[5].textContent) - parseFloat(b.children[5].textContent);
-						break;
-					case 'price-desc':
-						compare = (a, b) => parseFloat(b.children[5].textContent) - parseFloat(a.children[5].textContent);
-						break;
-					case 'quantity-asc':
-						compare = (a, b) => parseFloat(a.children[6].textContent) - parseFloat(b.children[6].textContent);
-						break;
-					case 'quantity-desc':
-						compare = (a, b) => parseFloat(b.children[6].textContent) - parseFloat(a.children[6].textContent);
-						break;
-					default:
-						compare = null;
-				}
-				if (compare) {
-					rows.sort(compare);
-					const tbody = table.querySelector('tbody');
-					rows.forEach(row => tbody.appendChild(row));
-				}
-			});
-		});
-
-		function updateRowOpacity(icon, newStatus) {
-			const row = icon.closest('tr');
-			if (!newStatus) {
-				row.classList.add('opacity-50');
-			} else {
-				row.classList.remove('opacity-50');
-			}
+<script src="/admin/js/datatables.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		if (window.feather) {
+			feather.replace();
 		}
+	});
+</script>
 
-		function toggleStatus(icon) {
+
+<script>
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const searchBox = document.getElementById('productSearchBox');
+		const table = document.getElementById('datatables-column-search-text-inputs');
+		searchBox.addEventListener('keyup', function () {
+			const filter = searchBox.value.toLowerCase();
+			const rows = table.querySelectorAll('tbody tr');
+			rows.forEach(row => {
+				const text = row.textContent.toLowerCase();
+				row.style.display = text.includes(filter) ? '' : 'none';
+			});
+		});
+	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const sortSelect = document.getElementById('sortSelect');
+		const table = document.getElementById('datatables-column-search-text-inputs');
+		sortSelect.addEventListener('change', function () {
+    const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)')); // Exclude add row
+    const addRow = table.querySelector('tbody tr.addrow'); // Find add row
+    let compare;
+    switch (sortSelect.value) {
+        case 'name-asc':
+            compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
+            break;
+        case 'name-desc':
+            compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
+            break;
+        case 'price-asc':
+            compare = (a, b) => parseFloat(a.children[3].textContent) - parseFloat(b.children[3].textContent);
+            break;
+        case 'price-desc':
+            compare = (a, b) => parseFloat(b.children[3].textContent) - parseFloat(a.children[3].textContent);
+            break;
+        case 'quantity-asc':
+            compare = (a, b) => parseFloat(a.children[4].textContent) - parseFloat(b.children[4].textContent);
+            break;
+        case 'quantity-desc':
+            compare = (a, b) => parseFloat(b.children[4].textContent) - parseFloat(a.children[4].textContent);
+            break;
+        default:
+            compare = null;
+    }
+    if (compare) {
+        rows.sort(compare);
+        const tbody = table.querySelector('tbody');
+        rows.forEach(row => tbody.appendChild(row));
+        if (addRow) tbody.appendChild(addRow); // Keep add row at the end
+    }
+});
+	});
+
+	function updateRowOpacity(icon, newStatus) {
+		const row = icon.closest('tr');
+		if (!newStatus) {
+			row.classList.add('opacity-50');
+		} else {
+			row.classList.remove('opacity-50');
+		}
+	}
+
+		function toggleProductStatus(icon) {
 			const currentStatus = icon.getAttribute('data-status') === 'true';
 			const productId = icon.getAttribute('data-id');
 			const newStatus = !currentStatus;
 
-			updateRowOpacity(icon, newStatus);
+		updateRowOpacity(icon, newStatus);
 
 			// Get CSRF token and header name from meta tags
-			const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
-			const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
-			const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-			const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
+			// const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+			// const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+			// const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+			// const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
 
 			// Build headers object
 			const headers = {
 				'Content-Type': 'application/json'
 			};
-			if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
-				headers[csrfHeader] = csrfToken;
-			}
+			// if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
+			// 	headers[csrfHeader] = csrfToken;
+			// }
 
-			fetch(`/admin/product/${productId}/status`, {
+			fetch(`/admin/products/${productId}/status`, {
 				method: 'POST',
 				headers: headers,
 				body: JSON.stringify({ status: newStatus })
@@ -293,8 +295,8 @@
 					updateRowOpacity(icon, currentStatus);
 				});
 		}
-
 	</script>
+	<script src="/admin/js/custom.js"></script>
 </body>
 
 </html>

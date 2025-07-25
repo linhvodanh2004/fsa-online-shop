@@ -73,6 +73,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         session.setAttribute("fullname", user.getFullname());
         session.setAttribute("username", user.getUsername());
         session.setAttribute("userId", user.getId());
+        session.setAttribute("email", user.getEmail());
+        session.setAttribute("provider", user.getProvider());
         redirectStrategy.sendRedirect(request, response, targetUrl);
         clearAuthenticationAttributes(session);
     }

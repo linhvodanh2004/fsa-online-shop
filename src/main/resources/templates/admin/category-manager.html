@@ -99,7 +99,7 @@
                                         </td>
                                         <td th:text="${category.name}"></td>
                                         <td>
-                                            <a class="text-decoration-none " th:href="@{/admin/delete-category/{id}(id=${category.id})}">
+                                            <a class="text-decoration-none " th:href="@{/admin/categories/delete-category/{id}(id=${category.id})}">
                                                 <i class="align-middle text-danger" data-feather="trash"></i>
                                             </a>
                                             <button class="btn btn-link text-decoration-none"
@@ -126,7 +126,7 @@
         <!-- Add Category Modal -->
         <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form id="addCategoryForm" method="post" th:action="@{/admin/add-category}"
+                <form id="addCategoryForm" method="post" th:action="@{/admin/categories/add-category}"
                       enctype="multipart/form-data" onsubmit="return validateAddForm(event)">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -156,7 +156,7 @@
         <!-- Edit Category Modal -->
         <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form id="editCategoryForm" method="post" th:action="@{/admin/edit-category}"
+                <form id="editCategoryForm" method="post" th:action="@{/admin/categories/edit-category}"
                       enctype="multipart/form-data" onsubmit="return validateEditForm(event)">
                     <input type="hidden" name="id" id="editCategoryId">
                     <div class="modal-content">
@@ -196,6 +196,7 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/toastify-message.js"></script>
+<script src="/admin/js/custom.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         if (window.feather) {
