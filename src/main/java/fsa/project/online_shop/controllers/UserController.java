@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -51,17 +52,6 @@ public class UserController {
     public String getAddUserPage(Model model) {
         model.addAttribute("user", new User());
         return "admin/admin-user-add";
-    }
-
-    // GET mapping for update user page
-    @GetMapping("/update-user/{id}")
-    public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
-        User user = userService.findById(id);
-        if (user == null) {
-            return "redirect:/admin/users?error=User not found";
-        }
-        model.addAttribute("user", user);
-        return "admin/admin-user-update";
     }
 
     // POST mapping for updating user status (AJAX)
@@ -132,41 +122,52 @@ public class UserController {
         }
     }
 
+    // GET mapping for update user page
+//    @GetMapping("/update-user/{id}")
+//    public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
+//        User user = userService.findById(id);
+//        if (user == null) {
+//            return "redirect:/admin/users?error=User not found";
+//        }
+//        model.addAttribute("user", user);
+//        return "admin/admin-user-update";
+//    }
+
     // POST mapping for updating user
-    @PostMapping("/update-user/{id}")
-    public String updateUser(@PathVariable("id") Long id,
-                             @ModelAttribute("user") User user,
-                             RedirectAttributes redirectAttributes) {
-        try {
-            User existingUser = userService.findById(id);
-
-            if (existingUser == null) {
-                redirectAttributes.addFlashAttribute("error", "User not found");
-                return "redirect:/admin/users";
-            }
-
-            // Update user fields
-            existingUser.setUsername(user.getUsername());
-            existingUser.setFullname(user.getFullname());
-            existingUser.setEmail(user.getEmail());
-            existingUser.setPhone(user.getPhone());
-            existingUser.setStatus(user.getStatus());
-            existingUser.setRole(user.getRole());
-
-            // Don't update password if it's empty
-            if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
-                existingUser.setPassword(user.getPassword());
-            }
-
-            userService.save(existingUser);
-            redirectAttributes.addFlashAttribute("success", "User updated successfully!");
-            return "redirect:/admin/users";
-
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update user: " + e.getMessage());
-            return "redirect:/admin/update-user/" + id;
-        }
-    }
+//    @PostMapping("/update-user/{id}")
+//    public String updateUser(@PathVariable("id") Long id,
+//                             @ModelAttribute("user") User user,
+//                             RedirectAttributes redirectAttributes) {
+//        try {
+//            User existingUser = userService.findById(id);
+//
+//            if (existingUser == null) {
+//                redirectAttributes.addFlashAttribute("error", "User not found");
+//                return "redirect:/admin/users";
+//            }
+//
+//            // Update user fields
+//            existingUser.setUsername(user.getUsername());
+//            existingUser.setFullname(user.getFullname());
+//            existingUser.setEmail(user.getEmail());
+//            existingUser.setPhone(user.getPhone());
+//            existingUser.setStatus(user.getStatus());
+//            existingUser.setRole(user.getRole());
+//
+//            // Don't update password if it's empty
+//            if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+//                existingUser.setPassword(user.getPassword());
+//            }
+//
+//            userService.save(existingUser);
+//            redirectAttributes.addFlashAttribute("success", "User updated successfully!");
+//            return "redirect:/admin/users";
+//
+//        } catch (Exception e) {
+//            redirectAttributes.addFlashAttribute("error", "Failed to update user: " + e.getMessage());
+//            return "redirect:/admin/update-user/" + id;
+//        }
+//    }
 
     // GET mapping with search, filter, and pagination parameters
     @GetMapping("/users/search")
