@@ -181,7 +181,7 @@ public class ProductController {
 
             model.addAttribute("relatedProducts", relatedProducts);
 
-            return "user/shop-single-simple";
+            return "user/shop-single";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,11 +199,6 @@ public class ProductController {
     public String showAboutPage(Model model) {
         model.addAttribute("pageType", "about");
         return "user/about";
-    }
-
-    @GetMapping("/privacy")
-    public String showPrivacyPage() {
-        return "user/privacy";
     }
 
     // Add missing endpoints for better navigation
