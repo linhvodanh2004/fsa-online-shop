@@ -37,7 +37,7 @@ public class AuthController implements ErrorController {
     public String handleRegister(
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String fullname,
+            @RequestParam(required = false) String fullname,
             @RequestParam String email,
             @RequestParam(required = false) String phone
     ) {
@@ -48,17 +48,21 @@ public class AuthController implements ErrorController {
         if (userService.existsByEmail(email)) {
             return "redirect:/register?error=email-exists";
         }
+        // Handle optional fields
+        String finalFullname = (fullname != null && !fullname.trim().isEmpty()) ? fullname.trim() : null;
+        String finalPhone = (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null;
+
         user = User.builder()
                 .username(username)
                 .password(password)
-                .fullname(fullname)
+                .fullname(finalFullname)
                 .email(email)
-                .phone(phone)
+                .phone(finalPhone)
                 .status(true)
                 .role(roleService.getRoleByName(UserRole.USER))
                 .build();
         userService.save(user);
-        return "redirect:/register?success=register-successfully";
+        return "redirect:/login?success=register-successfully";
     }
 
     @GetMapping("/login")

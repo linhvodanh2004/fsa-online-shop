@@ -194,6 +194,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsByPhone(String phone) {
+        if (!StringUtils.hasText(phone)) {
+            return false;
+        }
+
+        try {
+            return userRepository.existsByPhone(phone);
+        } catch (Exception e) {
+            throw new RuntimeException("Error checking phone existence: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<User> searchUsers(String query, String role, String provider, Boolean status) {
         try {

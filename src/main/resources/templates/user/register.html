@@ -40,8 +40,9 @@
             <form id="registerForm" method="post" th:action="@{/register}">
                 <div class="mb-2">
                     <label class="form-label">Username<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="text" name="username"
+                    <input class="form-control form-control-lg" type="text" name="username" id="username"
                            placeholder="Enter username"/>
+                    <div id="username-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password<span class="text-danger">*</span></label>
@@ -54,22 +55,24 @@
                            placeholder="Confirm password"/>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Fullname<span class="text-danger">*</span></label>
+                    <label class="form-label">Fullname</label>
                     <input class="form-control form-control-lg" type="text" name="fullname"
                            placeholder="Enter fullname"/>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="text" name="email" placeholder="Enter email"/>
+                    <input class="form-control form-control-lg" type="text" name="email" id="email" placeholder="Enter email"/>
+                    <div id="email-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Phone</label>
-                    <input class="form-control form-control-lg" type="text" name="phone"
+                    <input class="form-control form-control-lg" type="text" name="phone" id="phone"
                            placeholder="Enter phone number"/>
+                    <div id="phone-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
 
                 <div class="text-center mt-2">
-                    <button type="submit" class="btn btn-lg btn-success">Register now</button>
+                    <button type="submit" id="register-btn" class="btn btn-lg btn-success">Register now</button>
                     <br>
                 </div>
             </form>
@@ -87,14 +90,158 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="toastify-message.js"></script>
 <script>
+    // Validation state
+    let validationState = {
+        username: false,
+        email: false,
+        phone: true // Phone is optional, so default to true
+    };
+
+    // Debounce function to avoid too many API calls
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Show error message
+    function showError(fieldId, message) {
+        const errorDiv = document.getElementById(fieldId + '-error');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        validationState[fieldId] = false;
+        updateRegisterButton();
+    }
+
+    // Hide error message
+    function hideError(fieldId) {
+        const errorDiv = document.getElementById(fieldId + '-error');
+        errorDiv.style.display = 'none';
+        validationState[fieldId] = true;
+        updateRegisterButton();
+    }
+
+    // Update register button state
+    function updateRegisterButton() {
+        const registerBtn = document.getElementById('register-btn');
+        const allValid = Object.values(validationState).every(valid => valid);
+        registerBtn.disabled = !allValid;
+        registerBtn.style.opacity = allValid ? '1' : '0.6';
+        registerBtn.style.cursor = allValid ? 'pointer' : 'not-allowed';
+    }
+
+    // Check username availability
+    const checkUsername = debounce(async (username) => {
+        if (!username || username.length < 6) {
+            if (username && username.length < 6) {
+                showError('username', 'Username must be at least 6 characters');
+            }
+            return;
+        }
+
+        if (username.startsWith("google_user_")) {
+            showError('username', 'Invalid username');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/validation/check-username?username=${encodeURIComponent(username)}`);
+            const data = await response.json();
+
+            if (data.exists) {
+                showError('username', data.message);
+            } else {
+                hideError('username');
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+        }
+    }, 500);
+
+    // Check email availability
+    const checkEmail = debounce(async (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email) {
+            return;
+        }
+
+        if (!emailRegex.test(email)) {
+            showError('email', 'Invalid email format');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/validation/check-email?email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+
+            if (data.exists) {
+                showError('email', data.message);
+            } else {
+                hideError('email');
+            }
+        } catch (error) {
+            console.error('Error checking email:', error);
+        }
+    }, 500);
+
+    // Check phone availability
+    const checkPhone = debounce(async (phone) => {
+        if (!phone || phone.trim() === '') {
+            hideError('phone'); // Phone is optional
+            return;
+        }
+
+        const phoneRegex = /^\+?\d{10,15}$/;
+        if (!phoneRegex.test(phone)) {
+            showError('phone', 'Invalid phone number format');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/validation/check-phone?phone=${encodeURIComponent(phone)}`);
+            const data = await response.json();
+
+            if (data.exists) {
+                showError('phone', data.message);
+            } else {
+                hideError('phone');
+            }
+        } catch (error) {
+            console.error('Error checking phone:', error);
+        }
+    }, 500);
+
+    // Add event listeners
+    document.getElementById('username').addEventListener('blur', function() {
+        checkUsername(this.value.trim());
+    });
+
+    document.getElementById('email').addEventListener('blur', function() {
+        checkEmail(this.value.trim());
+    });
+
+    document.getElementById('phone').addEventListener('blur', function() {
+        checkPhone(this.value.trim());
+    });
+
+    // Form submission
     document.getElementById("registerForm").addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
+
         const username = this.username.value.trim();
         const password = this.password.value.trim();
         const confirmPassword = this["confirm-password"].value.trim();
         const fullname = this.fullname.value.trim();
         const email = this.email.value.trim();
         const phone = this.phone.value.trim();
+
         const showToast = (msg) => {
             Toastify({
                 text: msg,
@@ -108,39 +255,34 @@
                 }
             }).showToast();
         };
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^\+?\d{10,15}$/;
-        if (!username || !password || !confirmPassword || !email || !fullname) {
-            showToast("Please fill in all required fields");
+
+        // Basic validation - only check required fields
+        if (!username || !password || !confirmPassword || !email) {
+            showToast("Please fill in all required fields (Username, Password, Confirm Password, Email)");
             return;
         }
-        if(username.startsWith("google_user_")){
-            showToast("Invalid username");
-            return;
-        }
-        if (username.length < 6) {
-            showToast("Username must be at least 6 characters");
-            return;
-        }
+
         if (password.length < 6) {
             showToast("Password must be at least 6 characters");
             return;
         }
+
         if (password !== confirmPassword) {
             showToast("Password and confirm password must match");
             return;
         }
-        if (!emailRegex.test(email)) {
-            showToast("Invalid email format");
+
+        // Check if all validations passed
+        if (!Object.values(validationState).every(valid => valid)) {
+            showToast("Please fix the errors before submitting");
             return;
         }
-        if (phone && !phoneRegex.test(phone)) {
-            showToast("Invalid phone number");
-            return;
-        }
-        // Submit the form (you can use AJAX here instead)
+
         this.submit();
     });
+
+    // Initialize button state
+    updateRegisterButton();
 </script>
 </body>
 </html>
