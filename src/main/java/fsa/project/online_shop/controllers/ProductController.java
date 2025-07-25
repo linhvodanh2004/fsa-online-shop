@@ -308,6 +308,7 @@ public class ProductController {
         product.setQuantity(quantity);
         product.setDescription(description);
         product.setStatus(true);
+        product.setSold(0);
 
         Category category = categoryService.getCategoryById(categoryId);
         product.setCategory(category);

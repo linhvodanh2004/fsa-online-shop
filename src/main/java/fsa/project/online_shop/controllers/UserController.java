@@ -122,17 +122,6 @@ public class UserController {
         }
     }
 
-    // GET mapping for update user page
-//    @GetMapping("/update-user/{id}")
-//    public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            return "redirect:/admin/users?error=User not found";
-//        }
-//        model.addAttribute("user", user);
-//        return "admin/admin-user-update";
-//    }
-
     // POST mapping for updating user
 //    @PostMapping("/update-user/{id}")
 //    public String updateUser(@PathVariable("id") Long id,
@@ -232,6 +221,11 @@ public class UserController {
         model.addAttribute("isLast", userPage.isLast());
 
         return "admin/admin-user-manager";
+    }
+
+    @GetMapping("/admin/edit-profile")
+    public String editAdminProfile(){
+        return "admin/admin-profile";
     }
 
     
