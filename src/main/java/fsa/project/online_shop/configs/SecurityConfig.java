@@ -39,6 +39,7 @@ public class SecurityConfig {
             "/product/**"  // Allow product slug URLs with /product/ prefix
     };
     private static final String[] AUTHENTICATED_ENDPOINTS = {
+            "/admin/**"
     };
 
     @Bean
@@ -72,6 +73,7 @@ public class SecurityConfig {
                         auth -> auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(AUTHENTICATED_ENDPOINTS).authenticated()
                                 .requestMatchers("/admin/**").permitAll()
                                 .anyRequest().permitAll()
                 )
