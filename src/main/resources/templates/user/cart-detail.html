@@ -124,7 +124,6 @@
 <div th:replace="~{component/user-navbar :: user-navbar}"></div>
 <!-- Close Top Nav -->
 
-
 <!-- Header -->
 <div th:replace="~{component/user-header :: user-header}"></div>
 <!-- Close Header -->
@@ -151,25 +150,25 @@
                     <form id="checkout-form">
                         <div class="form-group mb-3">
                             <label>Receiver Name</label>
-                            <input type="text" name="receiverName" class="form-control" required>
+                            <input type="text" name="receiverName" class="form-control" th:value="${receiverName}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Phone</label>
-                            <input type="text" name="receiverPhone" class="form-control" required>
+                            <input type="text" name="receiverPhone" class="form-control" th:value="${receiverPhone}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Email</label>
-                            <input type="email" name="receiverEmail" class="form-control">
+                            <input type="text" name="receiverEmail" class="form-control" th:value="${receiverEmail}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Address</label>
-                            <input type="text" name="receiverAddress" class="form-control" required>
+                            <input type="text" name="receiverAddress" class="form-control">
                         </div>
                         <div class="form-group mb-3">
                             <label>Note</label>
                             <textarea name="note" class="form-control"></textarea>
                         </div>
-                        <input type="hidden" name="paymentMethod" id="paymentMethodInput" required>
+                        <input type="hidden" name="paymentMethod" id="paymentMethodInput">
                         <!-- Cash on Delivery -->
                         <div class="payment-option cash-delivery" data-method="COD" onclick="selectPayment('COD', this)">
                             <div class="d-flex align-items-center">
@@ -247,6 +246,42 @@
                 data[key] = value;
             });
 
+            // Validation
+            const receiverName = data.receiverName.trim();
+            const receiverPhone = data.receiverPhone.trim();
+            const receiverEmail = data.receiverEmail.trim();
+            const receiverAddress = data.receiverAddress.trim();
+
+            // Email validation (basic format check)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Phone validation (Vietnamese phone number: 0[1-9][0-9]{8,9} or +84[1-9][0-9]{8})
+            const phoneRegex = /^(0[1-9][0-9]{8,9}|84[1-9][0-9]{8})$/;
+
+            if (!receiverName) {
+                showToast("Receiver name cannot be empty");
+                return;
+            }
+            if (!receiverPhone) {
+                showToast("Phone number cannot be empty");
+                return;
+            }
+            if (!phoneRegex.test(receiverPhone)) {
+                showToast("Invalid phone number format (e.g., 0123456789 or +84123456789)");
+                return;
+            }
+            if (!receiverEmail) {
+                showToast("Email cannot be empty");
+                return;
+            }
+            if (!emailRegex.test(receiverEmail)) {
+                showToast("Invalid email format");
+                return;
+            }
+            if (!receiverAddress) {
+                showToast("Address cannot be empty");
+                return;
+            }
+
             if (paymentMethod === "COD") {
                 // Nộp đơn hàng qua form bình thường (POST tới /cart/checkout)
                 form.action = "/cart-detail/checkout";
@@ -255,12 +290,12 @@
             } else if (paymentMethod === "VNPAY") {
                 try {
                     const response = await fetch("/payment/api/create", {
-                        method: "POST", // dùng GET vì controller là @GetMapping
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            amount: getCartTotal(), // dùng tổng giỏ hàng
+                            amount: getCartTotal(),
                             receiverName: data.receiverName,
                             receiverPhone: data.receiverPhone,
                             receiverEmail: data.receiverEmail,
@@ -271,8 +306,6 @@
                     });
                     const result = await response.json();
                     if (result.status === "success" && result.url) {
-                        // Lưu thông tin đơn hàng tạm vào localStorage (sau thanh toán thành công sẽ submit tiếp)
-                        // localStorage.setItem("pendingOrder", JSON.stringify(data));
                         window.location.href = result.url;
                     } else {
                         showToast(result.message);
@@ -399,10 +432,5 @@
         return parseInt(totalText.replace(/[^\d]/g, "")) || 0;
     }
 </script>
-<script>
-
-</script>
-
 </body>
-
 </html>

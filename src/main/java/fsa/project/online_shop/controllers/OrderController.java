@@ -8,27 +8,19 @@ import fsa.project.online_shop.services.*;
 import fsa.project.online_shop.utils.SessionUtil;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,6 +38,11 @@ public class OrderController {
         System.out.println(user);
         Cart cart = user.getCart();
         model.addAttribute("userCart", (cart.getCartItems().isEmpty()) ? null : cart.getCartItems());
+        model.addAttribute("receiverName", (user.getReceiverName() != null) ? user.getReceiverName()
+                : (user.getFullname() != null) ? user.getFullname() : "");
+        model.addAttribute("receiverEmail", (user.getEmail()  == null) ? "" : user.getEmail());
+        model.addAttribute("receiverPhone", (user.getReceiverPhone() != null) ? user.getReceiverPhone()
+                : (user.getPhone() != null) ? user.getPhone() : "");
         return "user/cart-detail";
     }
 

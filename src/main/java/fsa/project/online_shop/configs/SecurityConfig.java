@@ -1,7 +1,5 @@
 package fsa.project.online_shop.configs;
 
-import fsa.project.online_shop.models.constant.UserRole;
-import fsa.project.online_shop.services.UserService;
 import fsa.project.online_shop.services.implement.CustomOAuth2UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;

@@ -40,7 +40,7 @@
             <form method="post" th:action="@{/login}">
                 <div class="mb-3">
                     <label class="form-label">Email / Phone / Username <span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="text" name="username"
+                    <input class="form-control form-control-lg" type="text" name="username" id="username"
                            placeholder="Enter email, phone number, or username" required/>
                     <div class="form-text text-muted">
                         You can login with email, phone number, or username
@@ -48,7 +48,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password <span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="password" name="password"
+                    <input class="form-control form-control-lg" type="password" name="password" id="password"
                            placeholder="Enter your password" required/>
                 </div>
                 <div class="mb-3 form-check">
@@ -91,10 +91,66 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="toastify-message.js"></script>
 <script>
-    document.getElementById("registerForm").addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent form submission
-        const username = this.username.value.trim();
-        const password = this.password.value.trim();
+    // Preserve form data in localStorage
+    function saveFormData() {
+        const username = document.getElementById('username').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+
+        localStorage.setItem('loginUsername', username);
+        localStorage.setItem('loginRememberMe', rememberMe);
+    }
+
+    // Restore form data from localStorage
+    function restoreFormData() {
+        const savedUsername = localStorage.getItem('loginUsername');
+        const savedRememberMe = localStorage.getItem('loginRememberMe');
+
+        if (savedUsername) {
+            document.getElementById('username').value = savedUsername;
+        }
+
+        if (savedRememberMe === 'true') {
+            document.getElementById('rememberMe').checked = true;
+        }
+    }
+
+    // Clear saved data on successful login
+    function clearSavedData() {
+        localStorage.removeItem('loginUsername');
+        localStorage.removeItem('loginRememberMe');
+    }
+
+    // Show success message for registration
+    function showSuccessMessage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'register-successfully') {
+            Toastify({
+                text: "Registration successful! Please login with your credentials.",
+                duration: 5000,
+                gravity: "top",
+                position: "right",
+                newWindow: true,
+                close: true,
+                style: {
+                    background: "#28a745",
+                }
+            }).showToast();
+
+            // Remove success parameter from URL without refreshing
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    }
+
+    // Save form data when user types
+    document.getElementById('username').addEventListener('input', saveFormData);
+    document.getElementById('rememberMe').addEventListener('change', saveFormData);
+
+    // Form submission validation
+    document.querySelector('form').addEventListener("submit", function (e) {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
         const showToast = (msg) => {
             Toastify({
                 text: msg,
@@ -108,11 +164,33 @@
                 }
             }).showToast();
         };
+
         if (!username || !password) {
+            e.preventDefault();
             showToast("Email/Phone/Username and password are required");
             return;
         }
-        this.submit();
+
+        // If validation passes, save data before submission
+        saveFormData();
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        restoreFormData();
+        showSuccessMessage();
+
+        // Clear saved data if login was successful (no error in URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('error')) {
+            // Check if we're on login page after a successful action
+            if (urlParams.get('success')) {
+                // Don't clear data yet, user hasn't logged in
+            } else {
+                // Clear data if no error and no success (normal page load)
+                setTimeout(clearSavedData, 1000);
+            }
+        }
     });
 </script>
 </body>

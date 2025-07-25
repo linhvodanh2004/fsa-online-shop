@@ -3,7 +3,6 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.services.*;
-import fsa.project.online_shop.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -181,7 +180,7 @@ public class ProductController {
 
             model.addAttribute("relatedProducts", relatedProducts);
 
-            return "user/shop-single-simple";
+            return "user/shop-single";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,11 +198,6 @@ public class ProductController {
     public String showAboutPage(Model model) {
         model.addAttribute("pageType", "about");
         return "user/about";
-    }
-
-    @GetMapping("/privacy")
-    public String showPrivacyPage() {
-        return "user/privacy";
     }
 
     // Add missing endpoints for better navigation

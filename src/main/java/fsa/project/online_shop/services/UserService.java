@@ -20,6 +20,7 @@ public interface UserService {
     // Existence checks
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
+    boolean existsByPhone(String phone);
 
     // Search and filter operations
     List<User> searchUsers(String query, String role, String provider, Boolean status);

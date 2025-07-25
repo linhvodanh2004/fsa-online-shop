@@ -20,866 +20,1086 @@
     <!-- Slick -->
     <link rel="stylesheet" type="text/css" href="user/css/slick.min.css">
     <link rel="stylesheet" type="text/css" href="user/css/slick-theme.css">
-<!--
 
-TemplateMo 559 Zay Shop
-
-https://templatemo.com/tm-559-zay-shop
-
--->
-</head>
-
-<body>
-    <!-- Start Top Nav -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
-        <div class="container text-light">
-            <div class="w-100 d-flex justify-content-between">
-                <div>
-                    <i class="fa fa-envelope mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
-                    <i class="fa fa-phone mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
-                </div>
-                <div>
-                    <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- Close Top Nav -->
-
-
-    <!-- Header -->
-    <div th:replace="~{component/user-header :: user-header}"></div>
-    <!-- Close Header -->
-
-    <!-- Modal -->
-    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="w-100 pt-1 mb-5 text-right">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
-                    <button type="submit" class="input-group-text bg-success text-light">
-                        <i class="fa fa-fw fa-search text-white"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-
-    <!-- Start Content -->
-    <section class="position-relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
-        <!-- Background Pattern -->
-        <div class="position-absolute w-100 h-100" style="background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></svg>'); opacity: 0.3;"></div>
-
-        <div class="container pb-5 position-relative">
-            <!-- Breadcrumb -->
-            <div class="row">
-                <div class="col-12 py-4">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb bg-white bg-opacity-10 backdrop-blur rounded-pill px-4 py-3 shadow-sm">
-                            <li class="breadcrumb-item">
-                                <a th:href="@{/}" class="text-white text-decoration-none fw-medium">
-                                    <i class="fas fa-home me-1"></i>Home
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a th:href="@{/shop}" class="text-white text-decoration-none fw-medium">Shop</a>
-                            </li>
-                            <li class="breadcrumb-item active text-white fw-semibold" aria-current="page" th:text="${product.name}">Product Name</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-            <!-- End Breadcrumb -->
-
-            <div class="row g-5">
-                <!-- Product Images Section -->
-                <div class="col-lg-6">
-                    <div class="position-sticky" style="top: 2rem;">
-                        <!-- Main Product Image -->
-                        <div class="bg-white rounded-4 shadow-lg p-4 mb-4 position-relative overflow-hidden">
-                            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f8f9fa 75%), linear-gradient(-45deg, transparent 75%, #f8f9fa 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; opacity: 0.1;"></div>
-                            <img class="img-fluid rounded-3 position-relative"
-                                 th:src="@{'/productImg/' + ${product.image}}"
-                                 th:alt="${product.name}"
-                                 id="product-detail"
-                                 style="width: 100%; height: 400px; object-fit: cover; transition: transform 0.3s ease;"
-                                 onerror="this.src='/user/img/default-pc.jpg'"
-                                 onmouseover="this.style.transform='scale(1.05)'"
-                                 onmouseout="this.style.transform='scale(1)'">
-
-                            <!-- Image Overlay Badge -->
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-success bg-opacity-90 px-3 py-2 rounded-pill shadow-sm">
-                                    <i class="fas fa-star me-1"></i>Premium
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Thumbnail Gallery -->
-                        <div class="bg-white rounded-4 shadow-sm p-3">
-                            <div class="row g-2">
-                                <div class="col-3">
-                                    <div class="thumbnail-item active rounded-3 overflow-hidden border-2 border-primary" style="cursor: pointer;">
-                                        <img class="img-fluid"
-                                             th:src="@{'/productImg/' + ${product.image}}"
-                                             th:alt="${product.name}"
-                                             style="height: 80px; width: 100%; object-fit: cover;"
-                                             onerror="this.src='/user/img/product_single_01.jpg'">
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="thumbnail-item rounded-3 overflow-hidden border-2 border-transparent hover-border-primary" style="cursor: pointer; transition: all 0.3s ease;">
-                                        <img class="img-fluid"
-                                             th:src="@{'/productImg/' + ${product.image}}"
-                                             th:alt="${product.name}"
-                                             style="height: 80px; width: 100%; object-fit: cover;"
-                                             onerror="this.src='/user/img/product_single_02.jpg'">
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="thumbnail-item rounded-3 overflow-hidden border-2 border-transparent hover-border-primary" style="cursor: pointer; transition: all 0.3s ease;">
-                                        <img class="img-fluid"
-                                             th:src="@{'/productImg/' + ${product.image}}"
-                                             th:alt="${product.name}"
-                                             style="height: 80px; width: 100%; object-fit: cover;"
-                                             onerror="this.src='/user/img/product_single_03.jpg'">
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="thumbnail-item rounded-3 overflow-hidden border-2 border-transparent hover-border-primary" style="cursor: pointer; transition: all 0.3s ease;">
-                                        <img class="img-fluid"
-                                             th:src="@{'/productImg/' + ${product.image}}"
-                                             th:alt="${product.name}"
-                                             style="height: 80px; width: 100%; object-fit: cover;"
-                                             onerror="this.src='/user/img/product_single_04.jpg'">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Information Section -->
-                <div class="col-lg-6">
-                    <div class="bg-white rounded-4 shadow-lg p-5 h-100">
-                        <!-- Category Badge -->
-                        <div class="d-inline-flex align-items-center gap-2 mb-4">
-                            <div class="bg-primary rounded-circle p-2">
-                                <i class="fas fa-award text-white"></i>
-                            </div>
-                            <span class="badge text-white fw-semibold text-uppercase px-4 py-2 rounded-pill shadow-sm"
-                                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
-                                  th:text="${product.category != null ? product.category.name : 'Category'}">Category</span>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div class="mb-5">
-                            <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" th:text="${product.name}">Product Name</h1>
-
-                            <!-- Rating and Reviews -->
-                            <div class="d-flex align-items-center gap-4 mb-4">
-                                <div class="d-flex align-items-center gap-1">
-                                    <i class="fas fa-star text-warning fs-5"></i>
-                                    <i class="fas fa-star text-warning fs-5"></i>
-                                    <i class="fas fa-star text-warning fs-5"></i>
-                                    <i class="fas fa-star text-warning fs-5"></i>
-                                    <i class="fas fa-star text-muted fs-5"></i>
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="fw-bold text-dark fs-5">(4.8)</span>
-                                    <span class="text-muted">•</span>
-                                    <span class="text-muted">36 reviews</span>
-                                    <a href="#reviews" class="text-decoration-none text-primary fw-medium ms-2">View all</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pricing Section -->
-                        <div class="mb-5">
-                            <div class="bg-light rounded-4 p-4 border">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="display-4 fw-bold text-success"
-                                          th:text="'$' + ${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT') : '0.00'}">$0.00</span>
-                                    <div class="text-end">
-                                        <small class="text-muted d-block">Starting from</small>
-                                        <small class="text-success fw-semibold">Free shipping</small>
-                                    </div>
-                                </div>
-                                <p class="small text-muted mb-0"><i class="fas fa-info-circle me-1"></i>Price includes VAT • 30-day money back guarantee</p>
-                            </div>
-                        </div>
-
-                        <!-- Stock Status -->
-                        <div class="mb-5">
-                            <div class="d-flex align-items-center gap-3 p-4 rounded-4 shadow-sm"
-                                 th:classappend="${product.quantity != null and product.quantity > 0} ? 'bg-success bg-opacity-10 border border-success' : 'bg-danger bg-opacity-10 border border-danger'">
-                                <div class="d-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm" style="width: 40px; height: 40px;">
-                                    <div th:if="${product.quantity != null and product.quantity > 0}" class="bg-success rounded-circle" style="width: 16px; height: 16px;"></div>
-                                    <div th:if="${product.quantity == null or product.quantity == 0}" class="bg-danger rounded-circle" style="width: 16px; height: 16px;"></div>
-                                </div>
-                                <div>
-                                    <span th:if="${product.quantity != null and product.quantity > 0}" class="text-success fw-bold fs-5 d-block">✓ In Stock</span>
-                                    <span th:if="${product.quantity == null or product.quantity == 0}" class="text-danger fw-bold fs-5 d-block">⚠ Out of Stock</span>
-                                    <small th:if="${product.quantity != null and product.quantity > 0}" class="text-muted"
-                                           th:text="'Only ' + ${product.quantity} + ' units remaining'">Stock info</small>
-                                    <small th:if="${product.quantity == null or product.quantity == 0}" class="text-muted">Notify when available</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Sales Info -->
-                        <div class="d-flex gap-3 mb-5">
-                            <div class="flex-fill bg-info bg-opacity-10 rounded-4 p-3 text-center border border-info">
-                                <div class="fw-bold text-info fs-4" th:text="${product.quantity != null ? product.quantity : 0}">0</div>
-                                <small class="text-muted">Available</small>
-                            </div>
-                            <div class="flex-fill bg-success bg-opacity-10 rounded-4 p-3 text-center border border-success">
-                                <div class="fw-bold text-success fs-4" th:text="${product.sold != null ? product.sold : 0}">0</div>
-                                <small class="text-muted">Sold</small>
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-5">
-                            <h5 class="fw-bold text-dark mb-4 d-flex align-items-center gap-2">
-                                <i class="fas fa-info-circle text-primary"></i>
-                                Description
-                            </h5>
-                            <div class="bg-light rounded-4 p-4 border">
-                                <p class="text-muted mb-0 lh-lg" th:text="${product.description}">Product description will be displayed here.</p>
-                            </div>
-                        </div>
-
-                        <!-- Available Colors -->
-                        <div class="mb-5">
-                            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-                                <i class="fas fa-palette text-primary"></i>
-                                Available Colors
-                            </h6>
-                            <div class="d-flex gap-3">
-                                <div class="color-option position-relative" style="cursor: pointer;">
-                                    <div class="bg-dark rounded-circle border border-3 border-white shadow-sm" style="width: 40px; height: 40px;"></div>
-                                    <span class="position-absolute top-100 start-50 translate-middle-x mt-2 small fw-medium">Black</span>
-                                </div>
-                                <div class="color-option position-relative" style="cursor: pointer;">
-                                    <div class="bg-light rounded-circle border border-3 border-dark" style="width: 40px; height: 40px;"></div>
-                                    <span class="position-absolute top-100 start-50 translate-middle-x mt-2 small fw-medium">White</span>
-                                </div>
-                                <div class="color-option position-relative" style="cursor: pointer;">
-                                    <div class="rounded-circle border border-3 border-white shadow-sm" style="width: 40px; height: 40px; background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);"></div>
-                                    <span class="position-absolute top-100 start-50 translate-middle-x mt-2 small fw-medium">RGB</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Specifications -->
-                        <div class="mb-5">
-                            <h5 class="fw-bold text-dark mb-4 d-flex align-items-center gap-2">
-                                <i class="fas fa-microchip text-primary"></i>
-                                Technical Specifications
-                            </h5>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="spec-card bg-white rounded-4 p-4 border shadow-sm h-100 position-relative overflow-hidden">
-                                        <div class="position-absolute top-0 end-0 opacity-10">
-                                            <i class="fas fa-microchip fa-3x text-primary"></i>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 position-relative">
-                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2">
-                                                <i class="fas fa-microchip text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted text-uppercase fw-semibold">Processor</small>
-                                                <div class="fw-bold text-dark">Intel Core i7-13700F</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="spec-card bg-white rounded-4 p-4 border shadow-sm h-100 position-relative overflow-hidden">
-                                        <div class="position-absolute top-0 end-0 opacity-10">
-                                            <i class="fas fa-tv fa-3x text-success"></i>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 position-relative">
-                                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                                <i class="fas fa-tv text-success"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted text-uppercase fw-semibold">Graphics</small>
-                                                <div class="fw-bold text-dark">NVIDIA RTX 4070 12GB</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="spec-card bg-white rounded-4 p-4 border shadow-sm h-100 position-relative overflow-hidden">
-                                        <div class="position-absolute top-0 end-0 opacity-10">
-                                            <i class="fas fa-memory fa-3x text-info"></i>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 position-relative">
-                                            <div class="bg-info bg-opacity-10 rounded-circle p-2">
-                                                <i class="fas fa-memory text-info"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted text-uppercase fw-semibold">Memory</small>
-                                                <div class="fw-bold text-dark">16GB DDR4 3200MHz</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="spec-card bg-white rounded-4 p-4 border shadow-sm h-100 position-relative overflow-hidden">
-                                        <div class="position-absolute top-0 end-0 opacity-10">
-                                            <i class="fas fa-hdd fa-3x text-warning"></i>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3 position-relative">
-                                            <div class="bg-warning bg-opacity-10 rounded-circle p-2">
-                                                <i class="fas fa-hdd text-warning"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted text-uppercase fw-semibold">Storage</small>
-                                                <div class="fw-bold text-dark">1TB NVMe SSD</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Purchase Form -->
-                        <div class="bg-white rounded-4 shadow-lg p-5 border">
-                            <form action="" method="GET">
-                                <input type="hidden" name="product-title" th:value="${product.name}">
-
-                                <!-- Configuration Selection -->
-                                <div class="mb-5">
-                                    <h6 class="fw-bold text-dark mb-4 d-flex align-items-center gap-2">
-                                        <i class="fas fa-cogs text-primary"></i>
-                                        Choose Configuration
-                                    </h6>
-                                    <div class="row g-3">
-                                        <div class="col-6 col-md-3">
-                                            <button type="button" class="btn btn-outline-primary w-100 py-3 rounded-4 config-btn position-relative overflow-hidden" data-config="Basic">
-                                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 transition-opacity"></div>
-                                                <div class="position-relative">
-                                                    <div class="fw-bold">Basic</div>
-                                                    <small class="text-muted">Entry Level</small>
-                                                </div>
-                                            </button>
-                                        </div>
-                                        <div class="col-6 col-md-3">
-                                            <button type="button" class="btn btn-outline-primary w-100 py-3 rounded-4 config-btn position-relative overflow-hidden" data-config="Pro">
-                                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 transition-opacity"></div>
-                                                <div class="position-relative">
-                                                    <div class="fw-bold">Pro</div>
-                                                    <small class="text-muted">Performance</small>
-                                                </div>
-                                            </button>
-                                        </div>
-                                        <div class="col-6 col-md-3">
-                                            <button type="button" class="btn btn-outline-primary w-100 py-3 rounded-4 config-btn position-relative overflow-hidden" data-config="Ultimate">
-                                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 transition-opacity"></div>
-                                                <div class="position-relative">
-                                                    <div class="fw-bold">Ultimate</div>
-                                                    <small class="text-muted">High-End</small>
-                                                </div>
-                                            </button>
-                                        </div>
-                                        <div class="col-6 col-md-3">
-                                            <button type="button" class="btn btn-outline-primary w-100 py-3 rounded-4 config-btn position-relative overflow-hidden" data-config="Custom">
-                                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 transition-opacity"></div>
-                                                <div class="position-relative">
-                                                    <div class="fw-bold">Custom</div>
-                                                    <small class="text-muted">Tailored</small>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="product-config" id="product-config" value="Basic">
-                                </div>
-
-                                <!-- Quantity Selection -->
-                                <div class="mb-5">
-                                    <h6 class="fw-bold text-dark mb-4 d-flex align-items-center gap-2">
-                                        <i class="fas fa-sort-numeric-up text-primary"></i>
-                                        Quantity
-                                    </h6>
-                                    <div class="d-flex align-items-center gap-4">
-                                        <div class="d-flex align-items-center bg-light rounded-4 border shadow-sm">
-                                            <button type="button" class="btn btn-light rounded-start-4 px-4 py-3" id="btn-minus">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <span class="px-4 py-3 fw-bold fs-5 bg-white border-start border-end" id="var-value">1</span>
-                                            <button type="button" class="btn btn-light rounded-end-4 px-4 py-3" id="btn-plus">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                        <div class="text-muted">
-                                            <small>Maximum: <span th:text="${product.quantity != null ? product.quantity : 10}">10</span> units</small>
-                                        </div>
-                                        <input type="hidden" name="product-quantity" id="product-quantity" value="1">
-                                    </div>
-                                </div>
-
-                                <!-- Action Buttons -->
-                                <div class="d-grid gap-3">
-                                    <button type="submit"
-                                            class="btn btn-lg py-4 fw-bold rounded-4 shadow-lg position-relative overflow-hidden"
-                                            name="submit" value="addtocard"
-                                            th:disabled="${product.quantity == null or product.quantity == 0}"
-                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white;">
-                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-0"></div>
-                                        <div class="position-relative d-flex align-items-center justify-content-center gap-3">
-                                            <i class="fas fa-shopping-cart fs-5"></i>
-                                            <span th:if="${product.quantity != null and product.quantity > 0}">Add to Cart - Buy Now</span>
-                                            <span th:if="${product.quantity == null or product.quantity == 0}">Notify When Available</span>
-                                        </div>
-                                    </button>
-
-                                    <div class="row g-3">
-                                        <div class="col-6">
-                                            <button type="button" class="btn btn-outline-danger btn-lg py-3 fw-semibold rounded-4 w-100 shadow-sm">
-                                                <i class="fas fa-heart me-2"></i>
-                                                Wishlist
-                                            </button>
-                                        </div>
-                                        <div class="col-6">
-                                            <a th:href="@{/shop}" class="btn btn-outline-secondary btn-lg py-3 fw-semibold rounded-4 w-100 shadow-sm">
-                                                <i class="fas fa-arrow-left me-2"></i>
-                                                Back
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Benefits Section -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="bg-white rounded-4 shadow-lg p-5">
-                        <h5 class="fw-bold text-dark mb-5 text-center d-flex align-items-center justify-content-center gap-3">
-                            <i class="fas fa-star text-warning"></i>
-                            Why Choose GOS Gaming?
-                            <i class="fas fa-star text-warning"></i>
-                        </h5>
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <div class="text-center p-4 rounded-4 h-100 position-relative overflow-hidden" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
-                                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-10"></div>
-                                    <div class="position-relative">
-                                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-lg" style="width: 60px; height: 60px;">
-                                            <i class="fas fa-truck text-success fs-4"></i>
-                                        </div>
-                                        <h6 class="fw-bold text-white mb-2">Free Express Shipping</h6>
-                                        <p class="small text-white opacity-90 mb-0">Fast delivery on orders over $500</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="text-center p-4 rounded-4 h-100 position-relative overflow-hidden" style="background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);">
-                                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-10"></div>
-                                    <div class="position-relative">
-                                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-lg" style="width: 60px; height: 60px;">
-                                            <i class="fas fa-shield-alt text-primary fs-4"></i>
-                                        </div>
-                                        <h6 class="fw-bold text-white mb-2">2-Year Warranty</h6>
-                                        <p class="small text-white opacity-90 mb-0">Full manufacturer coverage</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="text-center p-4 rounded-4 h-100 position-relative overflow-hidden" style="background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);">
-                                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-10"></div>
-                                    <div class="position-relative">
-                                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-lg" style="width: 60px; height: 60px;">
-                                            <i class="fas fa-undo text-info fs-4"></i>
-                                        </div>
-                                        <h6 class="fw-bold text-white mb-2">30-Day Returns</h6>
-                                        <p class="small text-white opacity-90 mb-0">Hassle-free return policy</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Close Content -->
-
-    <!-- Start Related Products -->
-    <section class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Related Products</h2>
-                <p class="text-muted">Discover more amazing gaming PCs</p>
-            </div>
-
-            <!--Start Related Products Grid-->
-            <div class="row g-4">
-                <!-- Related Products Loop -->
-                <div class="col-lg-3 col-md-6" th:each="relatedProduct : ${relatedProducts}">
-                    <div class="product-card bg-white rounded-4 shadow-lg overflow-hidden h-100 position-relative">
-                        <!-- Product Image -->
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid w-100"
-                                 th:src="@{'/productImg/' + ${relatedProduct.image}}"
-                                 th:alt="${relatedProduct.name}"
-                                 style="height: 250px; object-fit: cover; transition: transform 0.3s ease;"
-                                 onerror="this.src='/user/img/shop_01.jpg'">
-
-                            <!-- Hover Overlay -->
-                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center opacity-0 transition-opacity product-overlay">
-                                <div class="d-flex gap-2">
-                                    <a href="#" class="btn btn-light rounded-circle p-3 shadow-sm">
-                                        <i class="fas fa-heart text-danger"></i>
-                                    </a>
-                                    <a th:href="@{${relatedProduct.slug != null && !relatedProduct.slug.isEmpty() ? '/product/' + relatedProduct.slug : '/shop-single/' + relatedProduct.id}}"
-                                       class="btn btn-primary rounded-circle p-3 shadow-sm">
-                                        <i class="fas fa-eye text-white"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-success rounded-circle p-3 shadow-sm">
-                                        <i class="fas fa-cart-plus text-white"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Stock Badge -->
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-info bg-opacity-90 text-white px-3 py-2 rounded-pill shadow-sm">
-                                    <span th:text="${relatedProduct.quantity}">0</span> left
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="p-4">
-                            <!-- Category -->
-                            <div class="mb-2">
-                                <span class="badge bg-light text-muted text-uppercase small fw-semibold" th:text="${relatedProduct.category.name}">Category</span>
-                            </div>
-
-                            <!-- Product Name -->
-                            <h5 class="fw-bold mb-3">
-                                <a th:href="@{${relatedProduct.slug != null && !relatedProduct.slug.isEmpty() ? '/product/' + relatedProduct.slug : '/shop-single/' + relatedProduct.id}}"
-                                   class="text-decoration-none text-dark" th:text="${relatedProduct.name}">Product Name</a>
-                            </h5>
-
-                            <!-- Rating -->
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <div class="d-flex">
-                                    <i class="fas fa-star text-warning small"></i>
-                                    <i class="fas fa-star text-warning small"></i>
-                                    <i class="fas fa-star text-warning small"></i>
-                                    <i class="fas fa-star text-warning small"></i>
-                                    <i class="fas fa-star text-muted small"></i>
-                                </div>
-                                <small class="text-muted">(4.8)</small>
-                            </div>
-
-                            <!-- Stats -->
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <small class="text-success fw-semibold">
-                                    <i class="fas fa-check-circle me-1"></i>
-                                    <span th:text="${relatedProduct.sold}">0</span> sold
-                                </small>
-                                <div class="d-flex gap-1">
-                                    <div class="bg-dark rounded-circle" style="width: 12px; height: 12px;"></div>
-                                    <div class="bg-light border rounded-circle" style="width: 12px; height: 12px;"></div>
-                                    <div class="rounded-circle" style="width: 12px; height: 12px; background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);"></div>
-                                </div>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="fw-bold mb-0" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"
-                                    th:text="'$' + ${#numbers.formatDecimal(relatedProduct.price, 0, 'COMMA', 2, 'POINT')}">$0.00</h4>
-                                <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                                    <i class="fas fa-plus me-1"></i>Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-
-        </div>
-    </section>
-    <!-- End Content -->
-
-    <!-- Start Brands -->
-    <section class="bg-light py-5">
-        <div class="container my-4">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Our Brands</h1>
-                    <p>
-                        Trusted PC brands and manufacturers. We partner with leading technology companies
-                        to bring you the best quality computers and components.
-                    </p>
-                </div>
-                <div class="col-lg-9 m-auto tempaltemo-carousel">
-                    <div class="row d-flex flex-row">
-                        <!--Controls-->
-                        <div class="col-1 align-self-center">
-                            <a class="h1" href="#multi-item-example" role="button" data-bs-slide="prev">
-                                <i class="text-light fas fa-chevron-left"></i>
-                            </a>
-                        </div>
-                        <!--End Controls-->
-
-                        <!--Carousel Wrapper-->
-                        <div class="col">
-                            <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example" data-bs-ride="carousel">
-                                <!--Slides-->
-                                <div class="carousel-inner product-links-wap" role="listbox">
-
-                                    <!--First slide-->
-                                    <div class="carousel-item active">
-                                        <div class="row">
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_01.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_02.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_03.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_04.png" alt="Brand Logo"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End First slide-->
-
-                                    <!--Second slide-->
-                                    <div class="carousel-item">
-                                        <div class="row">
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_01.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_02.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_03.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_04.png" alt="Brand Logo"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End Second slide-->
-
-                                    <!--Third slide-->
-                                    <div class="carousel-item">
-                                        <div class="row">
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_01.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_02.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_03.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="./user/img/brand_04.png" alt="Brand Logo"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End Third slide-->
-
-                                </div>
-                                <!--End Slides-->
-                            </div>
-                        </div>
-                        <!--End Carousel Wrapper-->
-
-                        <!--Controls-->
-                        <div class="col-1 align-self-center">
-                            <a class="h1" href="#multi-item-example" role="button" data-bs-slide="next">
-                                <i class="text-light fas fa-chevron-right"></i>
-                            </a>
-                        </div>
-                        <!--End Controls-->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--End Brands-->
-
-    <!-- Start Footer -->
-    <div th:replace="~{component/user-footer :: user-footer}"></div>
-    <!-- End Footer -->
-
-    <!-- Start Script -->
-    <script src="/user/js/jquery-1.11.0.min.js"></script>
-    <script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="/user/js/bootstrap.bundle.min.js"></script>
-    <script src="/user/js/templatemo.js"></script>
-    <script src="/user/js/custom.js"></script>
-
-    <!-- Enhanced Product Page Script -->
-    <script>
-        $(document).ready(function() {
-            // Configuration selection with modern styling
-            $('.config-btn').click(function() {
-                $('.config-btn').removeClass('btn-primary').addClass('btn-outline-primary');
-                $('.config-btn .position-absolute').removeClass('opacity-100').addClass('opacity-0');
-
-                $(this).removeClass('btn-outline-primary').addClass('btn-primary');
-                $(this).find('.position-absolute').removeClass('opacity-0').addClass('opacity-100');
-                $('#product-config').val($(this).data('config'));
-            });
-
-            // Quantity controls
-            $('#btn-plus').click(function() {
-                var currentVal = parseInt($('#var-value').text());
-                var maxStock = parseInt(/*[[${product.quantity != null ? product.quantity : 10}]]*/ 10);
-                if (currentVal < maxStock) {
-                    $('#var-value').text(currentVal + 1);
-                    $('#product-quantity').val(currentVal + 1);
-                }
-            });
-
-            $('#btn-minus').click(function() {
-                var currentVal = parseInt($('#var-value').text());
-                if (currentVal > 1) {
-                    $('#var-value').text(currentVal - 1);
-                    $('#product-quantity').val(currentVal - 1);
-                }
-            });
-
-            // Thumbnail gallery interaction
-            $('.thumbnail-item').click(function() {
-                $('.thumbnail-item').removeClass('active border-primary').addClass('border-transparent');
-                $(this).removeClass('border-transparent').addClass('active border-primary');
-
-                var newSrc = $(this).find('img').attr('src');
-                $('#product-detail').attr('src', newSrc);
-            });
-
-            // Product card hover effects
-            $('.product-card').hover(
-                function() {
-                    $(this).find('img').css('transform', 'scale(1.1)');
-                    $(this).find('.product-overlay').removeClass('opacity-0').addClass('opacity-100');
-                },
-                function() {
-                    $(this).find('img').css('transform', 'scale(1)');
-                    $(this).find('.product-overlay').removeClass('opacity-100').addClass('opacity-0');
-                }
-            );
-
-            // Spec card hover effects
-            $('.spec-card').hover(
-                function() {
-                    $(this).css('transform', 'translateY(-5px)');
-                },
-                function() {
-                    $(this).css('transform', 'translateY(0)');
-                }
-            );
-
-            // Color option selection
-            $('.color-option').click(function() {
-                $('.color-option').removeClass('selected');
-                $(this).addClass('selected');
-            });
-
-            // Add to cart button hover effect
-            $('button[name="submit"]').hover(
-                function() {
-                    $(this).find('.position-absolute').removeClass('opacity-0').addClass('opacity-10');
-                },
-                function() {
-                    $(this).find('.position-absolute').removeClass('opacity-10').addClass('opacity-0');
-                }
-            );
-
-            // Smooth scroll for anchor links
-            $('a[href^="#"]').click(function(e) {
-                e.preventDefault();
-                var target = $($(this).attr('href'));
-                if (target.length) {
-                    $('html, body').animate({
-                        scrollTop: target.offset().top - 100
-                    }, 500);
-                }
-            });
-
-            // Initialize first configuration as selected
-            $('.config-btn').first().click();
-        });
-    </script>
-
-    <!-- Custom CSS for enhanced styling -->
+    <!-- Modern Product Page Styles -->
     <style>
-        .transition-opacity {
-            transition: opacity 0.3s ease;
+        /* Main Layout */
+        .product-page-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        .transition-all {
+        .product-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem; /* Space between gallery and info */
+        }
+
+        /* Product Gallery */
+        .main-image-wrapper {
+            aspect-ratio: 1 / 1;
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .main-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .thumbnail-grid img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .thumbnail-grid img:hover, .thumbnail-grid img.active {
+            border-color: #16a34a; /* GOS Green */
+        }
+
+        /* Product Information */
+        .product-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem; /* Space between info elements */
+        }
+
+        .product-info-wrapper h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .product-info-wrapper .price {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #16a34a;
+            margin: 0;
+        }
+
+        .product-info-wrapper .key-features-list {
+            list-style-position: inside;
+            margin: 0;
+            padding: 0;
+        }
+
+        .product-info-wrapper .key-features-list li {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .product-info-wrapper select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background-color: #fff;
+            font-size: 0.875rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-selector button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 1px solid #d1d5db;
+            background-color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .quantity-selector button:hover {
+            background-color: #f9fafb;
+            border-color: #16a34a;
+        }
+
+        .quantity-selector input {
+            width: 4rem;
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-buttons .btn-add-to-cart {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #16a34a;
+            color: #16a34a;
+            background-color: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .action-buttons .btn-add-to-cart:hover {
+            background-color: #16a34a;
+            color: #fff;
+        }
+
+        .action-buttons .btn-buy-now {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            color: #fff;
+            background-color: #16a34a;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .action-buttons .btn-buy-now:hover {
+            background-color: #15803d;
+        }
+
+        /* Rating and Stock */
+        .rating-stock-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #fbbf24;
+        }
+
+        .stock-badge {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Configuration Options */
+        .config-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .config-section label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Tabbed Details Section */
+        .product-details-tabs {
+            margin-top: 3rem;
+        }
+
+        .tab-list {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-list button {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab-list button.active {
+            color: #16a34a;
+            border-bottom-color: #16a34a;
+        }
+
+        .tab-list button:hover {
+            color: #16a34a;
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 1.5rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tab-content th, .tab-content td {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .tab-content th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+
+        /* Related Products Section */
+        .related-products-section {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .related-products-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        .related-products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Reuse product card styles from shop.html */
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .hover-border-primary:hover {
-            border-color: #0d6efd !important;
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
-        .backdrop-blur {
-            backdrop-filter: blur(10px);
+        .product-image-container {
+            position: relative;
+            aspect-ratio: 1 / 1;
         }
 
-        .color-option.selected .rounded-circle {
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.5);
-        }
-
-        .spec-card {
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        .product-card img {
-            transition: transform 0.3s ease;
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
-        .product-overlay {
-            transition: opacity 0.3s ease;
+        .product-card .stock-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 99px;
+            color: #14532d;
+            background-color: #d1fae5;
+        }
+
+        .product-content {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            text-decoration: none;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-name:hover {
+            color: #16a34a;
+            text-decoration: none;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #16a34a;
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .view-details-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #16a34a;
+            color: #fff;
+            padding: 0.6rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            border: none;
+        }
+
+        .view-details-btn:hover {
+            background-color: #15803d;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .product-main-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .related-products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
-            .display-4 {
-                font-size: 2rem !important;
+            .product-page-container {
+                padding: 0 0.5rem;
+                margin: 1rem auto;
             }
 
-            .display-6 {
-                font-size: 1.5rem !important;
+            .related-products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
             }
         }
+
+        .product-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+
+        .product-card-link:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-card-link:hover .product-name {
+            color: #16a34a;
+        }
+
+        .product-card-link:focus-visible {
+            outline: 2px solid #16a34a;
+            outline-offset: 4px;
+            border-radius: 12px;
+        }
+        .product-card-link:focus-visible .product-card {
+            border-color: #16a34a;
+        }
+
+        .product-card .product-content {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-card .product-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            text-decoration: none;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.8rem;
+        }
+
+        .product-card .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .product-card .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #facc15;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-card .product-rating .star.empty {
+            color: #d1d5db;
+        }
+
+        .product-card .rating-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-left: 0.25rem;
+        }
+
+        /* CSS cho giá tiền */
+        .product-card .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #16a34a;
+            margin-top: auto;
+            margin-bottom: 0;
+        }
     </style>
-    <!-- End Script -->
+    <!--
+
+    TemplateMo 559 Zay Shop
+
+    https://templatemo.com/tm-559-zay-shop
+
+    -->
+</head>
+
+<body>
+<!-- Start Top Nav -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
+    <div class="container text-light">
+        <div class="w-100 d-flex justify-content-between">
+            <div>
+                <i class="fa fa-envelope mx-2"></i>
+                <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                <i class="fa fa-phone mx-2"></i>
+                <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+            </div>
+            <div>
+                <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- Close Top Nav -->
+
+
+<!-- Header -->
+<div th:replace="~{component/user-header :: user-header}"></div>
+<!-- Close Header -->
+
+<!-- Modal -->
+<div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="w-100 pt-1 mb-5 text-right">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="get" class="modal-content modal-body border-0 p-0">
+            <div class="input-group mb-2">
+                <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
+                <button type="submit" class="input-group-text bg-success text-light">
+                    <i class="fa fa-fw fa-search text-white"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- Start Content -->
+<div class="product-page-container">
+    <!-- Main Product Grid -->
+    <div class="product-main-grid">
+        <!-- Left Column: Product Gallery -->
+        <div class="product-gallery">
+            <!-- Main Image -->
+            <div class="main-image-wrapper">
+                <img th:src="@{'/productImg/' + ${product.image}}"
+                     th:alt="${product.name}"
+                     id="product-detail"
+                     onerror="this.src='/user/img/default-pc.jpg'">
+            </div>
+
+            <!-- Thumbnail Grid -->
+            <div class="thumbnail-grid">
+                <img th:src="@{'/productImg/' + ${product.image}}"
+                     th:alt="${product.name}"
+                     class="active"
+                     onerror="this.src='/user/img/product_single_01.jpg'">
+                <img th:src="@{'/productImg/' + ${product.image}}"
+                     th:alt="${product.name}"
+                     onerror="this.src='/user/img/product_single_02.jpg'">
+                <img th:src="@{'/productImg/' + ${product.image}}"
+                     th:alt="${product.name}"
+                     onerror="this.src='/user/img/product_single_03.jpg'">
+                <img th:src="@{'/productImg/' + ${product.image}}"
+                     th:alt="${product.name}"
+                     onerror="this.src='/user/img/product_single_04.jpg'">
+            </div>
+        </div>
+
+        <!-- Right Column: Product Information -->
+        <div class="product-info-wrapper">
+            <!-- Product Title -->
+            <h1 th:text="${product.name}">ASUS ROG GAMING PC RTX 4070</h1>
+
+            <!-- Rating & Stock -->
+            <div class="rating-stock-section">
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span style="margin-left: 0.5rem; color: #6b7280;">(4.8)</span>
+                </div>
+                <div class="stock-badge" th:if="${product.quantity > 0}">
+                    <i class="fas fa-check"></i> In Stock
+                </div>
+                <div class="stock-badge" th:if="${product.quantity == 0}" style="background-color: #fee2e2; color: #991b1b;">
+                    <i class="fas fa-times"></i> Out of Stock
+                </div>
+            </div>
+
+            <!-- Price -->
+            <p class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}">$1,299.99</p>
+
+            <!-- Key Features -->
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: #111827;">Key Features</h3>
+                <ul class="key-features-list">
+                    <li>High-performance gaming PC</li>
+                    <li>Latest generation components</li>
+                    <li>Optimized for 4K gaming</li>
+                    <li>RGB lighting system</li>
+                    <li>2-year warranty included</li>
+                </ul>
+            </div>
+
+            <!-- Configuration Options -->
+            <div class="config-section">
+                <label>Memory (RAM)</label>
+                <select>
+                    <option>16GB DDR4</option>
+                    <option>32GB DDR4</option>
+                    <option>64GB DDR4</option>
+                </select>
+            </div>
+
+            <div class="config-section">
+                <label>Storage</label>
+                <select>
+                    <option>512GB SSD</option>
+                    <option>1TB SSD</option>
+                    <option>2TB SSD</option>
+                </select>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="quantity-selector">
+                <label style="font-weight: 500; color: #374151;">Quantity:</label>
+                <button type="button" onclick="decreaseQuantity()">-</button>
+                <input type="number" id="quantity" value="1" min="1" readonly>
+                <button type="button" onclick="increaseQuantity()">+</button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-add-to-cart" th:disabled="${product.quantity == 0}">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+                <button class="btn-buy-now" th:disabled="${product.quantity == 0}">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabbed Details Section -->
+    <div class="product-details-tabs">
+        <!-- Tab List -->
+        <div class="tab-list">
+            <button class="active" onclick="showTab('description')">Description</button>
+            <button onclick="showTab('specifications')">Technical Specifications</button>
+            <button onclick="showTab('reviews')">Customer Reviews</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="description" class="tab-content active">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Product Description</h3>
+            <p style="color: #374151; line-height: 1.6;" th:text="${product.description}">
+                Experience ultimate gaming performance with this high-end gaming PC. Built with the latest components
+                and optimized for 4K gaming, this system delivers exceptional performance for both gaming and
+                professional workloads. The sleek design features RGB lighting and premium build quality.
+            </p>
+            <ul style="margin-top: 1rem; color: #374151;">
+                <li>High-performance components for smooth gaming</li>
+                <li>Optimized cooling system for sustained performance</li>
+                <li>Premium build quality and materials</li>
+                <li>Comprehensive warranty and support</li>
+            </ul>
+        </div>
+
+        <div id="specifications" class="tab-content">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Technical Specifications</h3>
+            <table>
+                <tr>
+                    <th>Processor</th>
+                    <td>Intel Core i7-13700K / AMD Ryzen 7 7700X</td>
+                </tr>
+                <tr>
+                    <th>Graphics Card</th>
+                    <td>NVIDIA RTX 4070 / AMD RX 7800 XT</td>
+                </tr>
+                <tr>
+                    <th>Memory</th>
+                    <td>16GB DDR4-3200 (Expandable to 64GB)</td>
+                </tr>
+                <tr>
+                    <th>Storage</th>
+                    <td>512GB NVMe SSD + 1TB HDD</td>
+                </tr>
+                <tr>
+                    <th>Motherboard</th>
+                    <td>ATX Gaming Motherboard</td>
+                </tr>
+                <tr>
+                    <th>Power Supply</th>
+                    <td>750W 80+ Gold Certified</td>
+                </tr>
+                <tr>
+                    <th>Case</th>
+                    <td>Mid-Tower with RGB Lighting</td>
+                </tr>
+                <tr>
+                    <th>Warranty</th>
+                    <td>2 Years Parts & Labor</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="reviews" class="tab-content">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Customer Reviews</h3>
+            <div style="background-color: #f9fafb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <div style="color: #fbbf24;">★★★★★</div>
+                    <strong>Amazing Performance!</strong>
+                </div>
+                <p style="color: #6b7280; margin: 0;">This gaming PC exceeded my expectations. Runs all modern games at ultra settings with great frame rates.</p>
+            </div>
+            <div style="background-color: #f9fafb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <div style="color: #fbbf24;">★★★★☆</div>
+                    <strong>Great Value</strong>
+                </div>
+                <p style="color: #6b7280; margin: 0;">Excellent build quality and performance for the price. Setup was straightforward.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Close Content -->
+
+<!-- You May Also Like Section -->
+<section class="related-products-section">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
+        <h2>You May Also Like</h2>
+        <div class="related-products-grid">
+
+            <!-- Vòng lặp sản phẩm liên quan -->
+            <!-- THAY ĐỔI: Sử dụng lại cấu trúc HTML của thẻ sản phẩm từ shop.html -->
+            <a th:each="relatedProduct : ${relatedProducts}"
+               th:if="${relatedProductStat.index < 4}"
+               th:href="@{${relatedProduct.slug != null && !relatedProduct.slug.isEmpty() ? '/product/' + relatedProduct.slug : '/shop-single/' + relatedProduct.id}}"
+               class="product-card-link"
+               th:data-category="${relatedProduct.category.id}"
+               th:data-price="${relatedProduct.price}"
+               th:data-stock="${relatedProduct.quantity > 0 ? 'in-stock' : 'out-of-stock'}">
+
+                <div class="product-card">
+                    <!-- Phần hình ảnh -->
+                    <div class="product-image-container">
+                        <img class="product-image"
+                             th:src="@{'/productImg/' + relatedProduct.image}"
+                             th:alt="${relatedProduct.name}"
+                             onerror="this.src='/user/img/shop_01.jpg'">
+
+                        <!-- Badge tình trạng hàng -->
+                        <div th:if="${relatedProduct.quantity > 0}" class="stock-badge in-stock">
+                            <i class="fa fa-check"></i> In Stock
+                        </div>
+                        <div th:if="${relatedProduct.quantity == 0}" class="stock-badge out-of-stock">
+                            <i class="fa fa-times"></i> Out of Stock
+                        </div>
+                        <div th:if="${relatedProduct.quantity > 0 && relatedProduct.quantity <= 5}" class="stock-badge low-stock">
+                            <i class="fa fa-exclamation-triangle"></i> Low Stock
+                        </div>
+                    </div>
+                    <!-- Phần nội dung -->
+                    <div class="product-content">
+                        <!-- Tên sản phẩm -->
+                        <h3 class="product-name"
+                            th:text="${relatedProduct.name}"
+                            th:title="${relatedProduct.name}">Product Name</h3>
+
+                        <!-- Thông tin phụ: Category & số lượng -->
+                        <div class="product-meta">
+                            <span th:text="${relatedProduct.category.name}">Category</span>
+                            <span th:if="${relatedProduct.quantity > 0}" th:text="${relatedProduct.quantity} + ' left'">0 left</span>
+                            <span th:if="${relatedProduct.quantity == 0}">Out of stock</span>
+                        </div>
+
+                        <!-- Đánh giá sao -->
+                        <div class="product-rating">
+                            <i class="fa fa-star star"></i>
+                            <i class="fa fa-star star"></i>
+                            <i class="fa fa-star star"></i>
+                            <i class="fa fa-star star"></i>
+                            <i class="fa fa-star star empty"></i>
+                            <span class="rating-text">(4.0)</span>
+                        </div>
+
+                        <!-- Giá sản phẩm -->
+                        <div class="product-price"
+                             th:text="'$' + ${#numbers.formatDecimal(relatedProduct.price, 0, 'COMMA', 2, 'POINT')}">$0.00</div>
+                    </div>
+                </div>
+            </a>
+            <!-- Hết vòng lặp -->
+
+        </div>
+    </div>
+</section>
+
+<!-- Start Brands -->
+<section class="bg-light py-5">
+    <div class="container my-4">
+        <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Our Brands</h1>
+                <p>
+                    Trusted PC brands and manufacturers. We partner with leading technology companies
+                    to bring you the best quality computers and components.
+                </p>
+            </div>
+            <div class="col-lg-9 m-auto tempaltemo-carousel">
+                <div class="row d-flex flex-row">
+                    <!--Controls-->
+                    <div class="col-1 align-self-center">
+                        <a class="h1" href="#multi-item-example" role="button" data-bs-slide="prev">
+                            <i class="text-light fas fa-chevron-left"></i>
+                        </a>
+                    </div>
+                    <!--End Controls-->
+
+                    <!--Carousel Wrapper-->
+                    <div class="col">
+                        <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example" data-bs-ride="carousel">
+                            <!--Slides-->
+                            <div class="carousel-inner product-links-wap" role="listbox">
+
+                                <!--First slide-->
+                                <div class="carousel-item active">
+                                    <div class="row">
+                                        <div class="col-3 p-md-5">
+                                            <a href="https://www.logitech.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_logitech.png" alt="Logitech Logo"></a>
+                                        </div>
+                                        <div class="col-3 p-md-5">
+                                            <a href="https://www.razer.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_razer.png" alt="Razer Logo"></a>
+                                        </div>
+                                        <div class="col-3 p-md-5">
+                                            <a href="https://www.steelseries.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_steelseries.png" alt="SteelSeries Logo"></a>
+                                        </div>
+                                        <div class="col-3 p-md-5">
+                                            <a href="https://www.hyperxgaming.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_hyperx.png" alt="HyperX Logo"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <style>
+                                    .same-size-img {
+                                        width: 150px;
+                                        height: 150px;
+                                        object-fit: contain;
+                                    }
+                                </style>
+                                <!--End First slide-->
+                            </div>
+                            <!--End Slides-->
+                        </div>
+                    </div>
+                    <!--End Carousel Wrapper-->
+
+                    <!--Controls-->
+                    <div class="col-1 align-self-center">
+                        <a class="h1" href="#multi-item-example" role="button" data-bs-slide="next">
+                            <i class="text-light fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <!--End Controls-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Brands-->
+
+<!-- Start Footer -->
+<div th:replace="~{component/user-footer :: user-footer}"></div>
+<!-- End Footer -->
+
+<!-- Start Script -->
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
+
+<!-- Enhanced Product Page Script -->
+<script>
+    $(document).ready(function() {
+        // Configuration selection with modern styling
+        $('.config-btn').click(function() {
+            $('.config-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+            $('.config-btn .position-absolute').removeClass('opacity-100').addClass('opacity-0');
+
+            $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+            $(this).find('.position-absolute').removeClass('opacity-0').addClass('opacity-100');
+            $('#product-config').val($(this).data('config'));
+        });
+
+        // Quantity controls
+        $('#btn-plus').click(function() {
+            var currentVal = parseInt($('#var-value').text());
+            var maxStock = parseInt(/*[[${product.quantity != null ? product.quantity : 10}]]*/ 10);
+            if (currentVal < maxStock) {
+                $('#var-value').text(currentVal + 1);
+                $('#product-quantity').val(currentVal + 1);
+            }
+        });
+
+        $('#btn-minus').click(function() {
+            var currentVal = parseInt($('#var-value').text());
+            if (currentVal > 1) {
+                $('#var-value').text(currentVal - 1);
+                $('#product-quantity').val(currentVal - 1);
+            }
+        });
+
+        // Thumbnail gallery interaction
+        $('.thumbnail-item').click(function() {
+            $('.thumbnail-item').removeClass('active border-primary').addClass('border-transparent');
+            $(this).removeClass('border-transparent').addClass('active border-primary');
+
+            var newSrc = $(this).find('img').attr('src');
+            $('#product-detail').attr('src', newSrc);
+        });
+
+        // Product card hover effects
+        $('.product-card').hover(
+            function() {
+                $(this).find('img').css('transform', 'scale(1.1)');
+                $(this).find('.product-overlay').removeClass('opacity-0').addClass('opacity-100');
+            },
+            function() {
+                $(this).find('img').css('transform', 'scale(1)');
+                $(this).find('.product-overlay').removeClass('opacity-100').addClass('opacity-0');
+            }
+        );
+
+        // Spec card hover effects
+        $('.spec-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-5px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+
+        // Color option selection
+        $('.color-option').click(function() {
+            $('.color-option').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        // Add to cart button hover effect
+        $('button[name="submit"]').hover(
+            function() {
+                $(this).find('.position-absolute').removeClass('opacity-0').addClass('opacity-10');
+            },
+            function() {
+                $(this).find('.position-absolute').removeClass('opacity-10').addClass('opacity-0');
+            }
+        );
+
+        // Smooth scroll for anchor links
+        $('a[href^="#"]').click(function(e) {
+            e.preventDefault();
+            var target = $($(this).attr('href'));
+            if (target.length) {
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 100
+                }, 500);
+            }
+        });
+
+        // Initialize first configuration as selected
+        $('.config-btn').first().click();
+    });
+</script>
+
+<!-- Custom CSS for enhanced styling -->
+<style>
+    .transition-opacity {
+        transition: opacity 0.3s ease;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .hover-border-primary:hover {
+        border-color: #0d6efd !important;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(10px);
+    }
+
+    .color-option.selected .rounded-circle {
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.5);
+    }
+
+    .spec-card {
+        transition: transform 0.3s ease;
+    }
+
+    .product-card img {
+        transition: transform 0.3s ease;
+    }
+
+    .product-overlay {
+        transition: opacity 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2rem !important;
+        }
+
+        .display-6 {
+            font-size: 1.5rem !important;
+        }
+    }
+</style>
+<!-- End Script -->
+
+<!-- Modern Product Page JavaScript -->
+<script>
+    // Tab functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Remove active class from all tab buttons
+        const tabButtons = document.querySelectorAll('.tab-list button');
+        tabButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+
+        // Show selected tab content
+        document.getElementById(tabName).classList.add('active');
+
+        // Add active class to clicked button
+        event.target.classList.add('active');
+    }
+
+    // Quantity selector functionality
+    function increaseQuantity() {
+        const quantityInput = document.getElementById('quantity');
+        let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    }
+
+    function decreaseQuantity() {
+        const quantityInput = document.getElementById('quantity');
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    }
+
+    // Thumbnail image switching
+    document.addEventListener('DOMContentLoaded', function() {
+        const thumbnails = document.querySelectorAll('.thumbnail-grid img');
+        const mainImage = document.querySelector('.main-image-wrapper img');
+
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                // Remove active class from all thumbnails
+                thumbnails.forEach(thumb => thumb.classList.remove('active'));
+
+                // Add active class to clicked thumbnail
+                this.classList.add('active');
+
+                // Update main image
+                mainImage.src = this.src;
+            });
+        });
+    });
+</script>
 
 </body>
 
