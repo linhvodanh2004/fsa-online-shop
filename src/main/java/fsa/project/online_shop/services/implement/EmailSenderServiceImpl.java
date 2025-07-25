@@ -8,6 +8,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -18,6 +19,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender javaMailSender;
 
     @Override
+    @Async
     public void sendVerificationCode(String email, String username, String code) throws MessagingException {
         String subject = "🔐 Reset Your Password - Verification Code";
         String content = "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
@@ -42,6 +44,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Async
     public void notifyOrderPending(Order order) throws MessagingException {
         String subject = "📋 Order Confirmation - Order Received";
         String content = buildOrderEmailContent(
@@ -56,6 +59,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Async
     public void notifyOrderTransit(Order order) throws MessagingException {
         String subject = "🚚 Order Update - Your Order is On The Way";
         String content = buildOrderEmailContent(
@@ -70,6 +74,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Async
     public void notifyOrderDelivered(Order order) throws MessagingException {
         String subject = "✅ Order Delivered - Enjoy Your Gaming Gear!";
         String content = buildOrderEmailContent(
@@ -84,6 +89,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Async
     public void notifyOrderCancelled(Order order) throws MessagingException {
         String subject = "❌ Order Cancelled - Refund Processing";
         String content = buildOrderEmailContent(

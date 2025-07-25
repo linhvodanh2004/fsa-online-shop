@@ -5,10 +5,13 @@ import fsa.project.online_shop.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -60,6 +63,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * Find all orders ordered by creation time desc
      */
     Page<Order> findAllByOrderByCreationTimeDesc(Pageable pageable);
+    Page<Order> findByStatusOrderByPaymentStatusAscCreationTimeDesc(String orderStatus, Pageable pageable);
 
     /**
      * Count orders by status
@@ -78,4 +82,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.creationTime BETWEEN :startDate AND :endDate")
     List<Order> findOrdersInDateRange(@Param("startDate") java.time.LocalDateTime startDate,
                                      @Param("endDate") java.time.LocalDateTime endDate);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Order o SET o.status = 'IN TRANSIT', o.transitTime = :now WHERE o.status = 'PENDING'")
+    int updatePendingOrdersToInTransit(LocalDateTime now);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Order o SET o.status = 'DELIVERED', o.deliveryTime = :now, o.paymentDate = :now, o.paymentStatus = true WHERE o.status = 'IN TRANSIT'")
+    int updateInTransitOrdersToDelivered(LocalDateTime now);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.status = :status")
+    List<Order> findByStatusWithItems(@Param("status") String status);
+
+
 }

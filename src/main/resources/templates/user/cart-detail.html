@@ -249,7 +249,7 @@
 
             if (paymentMethod === "COD") {
                 // Nộp đơn hàng qua form bình thường (POST tới /cart/checkout)
-                form.action = "/cart/checkout";
+                form.action = "/cart-detail/checkout";
                 form.method = "POST";
                 form.submit();
             } else if (paymentMethod === "VNPAY") {

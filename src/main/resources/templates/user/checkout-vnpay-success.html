@@ -49,14 +49,14 @@
 </div>
 
 <script th:inline="javascript">
-    // setTimeout(() => {
-    //     const status = /*[[${status}]]*/ 0; // Thymeleaf inline
-    //     if (status === 1) {
-    //         window.location.href = "/?success=checkout_success";
-    //     } else {
-    //         window.location.href = "/?error=checkout_failed";
-    //     }
-    // }, 5000); // 5s timeout
+    setTimeout(() => {
+        const status = /*[[${status}]]*/ 0; // Thymeleaf inline
+        if (status === 1) {
+            window.location.href = "/?success=checkout-success";
+        } else {
+            window.location.href = "/?error=checkout-failed";
+        }
+    }, 5000); // 5s timeout
 </script>
 </body>
 </html>
