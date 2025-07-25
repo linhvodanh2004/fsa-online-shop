@@ -117,9 +117,11 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="user : ${users}"
+                                        th:if="${user.role != null and user.role.id == 2}"
                                         th:classappend="${!user.status} ? 'opacity-50'"
-                                        style="cursor: pointer;"
-                                        th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'">
+                                        style="cursor: pointer;">
+                                            <!--User Updating (add in tr tag if use)-->
+                                            <!--th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'"-->
                                         <td>
                                             <div class="user-avatar"
                                                  th:text="${#strings.substring(user.fullname != null ? user.fullname : user.username, 0, 1).toUpperCase()}">

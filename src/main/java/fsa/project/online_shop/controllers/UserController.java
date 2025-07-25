@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -52,17 +53,6 @@ public class UserController {
         model.addAttribute("user", new User());
         return "admin/admin-user-add";
     }
-
-//    // GET mapping for update user page
-//    @GetMapping("/update-user/{id}")
-//    public String getUpdateUserPage(@PathVariable("id") Long id, Model model) {
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            return "redirect:/admin/users?error=User not found";
-//        }
-//        model.addAttribute("user", user);
-//        return "admin/admin-user-update";
-//    }
 
     // POST mapping for updating user status (AJAX)
     @PostMapping("/user/{id}/status")
