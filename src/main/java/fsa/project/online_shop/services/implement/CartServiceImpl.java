@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -36,7 +36,7 @@ public class CartServiceImpl implements CartService {
         }
         Cart cart = cartRepository.findById(cartId).orElse(null);
         if (cartItemRepository.existsByCartIdAndProductId(cartId, productId)) {
-            CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId).get();
+            CartItem cartItem = cartItemRepository.findByCart_IdAndProduct_Id(cartId, productId).get();
             if (cartItem.getQuantity() + quantity > product.getQuantity()) {
                 throw new IllegalArgumentException("Not enough quantity in stock");
             }
@@ -64,7 +64,7 @@ public class CartServiceImpl implements CartService {
     public void removeProductFromCart(User user, Long productId) {
         Cart cart = cartRepository.findByUser(user);
         Set<CartItem> items = cart.getCartItems();
-        CartItem itemToRemove = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId).get();
+        CartItem itemToRemove = cartItemRepository.findByCart_IdAndProduct_Id(cart.getId(), productId).get();
         items.remove(itemToRemove);
         cartItemRepository.delete(itemToRemove);
         cart.setCartItems(items);
@@ -75,7 +75,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void increaseQuantity(Cart cart, Long productId) {
-        CartItem item = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId).get();
+        CartItem item = cartItemRepository.findByCart_IdAndProduct_Id(cart.getId(), productId).get();
         Set<CartItem> items = cart.getCartItems();
         Product product = item.getProduct();
         if (item.getQuantity() >= product.getQuantity()) {
@@ -96,7 +96,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void decreaseQuantity(Cart cart, Long productId) {
-        CartItem item = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId).get();
+        CartItem item = cartItemRepository.findByCart_IdAndProduct_Id(cart.getId(), productId).get();
         Set<CartItem> items = cart.getCartItems();
         Product product = item.getProduct();
         if (item.getQuantity() == 1) {

@@ -8,7 +8,7 @@
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
 	<meta name="keywords"
-		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+		  content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="admin/img/icons/icon-48x48.png" />
@@ -21,9 +21,8 @@
 
 	<!-- Toastify -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-	<script>
 
-	</script>
+	<script src="/admin/js/custom.js"></script>
 	<!-- Choose your prefered color scheme -->
 	<link href="/admin/css/light.css" rel="stylesheet">
 	<!-- <link href="css/dark.css" rel="stylesheet"> -->
@@ -56,148 +55,148 @@
 -->
 
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
-	<div class="wrapper">
-		<div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+<div class="wrapper">
+	<div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
 
-		<div class="main">
-			<div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+	<div class="main">
+		<div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
 
-			<main class="content">
-				<div class="container-fluid p-0">
-					<div class="row">
+		<main class="content">
+			<div class="container-fluid p-0">
+				<div class="row">
 
-						<div class="card">
-							<div class="card-header">
-								<h5 class="card-title" style="color: black; font-size: 23px;">Edit Product</h5>
-							</div>
-							<div class="card-body">
-								<form id="updateForm" th:action="@{/admin/products/update/{id}(id=${product.id})}" method="post"
-									enctype="multipart/form-data">
-									<div class="mb-3">
-										<label class="form-label">Name:<span class="text-danger">*</span></label>
-										<input type="text" class="form-control" name="name" th:value="${product.name}">
-									</div>
-									<div class="mb-3">
-										<label class="form-label">Category:<span class="text-danger">*</span></label>
-										<select class="form-control" name="categoryId">
-											<option disabled selected>Select Category</option>
-											<option th:each="category : ${categories}" th:value="${category.id}"
+					<div class="card">
+						<div class="card-header">
+							<h5 class="card-title" style="color: black; font-size: 23px;">Edit Product</h5>
+						</div>
+						<div class="card-body">
+							<form id="updateForm" th:action="@{/admin/products/update/{id}(id=${product.id})}" method="post"
+								  enctype="multipart/form-data">
+								<div class="mb-3">
+									<label class="form-label">Name:<span class="text-danger">*</span></label>
+									<input type="text" class="form-control" name="name" th:value="${product.name}">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Category:<span class="text-danger">*</span></label>
+									<select class="form-control" name="categoryId">
+										<option disabled selected>Select Category</option>
+										<option th:each="category : ${categories}" th:value="${category.id}"
 												th:text="${category.name}"
 												th:selected="${category.id == product.category?.id}">
-											</option>
-										</select>
-									</div>
-									<div class="mb-3">
-										<label class="form-label">Price:<span class="text-danger">*</span></label>
-										<input type="number" class="form-control" name="price"
-											th:value="${product.price}">
-									</div>
-									<div class="mb-3">
-										<label class="form-label">Quantity:</label>
-										<input type="number" class="form-control" name="quantity"
-											th:value="${product.quantity}">
-									</div>
-									<div class="mb-3">
-										<label class="form-label">Description:</label>
-										<textarea class="form-control" rows="4" name="description"
-											th:text="${product.description}"></textarea>
-									</div>
-									<div class="mb-3">
-										<label class="form-label w-100">Product's Image:</label>
-										<input type="file" class="form-control" name="image" accept="image/*" onchange="previewImage(this, '#updatePreview')">
-										<img id="updatePreview" th:src="${product.image}" alt="Image Preview"
-											th:style="${product.image} != null ? 'display:block; width: 120px; height: 120px; object-fit: cover; margin-top: 10px;' : 'display:none; width: 120px; height: 120px; object-fit: cover; margin-top: 10px;'">
-									</div>
-									<button type="submit" class="btn btn-primary">Save</button>
-									<a href="/admin/products" class="btn btn-danger">Go Back</a>
-								</form>
-							</div>
-
+										</option>
+									</select>
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Price:<span class="text-danger">*</span></label>
+									<input type="number" class="form-control" name="price"
+										   th:value="${product.price}">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Quantity:</label>
+									<input type="number" class="form-control" name="quantity"
+										   th:value="${product.quantity}">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Description:</label>
+									<textarea class="form-control" rows="4" name="description"
+											  th:text="${product.description}"></textarea>
+								</div>
+								<div class="mb-3">
+									<label class="form-label w-100">Product's Image:</label>
+									<input type="file" class="form-control" name="image" accept="image/*" onchange="previewImage(this, '#updatePreview')">
+									<img id="updatePreview" th:src="${product.image}" alt="Image Preview"
+										 th:style="${product.image} != null ? 'display:block; width: 120px; height: 120px; object-fit: cover; margin-top: 10px;' : 'display:none; width: 120px; height: 120px; object-fit: cover; margin-top: 10px;'">
+								</div>
+								<button type="submit" class="btn btn-primary">Save</button>
+								<a href="/admin/products" class="btn btn-danger">Go Back</a>
+							</form>
 						</div>
+
 					</div>
 				</div>
-			</main>
+			</div>
+		</main>
 
 
-			<div th:replace="~{component/admin-footer :: admin-footer}"></div>
-		</div>
+		<div th:replace="~{component/admin-footer :: admin-footer}"></div>
 	</div>
-	<script src="https://cdn.tiny.cloud/1/3r6p3w9fdtbe83dz1ri0eh608u5jwrt1fm3jsdl05bwfvvxe/tinymce/7/tinymce.min.js"
+</div>
+<script src="https://cdn.tiny.cloud/1/3r6p3w9fdtbe83dz1ri0eh608u5jwrt1fm3jsdl05bwfvvxe/tinymce/7/tinymce.min.js"
 		referrerpolicy="origin"></script>
-	<script src="/admin/js/app.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-	<script src="toastify-message.js"></script>
+<script src="/admin/js/app.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="toastify-message.js"></script>
 
-	<script>
-		function previewImage(input, previewId) {
-			const file = input.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function (e) {
-					const preview = document.querySelector(previewId);
-					preview.src = e.target.result;
-					preview.style.display = 'block';
-				};
-				reader.readAsDataURL(file);
-			}
-		}
-	</script>
-
-	<script>
-		tinymce.init({
-			selector: 'textarea',
-			object_resizing: false,
-			plugins: [
-				// Core editing features
-				'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks'
-			],
-			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-			tinycomments_mode: 'embedded',
-			tinycomments_author: 'Author name',
-			mergetags_list: [
-				{ value: 'First.Name', title: 'First Name' },
-				{ value: 'Email', title: 'Email' },
-			],
-			ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-		});
-
-		document.getElementById("updateForm").addEventListener("submit", function (e) {
-			e.preventDefault();
-			const name = this.name.value.trim();
-			const category = this.categoryId.value;
-			const price = this.price.value.trim();
-			const showToast = (msg) => {
-				Toastify({
-					text: msg,
-					duration: 3000,
-					gravity: "top",
-					position: "right",
-					newWindow: true,
-					close: true,
-					style: {
-						background: "#f44336",
-					}
-				}).showToast();
+<script>
+	function previewImage(input, previewId) {
+		const file = input.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				const preview = document.querySelector(previewId);
+				preview.src = e.target.result;
+				preview.style.display = 'block';
 			};
-			if (!name && (!category || category == "") && !price) {
-				showToast("Please fill in all required fields");
-				return;
-			}
-			if (!name) {
-				showToast("Please enter product name");
-				return;
-			}
-			if (!category || category == "") {
-				showToast("Please select a category");
-				return;
-			}
-			if (!price || isNaN(price) || parseFloat(price) <= 0) {
-				showToast("Please enter a valid price");
-				return;
-			}
-			this.submit();
-		});
-	</script>
+			reader.readAsDataURL(file);
+		}
+	}
+</script>
+
+<script>
+	tinymce.init({
+		selector: 'textarea',
+		object_resizing: false,
+		plugins: [
+			// Core editing features
+			'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks'
+		],
+		toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+		tinycomments_mode: 'embedded',
+		tinycomments_author: 'Author name',
+		mergetags_list: [
+			{ value: 'First.Name', title: 'First Name' },
+			{ value: 'Email', title: 'Email' },
+		],
+		ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+	});
+
+	document.getElementById("updateForm").addEventListener("submit", function (e) {
+		e.preventDefault();
+		const name = this.name.value.trim();
+		const category = this.categoryId.value;
+		const price = this.price.value.trim();
+		const showToast = (msg) => {
+			Toastify({
+				text: msg,
+				duration: 3000,
+				gravity: "top",
+				position: "right",
+				newWindow: true,
+				close: true,
+				style: {
+					background: "#f44336",
+				}
+			}).showToast();
+		};
+		if (!name && (!category || category == "") && !price) {
+			showToast("Please fill in all required fields");
+			return;
+		}
+		if (!name) {
+			showToast("Please enter product name");
+			return;
+		}
+		if (!category || category == "") {
+			showToast("Please select a category");
+			return;
+		}
+		if (!price || isNaN(price) || parseFloat(price) <= 0) {
+			showToast("Please enter a valid price");
+			return;
+		}
+		this.submit();
+	});
+</script>
 
 
 

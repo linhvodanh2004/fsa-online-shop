@@ -6,13 +6,9 @@ import fsa.project.online_shop.services.EmailSenderService;
 import fsa.project.online_shop.services.RoleService;
 import fsa.project.online_shop.services.UserService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,14 +48,9 @@ public class AuthController implements ErrorController {
         if (userService.existsByEmail(email)) {
             return "redirect:/register?error=email-exists";
         }
-        // We dont save password directly into database, instead we use PasswordEncoder in Security
-        // to hash into another string, then we save to database.
-        // The special thing is every time we encode, the encoded string is difference
-        // ex 123456 -> abcscascas/ascascascaca/ascaccxvbcxvx
-        String encodedPassword = passwordEncoder.encode(password);
         user = User.builder()
                 .username(username)
-                .password(encodedPassword)
+                .password(password)
                 .fullname(fullname)
                 .email(email)
                 .phone(phone)
@@ -114,7 +105,7 @@ public class AuthController implements ErrorController {
             Model model
     ){
         User user = userService.findByEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(password);
         userService.save(user);
         return "redirect:/login?success=reset-successfully";
     }
@@ -137,7 +128,7 @@ public class AuthController implements ErrorController {
         }
     }
 
-    @GetMapping({"/admin", "/admin/dashboard"})
+    @GetMapping("/admin/dashboard")
     public String getAdminDashboardPage(
     ){
         return "admin/dashboard";

@@ -102,6 +102,18 @@
 										<div th:replace="~{component/no-item-notification :: no-item-notification}">
 										</div>
 									</div>
+									<div class="me-2 d-flex align-items-center">
+										<label for="entriesSelect" class="me-1" style="font-size: 12px;">Show</label>
+										<select id="entriesSelect" class="form-select form-select-sm w-auto"
+											style="font-size: 12px;">
+											<option value="3">3</option>
+											<option value="5" selected>5</option>
+											<option value="10">10</option>
+											<option value="15">15</option>
+											<option value="20">20</option>
+										</select>
+										<span class="ms-1" style="font-size: 12px;">products</span>
+									</div>
 									<table id="datatables-column-search-text-inputs" class="table"
 										style="width:100%; text-align: center;"
 										th:if="${products != null and !#lists.isEmpty(products)}">
@@ -141,13 +153,13 @@
 															data-feather="toggle-right"
 															style="cursor:pointer; color: green;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 														<i class="align-middle" th:unless="${product.status}"
 															data-feather="toggle-left"
 															style="cursor:pointer; color: red;"
 															th:attr="data-id=${product.id}, data-status=${product.status}"
-															onclick="toggleStatus(this)">
+															onclick="toggleProductStatus(this)">
 														</i>
 													</span>
 												</td>
@@ -159,6 +171,11 @@
 											</tr>
 										</tbody>
 									</table>
+
+									<div class="d-flex justify-content-between align-items-center mt-3">
+										<div id="table-info" style="font-size: 15px;"></div>
+										<div id="pagination"></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -207,7 +224,8 @@
 			const sortSelect = document.getElementById('sortSelect');
 			const table = document.getElementById('datatables-column-search-text-inputs');
 			sortSelect.addEventListener('change', function () {
-				const rows = Array.from(table.querySelectorAll('tbody tr'));
+				const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)')); // Exclude add row
+				const addRow = table.querySelector('tbody tr.addrow'); // Find add row
 				let compare;
 				switch (sortSelect.value) {
 					case 'name-asc':
@@ -217,16 +235,16 @@
 						compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
 						break;
 					case 'price-asc':
-						compare = (a, b) => parseFloat(a.children[5].textContent) - parseFloat(b.children[5].textContent);
+						compare = (a, b) => parseFloat(a.children[3].textContent) - parseFloat(b.children[3].textContent);
 						break;
 					case 'price-desc':
-						compare = (a, b) => parseFloat(b.children[5].textContent) - parseFloat(a.children[5].textContent);
+						compare = (a, b) => parseFloat(b.children[3].textContent) - parseFloat(a.children[3].textContent);
 						break;
 					case 'quantity-asc':
-						compare = (a, b) => parseFloat(a.children[6].textContent) - parseFloat(b.children[6].textContent);
+						compare = (a, b) => parseFloat(a.children[4].textContent) - parseFloat(b.children[4].textContent);
 						break;
 					case 'quantity-desc':
-						compare = (a, b) => parseFloat(b.children[6].textContent) - parseFloat(a.children[6].textContent);
+						compare = (a, b) => parseFloat(b.children[4].textContent) - parseFloat(a.children[4].textContent);
 						break;
 					default:
 						compare = null;
@@ -235,6 +253,7 @@
 					rows.sort(compare);
 					const tbody = table.querySelector('tbody');
 					rows.forEach(row => tbody.appendChild(row));
+					if (addRow) tbody.appendChild(addRow); // Keep add row at the end
 				}
 			});
 		});
@@ -248,7 +267,7 @@
 			}
 		}
 
-		function toggleStatus(icon) {
+		function toggleProductStatus(icon) {
 			const currentStatus = icon.getAttribute('data-status') === 'true';
 			const productId = icon.getAttribute('data-id');
 			const newStatus = !currentStatus;
@@ -256,20 +275,20 @@
 			updateRowOpacity(icon, newStatus);
 
 			// Get CSRF token and header name from meta tags
-			const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
-			const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
-			const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
-			const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
+			// const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+			// const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+			// const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
+			// const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
 
 			// Build headers object
 			const headers = {
 				'Content-Type': 'application/json'
 			};
-			if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
-				headers[csrfHeader] = csrfToken;
-			}
+			// if (csrfHeader && csrfToken && csrfHeader !== 'null' && csrfHeader !== 'undefined') {
+			// 	headers[csrfHeader] = csrfToken;
+			// }
 
-			fetch(`/admin/product/${productId}/status`, {
+			fetch(`/admin/products/${productId}/status`, {
 				method: 'POST',
 				headers: headers,
 				body: JSON.stringify({ status: newStatus })
@@ -293,7 +312,88 @@
 					updateRowOpacity(icon, currentStatus);
 				});
 		}
+	</script>
+	<!-- table pagination script -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const table = document.getElementById('datatables-column-search-text-inputs');
+			const pagination = document.getElementById('pagination');
+			const tableInfo = document.getElementById('table-info');
+			const entriesSelect = document.getElementById('entriesSelect');
+			const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)'));
+			const addRow = table.querySelector('tbody tr.addrow');
+			let rowsPerPage = parseInt(entriesSelect.value, 10);
+			let currentPage = 1;
 
+			function showPage(page) {
+				const start = (page - 1) * rowsPerPage;
+				const end = start + rowsPerPage;
+				let visibleRows = rows.filter(row => row.style.display !== 'none' || true); // all rows for pagination
+				visibleRows.forEach((row, idx) => {
+					row.style.display = (idx >= start && idx < end) ? '' : 'none';
+				});
+				if (addRow) addRow.style.display = page === Math.ceil(visibleRows.length / rowsPerPage) ? '' : 'none';
+				renderPagination(visibleRows.length);
+				renderTableInfo(start, end, visibleRows.length);
+			}
+
+			function renderTableInfo(start, end, total) {
+				const from = total === 0 ? 0 : start + 1;
+				const to = Math.min(end, total);
+				tableInfo.textContent = `Showing ${from} to ${to} of ${total} products`;
+			}
+
+			function renderPagination(totalRows) {
+				const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
+				let html = `<nav><ul class="pagination mb-0">`;
+				html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+				for (let i = 1; i <= totalPages; i++) {
+					html += `<li class="page-item${i === currentPage ? ' active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+				}
+				html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+				html += `</ul></nav>`;
+				pagination.innerHTML = html;
+				pagination.querySelectorAll('a.page-link').forEach(link => {
+					link.addEventListener('click', function (e) {
+						e.preventDefault();
+						const page = parseInt(this.getAttribute('data-page'));
+						const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
+						if (page >= 1 && page <= totalPages) {
+							currentPage = page;
+							showPage(currentPage);
+						}
+					});
+				});
+			}
+
+			showPage(currentPage);
+
+			// Change entries per page
+			entriesSelect.addEventListener('change', function () {
+				rowsPerPage = parseInt(entriesSelect.value, 10);
+				currentPage = 1;
+				showPage(currentPage);
+			});
+
+			// Re-apply pagination after sorting or searching
+			document.getElementById('sortSelect').addEventListener('change', function () {
+				showPage(1);
+			});
+			document.getElementById('productSearchBox').addEventListener('keyup', function () {
+				// Only show rows that are visible after search
+				const filter = this.value.toLowerCase();
+				rows.forEach(row => {
+					const text = row.textContent.toLowerCase();
+					row.style.display = text.includes(filter) ? '' : 'none';
+				});
+				currentPage = 1;
+				const visibleRows = rows.filter(row => row.style.display !== 'none');
+				showPage(currentPage);
+			});
+		});
 	</script>
 </body>
 
