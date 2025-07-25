@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -223,7 +225,35 @@ public class UserController {
     }
 
     @GetMapping("/admin/edit-profile")
-    public String editAdminProfile(){
+    public String editAdminProfile(Model model, Authentication authentication) {
+        try{
+            User user = getCurrentUser(authentication);
+            if (user == null) {
+                return "redirect:/login";
+            }
+            model.addAttribute("user", user);
+        }catch(Exception e){
+
+        }
         return "admin/admin-profile";
+    }
+
+    private User getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return null;
+        }
+
+        try {
+            if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
+                String email = oAuth2User.getAttribute("email");
+                return userService.findByEmail(email);
+            }
+
+            String username = authentication.getName();
+            return userService.findByUsername(username);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

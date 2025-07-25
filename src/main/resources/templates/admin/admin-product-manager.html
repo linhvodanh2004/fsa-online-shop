@@ -207,36 +207,38 @@
 		const sortSelect = document.getElementById('sortSelect');
 		const table = document.getElementById('datatables-column-search-text-inputs');
 		sortSelect.addEventListener('change', function () {
-			const rows = Array.from(table.querySelectorAll('tbody tr'));
-			let compare;
-			switch (sortSelect.value) {
-				case 'name-asc':
-					compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
-					break;
-				case 'name-desc':
-					compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
-					break;
-				case 'price-asc':
-					compare = (a, b) => parseFloat(a.children[5].textContent) - parseFloat(b.children[5].textContent);
-					break;
-				case 'price-desc':
-					compare = (a, b) => parseFloat(b.children[5].textContent) - parseFloat(a.children[5].textContent);
-					break;
-				case 'quantity-asc':
-					compare = (a, b) => parseFloat(a.children[6].textContent) - parseFloat(b.children[6].textContent);
-					break;
-				case 'quantity-desc':
-					compare = (a, b) => parseFloat(b.children[6].textContent) - parseFloat(a.children[6].textContent);
-					break;
-				default:
-					compare = null;
-			}
-			if (compare) {
-				rows.sort(compare);
-				const tbody = table.querySelector('tbody');
-				rows.forEach(row => tbody.appendChild(row));
-			}
-		});
+    const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)')); // Exclude add row
+    const addRow = table.querySelector('tbody tr.addrow'); // Find add row
+    let compare;
+    switch (sortSelect.value) {
+        case 'name-asc':
+            compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
+            break;
+        case 'name-desc':
+            compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
+            break;
+        case 'price-asc':
+            compare = (a, b) => parseFloat(a.children[3].textContent) - parseFloat(b.children[3].textContent);
+            break;
+        case 'price-desc':
+            compare = (a, b) => parseFloat(b.children[3].textContent) - parseFloat(a.children[3].textContent);
+            break;
+        case 'quantity-asc':
+            compare = (a, b) => parseFloat(a.children[4].textContent) - parseFloat(b.children[4].textContent);
+            break;
+        case 'quantity-desc':
+            compare = (a, b) => parseFloat(b.children[4].textContent) - parseFloat(a.children[4].textContent);
+            break;
+        default:
+            compare = null;
+    }
+    if (compare) {
+        rows.sort(compare);
+        const tbody = table.querySelector('tbody');
+        rows.forEach(row => tbody.appendChild(row));
+        if (addRow) tbody.appendChild(addRow); // Keep add row at the end
+    }
+});
 	});
 
 	function updateRowOpacity(icon, newStatus) {
