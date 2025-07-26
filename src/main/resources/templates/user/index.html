@@ -9,24 +9,25 @@
     <!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
     <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
-    <link rel="apple-touch-icon" href="user/img/apple-icon.png">
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
 
-    <link rel="stylesheet" href="user/css/bootstrap.min.css">
-    <link rel="stylesheet" href="user/css/templatemo.css">
-    <link rel="stylesheet" href="user/css/custom.css">
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="user/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
 
     <!-- Slick -->
-    <link rel="stylesheet" type="text/css" href="user/css/slick.min.css">
-    <link rel="stylesheet" type="text/css" href="user/css/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="/cart-service.js" defer></script>
+
 </head>
 
 <body>
@@ -184,10 +185,10 @@
         </div>
         <div class="row" th:if="${latestProducts != null and !#lists.isEmpty(latestProducts)}">
             <div th:each="product : ${latestProducts}" class="col-12 col-md-4 mb-4">
-                <div class="card h-100 product-wap rounded-0">
-                    <div class="card rounded-0">
+                <div class="card h-100 product-wap rounded-0 mx-1">
+                    <div class="card rounded-0 product-card">
                         <img class="card-img rounded-0 img-fluid"
-                             style="height: 250px; object-fit: cover;"
+                             style="height: 300px; object-fit: cover;"
                              th:src="${product.image}" th:alt="${product.name}">
                         <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                             <ul class="list-unstyled">
@@ -214,7 +215,7 @@
                             </a>
                         </div>
                         <div class="justify-content-between d-flex">
-                                <span class="text-danger fw-bold mb-0 h3"
+                                <span class="text-success fw-bolder mb-0 h3"
                                       th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </span>
@@ -247,18 +248,16 @@
         </div>
         <div class="row" th:if="${featuredProducts != null and !#lists.isEmpty(featuredProducts)}">
             <div th:each="product : ${featuredProducts}" class="col-12 col-md-4 mb-4">
-                <div class="card h-100 product-wap rounded-0">
-                    <div class="card rounded-0">
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-danger">Featured</span>
-                        </div>
+                <div class="card h-100 product-wap rounded-0 mx-1">
+                    <div class="card rounded-0 product-card">
                         <img class="card-img rounded-0 img-fluid"
-                             style="height: 250px; object-fit: cover;"
+                             style="height: 300px; object-fit: cover;"
                              th:src="${product.image}" th:alt="${product.name}">
                         <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                             <ul class="list-unstyled">
-                                <li><a class="btn btn-success text-white mt-2" href="#"><i class="far fa-eye"></i></a>
-                                </li>
+                                <li><a class="btn btn-success text-white mt-2"
+                                       th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                                       title="View Details"><i class="far fa-eye"></i></a></li>
                                 <li>
                                     <button class="btn btn-success text-white mt-2 add-to-cart-btn"
                                             th:data-product-id="${product.id}"
@@ -269,6 +268,9 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-danger">Latest</span>
+                            </div>
                             <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
                                class="text-decoration-none">
                                 <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
@@ -276,11 +278,11 @@
                             </a>
                         </div>
                         <div class="justify-content-between d-flex">
-                                <span class="text-danger fw-bold mb-0 h3"
+                                <span class="text-success fw-bolder mb-0 h3"
                                       th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </span>
-                                <span class="bg-success fw-bolder p-1 m-0 text-white rounded-1 text-sm">
+                            <span class="bg-success fw-bolder p-1 m-0 text-white rounded-1 text-sm">
                                    <i class="fa fa-shopping-cart"></i> <span th:text="${product.sold + ' Sold'} ">0 Sold</span>
                                 </span>
                         </div>
@@ -300,15 +302,15 @@
 <div th:replace="~{component/chat-widget :: chat-widget('home', '🎮', 'GOS Gaming Support', '● Tư vấn gaming', '🎮 <strong>Chào mừng đến GOS Gaming!</strong><br>Tôi có thể giúp bạn tư vấn về:<br>• PC Gaming & Laptop<br>• Gaming Gear & Phụ kiện<br>• Giá cả & Khuyến mãi<br><br>Bạn cần hỗ trợ gì hôm nay? 😊')}"></div>
 
 <!-- Start Script -->
-<script src="user/js/jquery-1.11.0.min.js"></script>
-<script src="user/js/jquery-migrate-1.2.1.min.js"></script>
-<script src="user/js/bootstrap.bundle.min.js"></script>
-<script src="user/js/templatemo.js"></script>
-<script src="user/js/custom.js"></script>
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
 <!-- End Script -->
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="toastify-message.js"></script>
+<script src="/toastify-message.js"></script>
 </body>
 
 </html>

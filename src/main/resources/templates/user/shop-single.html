@@ -564,45 +564,45 @@
         <div class="product-gallery">
             <!-- Main Image -->
             <div class="main-image-wrapper">
-                <img th:src="@{'/productImg/' + ${product.image}}"
+                <img th:src="${product.image}"
                      th:alt="${product.name}"
+                     class="img-fluid" style="object-fit: cover"
                      id="product-detail"
-                     onerror="this.src='/user/img/default-pc.jpg'">
+                     onerror="this.src='/upload/default-product-image.png'">
             </div>
 
             <!-- Thumbnail Grid -->
-            <div class="thumbnail-grid">
-                <img th:src="@{'/productImg/' + ${product.image}}"
-                     th:alt="${product.name}"
-                     class="active"
-                     onerror="this.src='/user/img/product_single_01.jpg'">
-                <img th:src="@{'/productImg/' + ${product.image}}"
-                     th:alt="${product.name}"
-                     onerror="this.src='/user/img/product_single_02.jpg'">
-                <img th:src="@{'/productImg/' + ${product.image}}"
-                     th:alt="${product.name}"
-                     onerror="this.src='/user/img/product_single_03.jpg'">
-                <img th:src="@{'/productImg/' + ${product.image}}"
-                     th:alt="${product.name}"
-                     onerror="this.src='/user/img/product_single_04.jpg'">
-            </div>
+<!--            <div class="thumbnail-grid">-->
+<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+<!--                     th:alt="${product.name}"-->
+<!--                     class="active"-->
+<!--                     onerror="this.src='/user/img/product_single_01.jpg'">-->
+<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+<!--                     th:alt="${product.name}"-->
+<!--                     onerror="this.src='/user/img/product_single_02.jpg'">-->
+<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+<!--                     th:alt="${product.name}"-->
+<!--                     onerror="this.src='/user/img/product_single_03.jpg'">-->
+<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+<!--                     th:alt="${product.name}"-->
+<!--                     onerror="this.src='/user/img/product_single_04.jpg'">-->
+<!--            </div>-->
         </div>
 
         <!-- Right Column: Product Information -->
         <div class="product-info-wrapper">
-            <!-- Product Title -->
-            <h1 th:text="${product.name}">ASUS ROG GAMING PC RTX 4070</h1>
-
             <!-- Rating & Stock -->
             <div class="rating-stock-section">
-                <div class="rating-stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span style="margin-left: 0.5rem; color: #6b7280;">(4.8)</span>
-                </div>
+<!--                <div class="rating-stars">-->
+<!--                    <i class="fas fa-star"></i>-->
+<!--                    <i class="fas fa-star"></i>-->
+<!--                    <i class="fas fa-star"></i>-->
+<!--                    <i class="fas fa-star"></i>-->
+<!--                    <i class="fas fa-star"></i>-->
+<!--                    <span style="margin-left: 0.5rem; color: #6b7280;">(4.8)</span>-->
+<!--                </div>-->
+                <!-- Product Title -->
+                <span th:text="${product.name}" class="h2 fw-bolder">ASUS ROG GAMING PC RTX 4070</span>
                 <div class="stock-badge" th:if="${product.quantity > 0}">
                     <i class="fas fa-check"></i> In Stock
                 </div>
@@ -612,38 +612,39 @@
             </div>
 
             <!-- Price -->
-            <p class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}">$1,299.99</p>
+            <p class="price fw-bolder" th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000 VND</p>
 
             <!-- Key Features -->
             <div>
-                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: #111827;">Key Features</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: #111827;">Guarantee</h3>
                 <ul class="key-features-list">
-                    <li>High-performance gaming PC</li>
-                    <li>Latest generation components</li>
-                    <li>Optimized for 4K gaming</li>
-                    <li>RGB lighting system</li>
-                    <li>2-year warranty included</li>
+                    <li>12-24 month manufacturer warranty on all gaming hardware and peripherals</li>
+                    <li>30-day money-back guarantee for unsatisfied customers with original packaging</li>
+                    <li>Free repair or replacement for defective items within warranty period</li>
+                    <li>Extended warranty options available for premium gaming setups and high-end components</li>
+                    <li>Quick RMA process with prepaid shipping labels for warranty claims</li>
+                    <li>Dead-on-arrival protection with immediate replacement for DOA products</li>
                 </ul>
             </div>
 
-            <!-- Configuration Options -->
-            <div class="config-section">
-                <label>Memory (RAM)</label>
-                <select>
-                    <option>16GB DDR4</option>
-                    <option>32GB DDR4</option>
-                    <option>64GB DDR4</option>
-                </select>
-            </div>
+<!--            &lt;!&ndash; Configuration Options &ndash;&gt;-->
+<!--            <div class="config-section">-->
+<!--                <label>Memory (RAM)</label>-->
+<!--                <select>-->
+<!--                    <option>16GB DDR4</option>-->
+<!--                    <option>32GB DDR4</option>-->
+<!--                    <option>64GB DDR4</option>-->
+<!--                </select>-->
+<!--            </div>-->
 
-            <div class="config-section">
-                <label>Storage</label>
-                <select>
-                    <option>512GB SSD</option>
-                    <option>1TB SSD</option>
-                    <option>2TB SSD</option>
-                </select>
-            </div>
+<!--            <div class="config-section">-->
+<!--                <label>Storage</label>-->
+<!--                <select>-->
+<!--                    <option>512GB SSD</option>-->
+<!--                    <option>1TB SSD</option>-->
+<!--                    <option>2TB SSD</option>-->
+<!--                </select>-->
+<!--            </div>-->
 
             <!-- Quantity Selector -->
             <div class="quantity-selector">
@@ -675,7 +676,7 @@
         </div>
 
         <!-- Tab Content -->
-        <div id="description" class="tab-content active">
+        <div id="description" class="tab-content active" th:utext="${product.description}">
             <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Product Description</h3>
             <p style="color: #374151; line-height: 1.6;" th:text="${product.description}">
                 Experience ultimate gaming performance with this high-end gaming PC. Built with the latest components
@@ -769,9 +770,9 @@
                     <!-- Phần hình ảnh -->
                     <div class="product-image-container">
                         <img class="product-image"
-                             th:src="@{'/productImg/' + relatedProduct.image}"
+                             th:src="${relatedProduct.image}"
                              th:alt="${relatedProduct.name}"
-                             onerror="this.src='/user/img/shop_01.jpg'">
+                             onerror="this.src='/upload/default-product-image.png'">
 
                         <!-- Badge tình trạng hàng -->
                         <div th:if="${relatedProduct.quantity > 0}" class="stock-badge in-stock">
@@ -799,18 +800,18 @@
                         </div>
 
                         <!-- Đánh giá sao -->
-                        <div class="product-rating">
-                            <i class="fa fa-star star"></i>
-                            <i class="fa fa-star star"></i>
-                            <i class="fa fa-star star"></i>
-                            <i class="fa fa-star star"></i>
-                            <i class="fa fa-star star empty"></i>
-                            <span class="rating-text">(4.0)</span>
-                        </div>
+<!--                        <div class="product-rating">-->
+<!--                            <i class="fa fa-star star"></i>-->
+<!--                            <i class="fa fa-star star"></i>-->
+<!--                            <i class="fa fa-star star"></i>-->
+<!--                            <i class="fa fa-star star"></i>-->
+<!--                            <i class="fa fa-star star empty"></i>-->
+<!--                            <span class="rating-text">(4.0)</span>-->
+<!--                        </div>-->
 
                         <!-- Giá sản phẩm -->
-                        <div class="product-price"
-                             th:text="'$' + ${#numbers.formatDecimal(relatedProduct.price, 0, 'COMMA', 2, 'POINT')}">$0.00</div>
+                        <div class="product-price fw-bolder"
+                             th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000 VND</div>
                     </div>
                 </div>
             </a>

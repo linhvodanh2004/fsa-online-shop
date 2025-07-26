@@ -199,6 +199,12 @@ public class ProductController {
         model.addAttribute("pageType", "about");
         return "user/about";
     }
+    @GetMapping("/privacy")
+    public String showPryvacy(Model model) {
+        model.addAttribute("pageType", "privacy");
+        return "user/privacy";
+    }
+
 
     // Add missing endpoints for better navigation
     @GetMapping("/shop-category/{id}")

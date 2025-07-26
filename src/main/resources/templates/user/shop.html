@@ -208,7 +208,7 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
         .product-image-container {
@@ -452,15 +452,11 @@
     </style>
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="/user/css/fontawesome.min.css">
-    <!--
-
-    TemplateMo 559 Zay Shop
-
-    https://templatemo.com/tm-559-zay-shop
-
-    -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="/cart-service.js" defer></script>
 </head>
 
 <body>
@@ -475,7 +471,6 @@
 
 <!-- Search Modal -->
 <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
-
 
 
 <!-- Start Content -->
@@ -518,18 +513,18 @@
                 <h5>Price Range</h5>
                 <div class="price-range-container">
                     <div class="price-labels">
-                        <span id="minPriceLabel">$0</span>
-                        <span id="maxPriceLabel">$3000</span>
+                        <span id="minPriceLabel">100000</span>
+                        <span id="maxPriceLabel">10000000</span>
                     </div>
                     <div class="range-slider">
-                        <input type="range" id="minPrice" min="0" max="3000"
-                               th:value="${minPrice != null ? minPrice : 0}" step="50">
-                        <input type="range" id="maxPrice" min="0" max="3000"
-                               th:value="${maxPrice != null ? maxPrice : 3000}" step="50">
+                        <input type="range" id="minPrice" min="100000" max="10000000"
+                               th:value="${minPrice != null ? minPrice : 0}" step="50000">
+                        <input type="range" id="maxPrice" min="100000" max="10000000"
+                               th:value="${maxPrice != null ? maxPrice : 10000000}" step="50000">
                     </div>
                     <div class="price-inputs">
-                        <span>Min: $<span id="minPriceValue">0</span></span>
-                        <span>Max: $<span id="maxPriceValue">3000</span></span>
+                        <span id="minPriceValue">100000</span>
+                        <span id="maxPriceValue">10000000</span>
                     </div>
                 </div>
             </div>
@@ -576,8 +571,10 @@
                 </div>
                 <div class="custom-select">
                     <select id="sortSelect">
-                        <option value="price-low" th:selected="${currentSort == 'price-low'}">Price: Low to High</option>
-                        <option value="price-high" th:selected="${currentSort == 'price-high'}">Price: High to Low</option>
+                        <option value="price-low" th:selected="${currentSort == 'price-low'}">Price: Low to High
+                        </option>
+                        <option value="price-high" th:selected="${currentSort == 'price-high'}">Price: High to Low
+                        </option>
                     </select>
                 </div>
             </div>
@@ -590,75 +587,86 @@
                      th:data-category="${product.category.id}"
                      th:data-price="${product.price}"
                      th:data-stock="${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}">
-
-                    <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
-                       class="product-card-link">
-
-                        <div class="product-card">
-                            <div class="product-image-container">
-                                <img class="product-image"
-                                     th:src="@{'/productImg/' + ${product.image}}"
-                                     th:alt="${product.name}"
-                                     onerror="this.src='/user/img/shop_01.jpg'">
-
-                                <!-- Stock Badge -->
-                                <div th:if="${product.quantity > 0}" class="stock-badge in-stock">
-                                    <i class="fa fa-check"></i> In Stock
-                                </div>
-                                <div th:if="${product.quantity == 0}" class="stock-badge out-of-stock">
-                                    <i class="fa fa-times"></i> Out of Stock
-                                </div>
-                                <div th:if="${product.quantity > 0 && product.quantity <= 5}" class="stock-badge low-stock">
-                                    <i class="fa fa-exclamation-triangle"></i> Low Stock
-                                </div>
+                    <div class="card h-100 product-wap rounded-0">
+                        <div class="card rounded-0 product-card">
+                            <img class="card-img product-image rounded-0 img-fluid"
+                                 style="height: 300px; object-fit: cover;"
+                                 th:src="${product.image}" th:alt="${product.name}"
+                                 onerror="this.src='/upload/default-product-image.png'">
+                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-success text-white mt-2"
+                                           th:href="@{${product.slug != null && !product.slug.isEmpty()
+                                               ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                                           title="View Details"><i class="far fa-eye"></i></a></li>
+                                    <li>
+                                        <button class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                                th:data-product-id="${product.id}"
+                                                data-quantity="1"><i class="fas fa-cart-plus"></i></button>
+                                    </li>
+                                </ul>
                             </div>
-                            <!-- Product Content -->
-                            <div class="product-content">
-                                <h3 class="product-name"
-                                    th:text="${product.name}"
-                                    th:title="${product.name}">Product Name</h3>
 
-                                <!-- Product Meta -->
-                                <div class="product-meta">
-                                    <span th:text="${product.category.name}">Category</span>
-                                    <span th:if="${product.quantity > 0}" th:text="${product.quantity} + ' left'">0 left</span>
-                                    <span th:if="${product.quantity == 0}">Out of stock</span>
-                                </div>
-
-                                <!-- Rating -->
-                                <div class="product-rating">
-                                    <i class="fa fa-star star"></i>
-                                    <i class="fa fa-star star"></i>
-                                    <i class="fa fa-star star"></i>
-                                    <i class="fa fa-star star"></i>
-                                    <i class="fa fa-star star empty"></i>
-                                    <span class="rating-text">(4.0)</span>
-                                </div>
-
-                                <!-- Price -->
-                                <div class="product-price"
-                                     th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}">$0.00</div>
+                            <!-- Stock Badge -->
+                            <div th:if="${product.quantity > 0}" class="stock-badge in-stock">
+                                <i class="fa fa-check"></i> In Stock
+                            </div>
+                            <div th:if="${product.quantity == 0}" class="stock-badge out-of-stock">
+                                <i class="fa fa-times"></i> Out of Stock
+                            </div>
+                            <div th:if="${product.quantity > 0 && product.quantity <= 5}" class="stock-badge low-stock">
+                                <i class="fa fa-exclamation-triangle"></i> Low Stock
                             </div>
                         </div>
-                    </a>
+                        <!-- Product Content -->
+                        <div class="product-content">
+                            <h3 class="product-name"
+                                th:text="${product.name}"
+                                th:title="${product.name}">Product Name</h3>
+
+                            <!-- Product Meta -->
+                            <div class="product-meta mt-0">
+                                <span th:text="${product.category.name}">Category</span>
+                                <span th:if="${product.quantity > 0}"
+                                      th:text="${product.quantity} + ' left'">0 left</span>
+                                <span th:if="${product.quantity == 0}">Out of stock</span>
+                            </div>
+
+                            <!--                                &lt;!&ndash; Rating &ndash;&gt;-->
+                            <!--                                <div class="product-rating">-->
+                            <!--                                    <i class="fa fa-star star"></i>-->
+                            <!--                                    <i class="fa fa-star star"></i>-->
+                            <!--                                    <i class="fa fa-star star"></i>-->
+                            <!--                                    <i class="fa fa-star star"></i>-->
+                            <!--                                    <i class="fa fa-star star empty"></i>-->
+                            <!--                                    <span class="rating-text">(4.0)</span>-->
+                            <!--                                </div>-->
+
+                            <!-- Price -->
+                            <div class="product-price fw-bolder"
+                                 th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">0
+                                VND
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- End Product Loop -->
             </div>
 
-            <!-- Pagination -->
-            <div style="display: flex; justify-content: center; margin-top: 2rem;">
-                <ul class="pagination pagination-lg">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
-                </ul>
-            </div>
+<!--            &lt;!&ndash; Pagination &ndash;&gt;-->
+<!--            <div style="display: flex; justify-content: center; margin-top: 2rem;">-->
+<!--                <ul class="pagination pagination-lg">-->
+<!--                    <li class="page-item disabled">-->
+<!--                        <a class="page-link" href="#" tabindex="-1">1</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item">-->
+<!--                        <a class="page-link" href="#">2</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item">-->
+<!--                        <a class="page-link" href="#">3</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
         </div>
     </div>
 </div>
@@ -687,7 +695,8 @@
 
                     <!--Carousel Wrapper-->
                     <div class="col">
-                        <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example" data-bs-ride="carousel">
+                        <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example"
+                             data-bs-ride="carousel">
                             <!--Slides-->
                             <div class="carousel-inner product-links-wap" role="listbox">
 
@@ -695,16 +704,24 @@
                                 <div class="carousel-item active">
                                     <div class="row">
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.logitech.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_logitech.png" alt="Logitech Logo"></a>
+                                            <a href="https://www.logitech.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_logitech.png" alt="Logitech Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.razer.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_razer.png" alt="Razer Logo"></a>
+                                            <a href="https://www.razer.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_razer.png" alt="Razer Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.steelseries.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_steelseries.png" alt="SteelSeries Logo"></a>
+                                            <a href="https://www.steelseries.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_steelseries.png" alt="SteelSeries Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.hyperxgaming.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_hyperx.png" alt="HyperX Logo"></a>
+                                            <a href="https://www.hyperxgaming.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_hyperx.png" alt="HyperX Logo"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -755,7 +772,7 @@
 <!-- Vanilla JS Shop Filter Script (No jQuery conflicts) -->
 <script>
     // Wait for DOM to be ready
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // Test basic functionality
         const products = document.querySelectorAll('.product-item');
@@ -793,10 +810,10 @@
             const minPrice = document.getElementById('minPrice').value;
             const maxPrice = document.getElementById('maxPrice').value;
 
-            if (minPrice && minPrice !== '0') {
+            if (minPrice && minPrice !== '100000') {
                 params.set('minPrice', minPrice);
             }
-            if (maxPrice && maxPrice !== '3000') {
+            if (maxPrice && maxPrice !== '10000000') {
                 params.set('maxPrice', maxPrice);
             }
 
@@ -822,7 +839,6 @@
         }
 
 
-
         // Test if elements exist
         if (products.length === 0) {
             console.error('❌ No products found! Check HTML structure.');
@@ -833,7 +849,6 @@
             console.error('❌ No category filters found! Check HTML structure.');
             return;
         }
-
 
 
         // Price range slider functionality
@@ -850,30 +865,30 @@
 
             // Ensure min doesn't exceed max
             if (minVal >= maxVal) {
-                minPriceSlider.value = maxVal - 50;
+                minPriceSlider.value = maxVal - 10000;
             }
 
             // Ensure max doesn't go below min
             if (maxVal <= minVal) {
-                maxPriceSlider.value = minVal + 50;
+                maxPriceSlider.value = minVal + 10000;
             }
 
             const finalMin = parseInt(minPriceSlider.value);
             const finalMax = parseInt(maxPriceSlider.value);
 
-            minPriceLabel.textContent = '$' + finalMin;
-            maxPriceLabel.textContent = '$' + finalMax;
-            minPriceValue.textContent = finalMin;
-            maxPriceValue.textContent = finalMax;
+            minPriceLabel.textContent = finalMin.toLocaleString('en-US');
+            maxPriceLabel.textContent = finalMax.toLocaleString('en-US');
+            minPriceValue.textContent = finalMin.toLocaleString('en-US');
+            maxPriceValue.textContent = finalMax.toLocaleString('en-US');
         }
 
-        minPriceSlider.addEventListener('input', function() {
+        minPriceSlider.addEventListener('input', function () {
             updatePriceLabels();
             filterProducts();
             updateUrl();
         });
 
-        maxPriceSlider.addEventListener('input', function() {
+        maxPriceSlider.addEventListener('input', function () {
             updatePriceLabels();
             filterProducts();
             updateUrl();
@@ -884,17 +899,14 @@
         updateProductCount();
 
 
-
-
-
         // Category filter functionality - FIXED LOGIC
-        categoryFilters.forEach(function(filter) {
-            filter.addEventListener('change', function() {
+        categoryFilters.forEach(function (filter) {
+            filter.addEventListener('change', function () {
                 // Handle "All Categories" special case
                 if (this.value === 'all') {
                     if (this.checked) {
                         // Uncheck all other category filters
-                        categoryFilters.forEach(function(f) {
+                        categoryFilters.forEach(function (f) {
                             if (f.value !== 'all') {
                                 f.checked = false;
                             }
@@ -916,9 +928,9 @@
 
         // Price and stock filter functionality
         const allFilters = [...priceFilters, ...stockFilters];
-        allFilters.forEach(function(filter) {
-            filter.addEventListener('change', function() {
-                setTimeout(function() {
+        allFilters.forEach(function (filter) {
+            filter.addEventListener('change', function () {
+                setTimeout(function () {
                     filterProducts();
                     updateUrl();
                 }, 100);
@@ -928,7 +940,7 @@
         // Sort functionality - Direct trigger
         const sortSelect = document.getElementById('sortSelect');
         if (sortSelect) {
-            sortSelect.addEventListener('change', function() {
+            sortSelect.addEventListener('change', function () {
                 // Directly trigger sort for immediate response
                 sortProducts();
                 updateUrl();
@@ -936,7 +948,7 @@
         }
 
         // Backup event delegation
-        document.addEventListener('change', function(e) {
+        document.addEventListener('change', function (e) {
             if (e.target && e.target.id === 'sortSelect') {
                 sortProducts();
                 updateUrl();
@@ -946,10 +958,10 @@
         // Clear filters
         const clearButton = document.getElementById('clearFilters');
         if (clearButton) {
-            clearButton.addEventListener('click', function() {
+            clearButton.addEventListener('click', function () {
 
                 // Clear all filters
-                [...categoryFilters, ...stockFilters].forEach(function(filter) {
+                [...categoryFilters, ...stockFilters].forEach(function (filter) {
                     filter.checked = false;
                 });
 
@@ -973,10 +985,6 @@
             });
         }
 
-
-
-
-
         function filterProducts() {
             // Check if "All Categories" is selected
             const allCategoriesFilter = document.getElementById('categoryAll');
@@ -994,7 +1002,7 @@
             let visibleCount = 0;
 
             // Filter each product
-            products.forEach(function(product) {
+            products.forEach(function (product) {
                 let showProduct = true;
 
                 // Get product data
@@ -1039,17 +1047,16 @@
             });
 
             // Apply sorting immediately after filtering
-            setTimeout(function() {
+            setTimeout(function () {
                 sortProducts();
             }, 10); // Tiny delay to ensure DOM is ready
 
             // Update counts
-            setTimeout(function() {
+            setTimeout(function () {
                 updateProductCount();
                 updateFilterSummary();
             }, 50);
         }
-
 
 
         function sortProducts() {
@@ -1072,7 +1079,7 @@
             if (visibleProducts.length === 0) return;
 
             // Sort products based on selected option
-            visibleProducts.sort(function(a, b) {
+            visibleProducts.sort(function (a, b) {
                 const priceA = parseFloat(a.dataset.price);
                 const priceB = parseFloat(b.dataset.price);
                 const nameA = a.dataset.name || '';
@@ -1082,7 +1089,7 @@
                 const soldA = parseInt(a.dataset.sold) || 0;
                 const soldB = parseInt(b.dataset.sold) || 0;
 
-                switch(sortValue) {
+                switch (sortValue) {
                     case 'price-low':
                         return priceA - priceB; // Low to High
                     case 'price-high':
@@ -1094,20 +1101,20 @@
 
             // DETACH all products first
             const allProducts = Array.from(products);
-            allProducts.forEach(function(product) {
+            allProducts.forEach(function (product) {
                 if (product.parentNode) {
                     product.parentNode.removeChild(product);
                 }
             });
 
             // RE-INSERT in sorted order
-            visibleProducts.forEach(function(product) {
+            visibleProducts.forEach(function (product) {
                 productContainer.appendChild(product);
             });
 
             // Add hidden products at end
             const hiddenProducts = Array.from(products).filter(p => p.style.display === 'none');
-            hiddenProducts.forEach(function(product) {
+            hiddenProducts.forEach(function (product) {
                 productContainer.appendChild(product);
             });
 
@@ -1116,7 +1123,7 @@
         }
 
         function updateProductCount() {
-            setTimeout(function() {
+            setTimeout(function () {
                 const visibleCount = Array.from(products).filter(p => p.style.display !== 'none').length;
                 const totalCount = products.length;
 
@@ -1129,7 +1136,7 @@
         }
 
         function updateFilterSummary() {
-            setTimeout(function() {
+            setTimeout(function () {
                 const visibleCount = Array.from(products).filter(p => p.style.display !== 'none').length;
                 const totalCount = products.length;
 
@@ -1147,6 +1154,8 @@
     });
 </script>
 <!-- End Script -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="toastify-message.js"></script>
 </body>
 
 </html>

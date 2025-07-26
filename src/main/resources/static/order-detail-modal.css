@@ -1,0 +1,314 @@
+/* Modal customizations */
+#orderDetailModal .modal-dialog {
+    max-width: 1200px;
+}
+
+#orderDetailModal .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Card headers */
+#orderDetailModal .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+}
+
+#orderDetailModal .card-header h6 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #495057;
+}
+
+/* Table styling */
+#orderDetailModal .table-borderless td {
+    border: none;
+    padding: 0.4rem 0.75rem;
+}
+
+#orderDetailModal .table-borderless td:first-child {
+    width: 40%;
+    color: #6c757d;
+}
+
+/* Product image styling */
+#orderDetailModal .img-thumbnail {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+#orderDetailModal .img-thumbnail:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #orderDetailModal .modal-dialog {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    #orderDetailModal .modal-body {
+        padding: 1rem 0.5rem;
+    }
+
+    #orderDetailModal .table-responsive {
+        font-size: 0.9em;
+    }
+
+    #orderDetailModal .img-thumbnail {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Error alert styling */
+#orderDetailModal .alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Smooth transitions */
+#orderDetailModal .modal-content {
+    transition: all 0.3s ease;
+}
+
+/* Hover effects for table rows */
+#orderDetailModal .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.025);
+}
+
+/* Footer styling */
+#orderDetailModal .table tfoot th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Badge styling for quantity */
+#orderDetailModal .badge {
+    font-size: 0.9em;
+}
+
+/* Custom scrollbar for modal body */
+#orderDetailModal .modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+#orderDetailModal .modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#orderDetailModal .modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+#orderDetailModal .modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+.text-truncate-custom {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.payment-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.payment-cash {
+    background-color: #28a745;
+    color: white;
+}
+
+.payment-card {
+    background-color: #007bff;
+    color: white;
+}
+
+.payment-paypal {
+    background-color: #ffc107;
+    color: black;
+}
+
+.payment-bank {
+    background-color: #6c757d;
+    color: white;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-in-transit {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #74b9ff;
+}
+
+.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #00b894;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #d63031;
+}
+
+.paid-badge {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.paid-yes {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.paid-no {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-filter-btn {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-filter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-filter-btn.active {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Order Detail Modal Styles */
+
+/* Status badges */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-in-transit {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #74b9ff;
+}
+
+.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #00b894;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #e17055;
+}
+
+/* Payment method badges */
+.payment-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.payment-cash {
+    background-color: #ddd6fe;
+    color: #5b21b6;
+    border: 1px solid #a855f7;
+}
+
+.payment-card {
+    background-color: #ccfbf1;
+    color: #0f766e;
+    border: 1px solid #14b8a6;
+}
+
+.payment-paypal {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.payment-bank {
+    background-color: #ede9fe;
+    color: #6b21a8;
+    border: 1px solid #8b5cf6;
+}
+
+/* Payment status badges */
+.paid-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.paid-yes {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #00b894;
+}
+
+.paid-no {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #e17055;
+}

@@ -1,22 +1,22 @@
 package fsa.project.online_shop.controllers;
 
+import fsa.project.online_shop.dtos.OrderResponse;
 import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.models.constant.OrderStatus;
 import fsa.project.online_shop.services.*;
+import fsa.project.online_shop.utils.OrderMapper;
 import fsa.project.online_shop.utils.SessionUtil;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -160,6 +160,14 @@ public class OrderController {
             return "redirect:/admin/orders?error=email-failed";
         }
         return "redirect:/admin/orders?success=update-order-status-successfully";
+    }
+
+    @ResponseBody
+    @GetMapping("/orders/api/order-detail/{orderId}")
+    public ResponseEntity<?> getOrderDetail(@PathVariable("orderId") Long orderId) {
+        Order order = orderService.getOrderById(orderId);
+        OrderResponse orderResponse = OrderMapper.toOrderResponse(order);
+        return ResponseEntity.ok(orderResponse);
     }
 
     private Double parseCurrencyToLong(String input) {
