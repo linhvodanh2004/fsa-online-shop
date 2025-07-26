@@ -92,12 +92,12 @@
                                         <option value="GOOGLE">Google</option>
                                         <option value="FACEBOOK">Facebook</option>
                                     </select>
-                                    <div class="ms-auto">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="location.href='/admin/add-user';">
-                                            <i data-feather="plus"></i> Add New User
-                                        </button>
-                                    </div>
+<!--                                    <div class="ms-auto">-->
+<!--                                        <button type="button" class="btn btn-primary"-->
+<!--                                                onclick="location.href='/admin/add-user';">-->
+<!--                                            <i data-feather="plus"></i> Add New User-->
+<!--                                        </button>-->
+<!--                                    </div>-->
                                 </div>
                                 
                                 <div th:if="${#lists.isEmpty(users)}">
@@ -173,11 +173,11 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">
-                                        <td colspan="9" style="text-align: center;">
-                                            <i data-feather="plus"></i>
-                                        </td>
-                                    </tr>
+<!--                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">-->
+<!--                                        <td colspan="9" style="text-align: center;">-->
+<!--                                            <i data-feather="plus"></i>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
                                     </tbody>
                                 </table>
                                 

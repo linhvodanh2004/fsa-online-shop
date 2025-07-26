@@ -15,12 +15,13 @@
     <link rel="stylesheet" href="/user/css/custom.css">
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="/user/css/fontawesome.min.css">
 
     <!-- Slick -->
-    <link rel="stylesheet" type="text/css" href="user/css/slick.min.css">
-    <link rel="stylesheet" type="text/css" href="user/css/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
 
     <!-- Modern Product Page Styles -->
     <style>
@@ -310,7 +311,7 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
         .product-image-container {
@@ -441,6 +442,7 @@
             outline-offset: 4px;
             border-radius: 12px;
         }
+
         .product-card-link:focus-visible .product-card {
             border-color: #16a34a;
         }
@@ -502,13 +504,8 @@
             margin-bottom: 0;
         }
     </style>
-    <!--
-
-    TemplateMo 559 Zay Shop
-
-    https://templatemo.com/tm-559-zay-shop
-
-    -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="/cart-service.js" defer></script>
 </head>
 
 <body>
@@ -523,9 +520,6 @@
 
 <!-- Modal -->
 <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
-
-
-
 
 
 <!-- Start Content -->
@@ -544,21 +538,21 @@
             </div>
 
             <!-- Thumbnail Grid -->
-<!--            <div class="thumbnail-grid">-->
-<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
-<!--                     th:alt="${product.name}"-->
-<!--                     class="active"-->
-<!--                     onerror="this.src='/user/img/product_single_01.jpg'">-->
-<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
-<!--                     th:alt="${product.name}"-->
-<!--                     onerror="this.src='/user/img/product_single_02.jpg'">-->
-<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
-<!--                     th:alt="${product.name}"-->
-<!--                     onerror="this.src='/user/img/product_single_03.jpg'">-->
-<!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
-<!--                     th:alt="${product.name}"-->
-<!--                     onerror="this.src='/user/img/product_single_04.jpg'">-->
-<!--            </div>-->
+            <!--            <div class="thumbnail-grid">-->
+            <!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+            <!--                     th:alt="${product.name}"-->
+            <!--                     class="active"-->
+            <!--                     onerror="this.src='/user/img/product_single_01.jpg'">-->
+            <!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+            <!--                     th:alt="${product.name}"-->
+            <!--                     onerror="this.src='/user/img/product_single_02.jpg'">-->
+            <!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+            <!--                     th:alt="${product.name}"-->
+            <!--                     onerror="this.src='/user/img/product_single_03.jpg'">-->
+            <!--                <img th:src="@{'/productImg/' + ${product.image}}"-->
+            <!--                     th:alt="${product.name}"-->
+            <!--                     onerror="this.src='/user/img/product_single_04.jpg'">-->
+            <!--            </div>-->
         </div>
 
         <!-- Right Column: Product Information -->
@@ -568,29 +562,32 @@
             <h2 th:text="${product.name}" class="fw-bolder">ASUS ROG GAMING PC RTX 4070</h2>
             <!-- Rating & Stock -->
             <div class="rating-stock-section">
-<!--                <div class="rating-stars">-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <span style="margin-left: 0.5rem; color: #6b7280;">(4.8)</span>-->
-<!--                </div>-->
+                <!--                <div class="rating-stars">-->
+                <!--                    <i class="fas fa-star"></i>-->
+                <!--                    <i class="fas fa-star"></i>-->
+                <!--                    <i class="fas fa-star"></i>-->
+                <!--                    <i class="fas fa-star"></i>-->
+                <!--                    <i class="fas fa-star"></i>-->
+                <!--                    <span style="margin-left: 0.5rem; color: #6b7280;">(4.8)</span>-->
+                <!--                </div>-->
 
                 <div class="stock-badge" th:if="${product.quantity > 0}">
                     <i class="fas fa-check"></i> In Stock
                 </div>
-                <div class="stock-badge" th:if="${product.quantity == 0}" style="background-color: #fee2e2; color: #991b1b;">
+                <div class="stock-badge" th:if="${product.quantity == 0}"
+                     style="background-color: #fee2e2; color: #991b1b;">
                     <i class="fas fa-times"></i> Out of Stock
                 </div>
             </div>
 
             <!-- Price -->
-            <p class="price fw-bolder" th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000 VND</p>
+            <p class="price fw-bolder"
+               th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000 VND</p>
 
             <!-- Key Features -->
             <div>
-                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: #111827;">Guarantee</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: #111827;">
+                    Guarantee</h3>
                 <ul class="key-features-list">
                     <li>12-24 month manufacturer warranty on all gaming hardware and peripherals</li>
                     <li>30-day money-back guarantee for unsatisfied customers with original packaging</li>
@@ -601,41 +598,51 @@
                 </ul>
             </div>
 
-<!--            &lt;!&ndash; Configuration Options &ndash;&gt;-->
-<!--            <div class="config-section">-->
-<!--                <label>Memory (RAM)</label>-->
-<!--                <select>-->
-<!--                    <option>16GB DDR4</option>-->
-<!--                    <option>32GB DDR4</option>-->
-<!--                    <option>64GB DDR4</option>-->
-<!--                </select>-->
-<!--            </div>-->
+            <!--            &lt;!&ndash; Configuration Options &ndash;&gt;-->
+            <!--            <div class="config-section">-->
+            <!--                <label>Memory (RAM)</label>-->
+            <!--                <select>-->
+            <!--                    <option>16GB DDR4</option>-->
+            <!--                    <option>32GB DDR4</option>-->
+            <!--                    <option>64GB DDR4</option>-->
+            <!--                </select>-->
+            <!--            </div>-->
 
-<!--            <div class="config-section">-->
-<!--                <label>Storage</label>-->
-<!--                <select>-->
-<!--                    <option>512GB SSD</option>-->
-<!--                    <option>1TB SSD</option>-->
-<!--                    <option>2TB SSD</option>-->
-<!--                </select>-->
-<!--            </div>-->
+            <!--            <div class="config-section">-->
+            <!--                <label>Storage</label>-->
+            <!--                <select>-->
+            <!--                    <option>512GB SSD</option>-->
+            <!--                    <option>1TB SSD</option>-->
+            <!--                    <option>2TB SSD</option>-->
+            <!--                </select>-->
+            <!--            </div>-->
 
             <!-- Quantity Selector -->
             <div class="quantity-selector">
                 <label style="font-weight: 500; color: #374151;">Quantity:</label>
-                <button type="button" onclick="decreaseQuantity()">-</button>
+                <button type="button" onclick="adjustQuantity(-1)">-</button>
                 <input type="number" id="quantity" value="1" min="1" readonly>
-                <button type="button" onclick="increaseQuantity()">+</button>
+                <button type="button" onclick="adjustQuantity(1)">+</button>
             </div>
 
             <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button class="btn-add-to-cart" th:disabled="${product.quantity == 0}">
+            <div class="action-buttons" sec:authorize="isAuthenticated()">
+                <button class="btn-add-to-cart" onclick="handleAddToCart()" th:data-product-id="${product.id}"
+                        th:disabled="${product.quantity == 0}">
                     <i class="fas fa-cart-plus"></i> Add to Cart
                 </button>
-                <button class="btn-buy-now" th:disabled="${product.quantity == 0}">
+                <button class="btn-buy-now" onclick="handleBuyNow()" th:data-product-id="${product.id}"
+                        th:disabled="${product.quantity == 0}">
                     <i class="fas fa-bolt"></i> Buy Now
                 </button>
+            </div>
+            <div class="action-buttons" sec:authorize="isAnonymous()">
+                <a th:href="@{/login}">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </a>
+                <a th:href="@{/login}">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </a>
             </div>
         </div>
     </div>
@@ -651,7 +658,8 @@
 
         <!-- Tab Content -->
         <div id="description" class="tab-content active" th:utext="${product.description}">
-            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Product Description</h3>
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Product
+                Description</h3>
             <p style="color: #374151; line-height: 1.6;" th:text="${product.description}">
                 Experience ultimate gaming performance with this high-end gaming PC. Built with the latest components
                 and optimized for 4K gaming, this system delivers exceptional performance for both gaming and
@@ -666,7 +674,8 @@
         </div>
 
         <div id="specifications" class="tab-content">
-            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Technical Specifications</h3>
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #111827;">Technical
+                Specifications</h3>
             <table>
                 <tr>
                     <th>Processor</th>
@@ -710,14 +719,16 @@
                     <div style="color: #fbbf24;">★★★★★</div>
                     <strong>Amazing Performance!</strong>
                 </div>
-                <p style="color: #6b7280; margin: 0;">This gaming PC exceeded my expectations. Runs all modern games at ultra settings with great frame rates.</p>
+                <p style="color: #6b7280; margin: 0;">This gaming PC exceeded my expectations. Runs all modern games at
+                    ultra settings with great frame rates.</p>
             </div>
             <div style="background-color: #f9fafb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <div style="color: #fbbf24;">★★★★☆</div>
                     <strong>Great Value</strong>
                 </div>
-                <p style="color: #6b7280; margin: 0;">Excellent build quality and performance for the price. Setup was straightforward.</p>
+                <p style="color: #6b7280; margin: 0;">Excellent build quality and performance for the price. Setup was
+                    straightforward.</p>
             </div>
         </div>
     </div>
@@ -755,7 +766,8 @@
                         <div th:if="${relatedProduct.quantity == 0}" class="stock-badge out-of-stock">
                             <i class="fa fa-times"></i> Out of Stock
                         </div>
-                        <div th:if="${relatedProduct.quantity > 0 && relatedProduct.quantity <= 5}" class="stock-badge low-stock">
+                        <div th:if="${relatedProduct.quantity > 0 && relatedProduct.quantity <= 5}"
+                             class="stock-badge low-stock">
                             <i class="fa fa-exclamation-triangle"></i> Low Stock
                         </div>
                     </div>
@@ -774,18 +786,20 @@
                         </div>
 
                         <!-- Đánh giá sao -->
-<!--                        <div class="product-rating">-->
-<!--                            <i class="fa fa-star star"></i>-->
-<!--                            <i class="fa fa-star star"></i>-->
-<!--                            <i class="fa fa-star star"></i>-->
-<!--                            <i class="fa fa-star star"></i>-->
-<!--                            <i class="fa fa-star star empty"></i>-->
-<!--                            <span class="rating-text">(4.0)</span>-->
-<!--                        </div>-->
+                        <!--                        <div class="product-rating">-->
+                        <!--                            <i class="fa fa-star star"></i>-->
+                        <!--                            <i class="fa fa-star star"></i>-->
+                        <!--                            <i class="fa fa-star star"></i>-->
+                        <!--                            <i class="fa fa-star star"></i>-->
+                        <!--                            <i class="fa fa-star star empty"></i>-->
+                        <!--                            <span class="rating-text">(4.0)</span>-->
+                        <!--                        </div>-->
 
                         <!-- Giá sản phẩm -->
                         <div class="product-price fw-bolder"
-                             th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000 VND</div>
+                             th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">1,000
+                            VND
+                        </div>
                     </div>
                 </div>
             </a>
@@ -818,7 +832,8 @@
 
                     <!--Carousel Wrapper-->
                     <div class="col">
-                        <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example" data-bs-ride="carousel">
+                        <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example"
+                             data-bs-ride="carousel">
                             <!--Slides-->
                             <div class="carousel-inner product-links-wap" role="listbox">
 
@@ -826,16 +841,24 @@
                                 <div class="carousel-item active">
                                     <div class="row">
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.logitech.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_logitech.png" alt="Logitech Logo"></a>
+                                            <a href="https://www.logitech.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_logitech.png" alt="Logitech Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.razer.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_razer.png" alt="Razer Logo"></a>
+                                            <a href="https://www.razer.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_razer.png" alt="Razer Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.steelseries.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_steelseries.png" alt="SteelSeries Logo"></a>
+                                            <a href="https://www.steelseries.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_steelseries.png" alt="SteelSeries Logo"></a>
                                         </div>
                                         <div class="col-3 p-md-5">
-                                            <a href="https://www.hyperxgaming.com" target="_blank"><img class="img-fluid brand-img same-size-img" src="/user/img/brand_hyperx.png" alt="HyperX Logo"></a>
+                                            <a href="https://www.hyperxgaming.com" target="_blank"><img
+                                                    class="img-fluid brand-img same-size-img"
+                                                    src="/user/img/brand_hyperx.png" alt="HyperX Logo"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -880,9 +903,9 @@
 
 <!-- Enhanced Product Page Script -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Configuration selection with modern styling
-        $('.config-btn').click(function() {
+        $('.config-btn').click(function () {
             $('.config-btn').removeClass('btn-primary').addClass('btn-outline-primary');
             $('.config-btn .position-absolute').removeClass('opacity-100').addClass('opacity-0');
 
@@ -892,7 +915,7 @@
         });
 
         // Quantity controls
-        $('#btn-plus').click(function() {
+        $('#btn-plus').click(function () {
             var currentVal = parseInt($('#var-value').text());
             var maxStock = parseInt(/*[[${product.quantity != null ? product.quantity : 10}]]*/ 10);
             if (currentVal < maxStock) {
@@ -901,7 +924,7 @@
             }
         });
 
-        $('#btn-minus').click(function() {
+        $('#btn-minus').click(function () {
             var currentVal = parseInt($('#var-value').text());
             if (currentVal > 1) {
                 $('#var-value').text(currentVal - 1);
@@ -910,7 +933,7 @@
         });
 
         // Thumbnail gallery interaction
-        $('.thumbnail-item').click(function() {
+        $('.thumbnail-item').click(function () {
             $('.thumbnail-item').removeClass('active border-primary').addClass('border-transparent');
             $(this).removeClass('border-transparent').addClass('active border-primary');
 
@@ -920,11 +943,11 @@
 
         // Product card hover effects
         $('.product-card').hover(
-            function() {
+            function () {
                 $(this).find('img').css('transform', 'scale(1.1)');
                 $(this).find('.product-overlay').removeClass('opacity-0').addClass('opacity-100');
             },
-            function() {
+            function () {
                 $(this).find('img').css('transform', 'scale(1)');
                 $(this).find('.product-overlay').removeClass('opacity-100').addClass('opacity-0');
             }
@@ -932,32 +955,32 @@
 
         // Spec card hover effects
         $('.spec-card').hover(
-            function() {
+            function () {
                 $(this).css('transform', 'translateY(-5px)');
             },
-            function() {
+            function () {
                 $(this).css('transform', 'translateY(0)');
             }
         );
 
         // Color option selection
-        $('.color-option').click(function() {
+        $('.color-option').click(function () {
             $('.color-option').removeClass('selected');
             $(this).addClass('selected');
         });
 
         // Add to cart button hover effect
         $('button[name="submit"]').hover(
-            function() {
+            function () {
                 $(this).find('.position-absolute').removeClass('opacity-0').addClass('opacity-10');
             },
-            function() {
+            function () {
                 $(this).find('.position-absolute').removeClass('opacity-10').addClass('opacity-0');
             }
         );
 
         // Smooth scroll for anchor links
-        $('a[href^="#"]').click(function(e) {
+        $('a[href^="#"]').click(function (e) {
             e.preventDefault();
             var target = $($(this).attr('href'));
             if (target.length) {
@@ -1019,6 +1042,8 @@
 <!-- End Script -->
 
 <!-- Modern Product Page JavaScript -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
 <script>
     // Tab functionality
     function showTab(tabName) {
@@ -1057,12 +1082,12 @@
     }
 
     // Thumbnail image switching
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const thumbnails = document.querySelectorAll('.thumbnail-grid img');
         const mainImage = document.querySelector('.main-image-wrapper img');
 
         thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
+            thumbnail.addEventListener('click', function () {
                 // Remove active class from all thumbnails
                 thumbnails.forEach(thumb => thumb.classList.remove('active'));
 
@@ -1074,6 +1099,39 @@
             });
         });
     });
+
+    // Logic with cart
+    // Adjust the quantity input
+    function adjustQuantity(change) {
+        const input = document.getElementById('quantity');
+        let current = parseInt(input.value);
+        if (isNaN(current)) current = 1;
+        const newValue = Math.max(1, current + change);
+        input.value = newValue;
+    }
+
+    // Handle Add to Cart
+    function handleAddToCart() {
+        const productId = document.querySelector('.btn-add-to-cart').dataset.productId;
+        const quantity = parseInt(document.getElementById('quantity').value);
+        if (productId && quantity > 0) {
+            addToCart(productId, quantity);
+        }
+    }
+
+    // Handle Buy Now
+    function handleBuyNow() {
+        const productId = document.querySelector('.btn-buy-now').dataset.productId;
+        const quantity = parseInt(document.getElementById('quantity').value);
+        if (productId && quantity > 0) {
+            addToCart(productId, quantity).then(data => {
+                if (data && data.success) {
+                    window.location.href = '/cart-detail'; // redirect only if successful
+                }
+            });
+        }
+    }
+
 </script>
 
 </body>

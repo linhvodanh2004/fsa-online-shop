@@ -121,10 +121,14 @@ public class OrderController {
         if (order != null) {
             try {
                 orderService.updateOrderStatus(orderId, orderStatus.toUpperCase());
-                switch (orderStatus.toUpperCase()) {
-                    case OrderStatus.IN_TRANSIT -> emailSenderService.notifyOrderTransit(order);
-                    case OrderStatus.DELIVERED -> emailSenderService.notifyOrderDelivered(order);
-                    case OrderStatus.CANCELLED -> emailSenderService.notifyOrderCancelled(order);
+                if(orderStatus.equalsIgnoreCase(OrderStatus.IN_TRANSIT)){
+                    emailSenderService.notifyOrderTransit(order);
+                }
+                else if(orderStatus.equalsIgnoreCase(OrderStatus.DELIVERED)){
+                    emailSenderService.notifyOrderDelivered(order);
+                }
+                else if(orderStatus.equalsIgnoreCase(OrderStatus.CANCELLED)){
+                    emailSenderService.notifyOrderCancelled(order);
                 }
                 return "redirect:/admin/orders?success=update-order-status-successfully";
             } catch (MessagingException e) {

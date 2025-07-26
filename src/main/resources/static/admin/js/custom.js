@@ -253,7 +253,7 @@ function toggleStatus(icon) {
         headers[csrfHeader] = csrfToken;
     }
 
-    fetch(`/admin/user/${userId}/status`, {
+    fetch(`/admin/users/${userId}/status`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ status: newStatus })
@@ -294,7 +294,7 @@ function deleteUser(userId) {
             headers[csrfHeader] = csrfToken;
         }
 
-        fetch(`/admin/user/${userId}/delete`, {
+        fetch(`/admin/users/${userId}/delete`, {
             method: 'DELETE',
             headers: headers
         })

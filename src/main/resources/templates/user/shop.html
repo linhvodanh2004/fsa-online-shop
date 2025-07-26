@@ -515,17 +515,17 @@
                 <div class="price-range-container">
                     <div class="price-labels">
                         <span id="minPriceLabel">100000</span>
-                        <span id="maxPriceLabel">10000000</span>
+                        <span id="maxPriceLabel">150000000</span>
                     </div>
                     <div class="range-slider">
-                        <input type="range" id="minPrice" min="100000" max="10000000"
+                        <input type="range" id="minPrice" min="100000" max="150000000"
                                th:value="${minPrice != null ? minPrice : 0}" step="50000">
-                        <input type="range" id="maxPrice" min="100000" max="10000000"
-                               th:value="${maxPrice != null ? maxPrice : 10000000}" step="50000">
+                        <input type="range" id="maxPrice" min="100000" max="150000000"
+                               th:value="${maxPrice != null ? maxPrice : 150000000}" step="50000">
                     </div>
                     <div class="price-inputs">
                         <span id="minPriceValue">100000</span>
-                        <span id="maxPriceValue">10000000</span>
+                        <span id="maxPriceValue">150000000</span>
                     </div>
                 </div>
             </div>
@@ -818,7 +818,7 @@
             if (minPrice && minPrice !== '100000') {
                 params.set('minPrice', minPrice);
             }
-            if (maxPrice && maxPrice !== '10000000') {
+            if (maxPrice && maxPrice !== '150000000') {
                 params.set('maxPrice', maxPrice);
             }
 
@@ -870,12 +870,12 @@
 
             // Ensure min doesn't exceed max
             if (minVal >= maxVal) {
-                minPriceSlider.value = maxVal - 10000;
+                minPriceSlider.value = maxVal - 50000;
             }
 
             // Ensure max doesn't go below min
             if (maxVal <= minVal) {
-                maxPriceSlider.value = minVal + 10000;
+                maxPriceSlider.value = minVal + 50000;
             }
 
             const finalMin = parseInt(minPriceSlider.value);

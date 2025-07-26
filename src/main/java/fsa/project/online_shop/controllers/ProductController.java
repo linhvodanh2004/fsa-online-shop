@@ -27,7 +27,7 @@ public class ProductController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("latestProducts", productService.getLatestProducts(9));
-        model.addAttribute("featuredProducts", productService.getLatestProducts(3));
+        model.addAttribute("featuredProducts", productService.getFeaturedProducts(9));
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("pageType", "home");
         return "user/index";
