@@ -258,10 +258,14 @@
                                 <li><a class="btn btn-success text-white mt-2"
                                        th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
                                        title="View Details"><i class="far fa-eye"></i></a></li>
-                                <li>
+                                <li sec:authorize="isAuthenticated()">
                                     <button class="btn btn-success text-white mt-2 add-to-cart-btn"
                                             th:data-product-id="${product.id}"
                                             data-quantity="1"><i class="fas fa-cart-plus"></i></button>
+                                </li>
+                                <li sec:authorize="isAnonymous()">
+                                    <a class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                            th:href="@{/login}"><i class="fas fa-cart-plus"></i></a>
                                 </li>
                             </ul>
                         </div>

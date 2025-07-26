@@ -3,6 +3,7 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.services.ChatMemoryService;
 import fsa.project.online_shop.utils.SessionUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/chat")
 public class ChatController {
 
@@ -24,11 +26,6 @@ public class ChatController {
     private final SessionUtil sessionUtil;
 
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-
-    public ChatController(ChatMemoryService chatMemoryService, SessionUtil sessionUtil) {
-        this.chatMemoryService = chatMemoryService;
-        this.sessionUtil = sessionUtil;
-    }
 
     @PostMapping("/message")
     public ResponseEntity<Map<String, Object>> sendMessage(

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>VNPAY Checkout Status</title>
@@ -12,6 +14,7 @@
         body {
             background-color: #f8f9fa;
         }
+
         .icon {
             font-size: 4rem;
         }
@@ -38,11 +41,26 @@
         </div>
         <div class="card-body">
             <table class="table table-bordered">
-                <tr><th>Order ID</th><td th:text="${orderId}"></td></tr>
-                <tr><th>Transaction No</th><td th:text="${transactionNo}"></td></tr>
-                <tr><th>Amount</th><td th:text="${#numbers.formatDecimal(amount / 100, 1, 'COMMA', 0, 'POINT')} + ' VND'">"></td></tr>
-                <tr><th>Bank Code</th><td th:text="${bankCode}"></td></tr>
-                <tr><th>Payment Date</th><td th:text="${#temporals.format(payDate, 'dd/MM/yyyy HH:mm:ss')}"></td></tr>
+                <tr>
+                    <th>Order ID</th>
+                    <td th:text="${orderId}"></td>
+                </tr>
+                <tr>
+                    <th>Transaction No</th>
+                    <td th:text="${transactionNo}"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td th:text="${#numbers.formatDecimal(amount / 100, 1, 'COMMA', 0, 'POINT')} + ' VND'">"></td>
+                </tr>
+                <tr>
+                    <th>Bank Code</th>
+                    <td th:text="${bankCode}"></td>
+                </tr>
+                <tr>
+                    <th>Payment Date</th>
+                    <td th:text="${#temporals.format(payDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                </tr>
             </table>
         </div>
     </div>

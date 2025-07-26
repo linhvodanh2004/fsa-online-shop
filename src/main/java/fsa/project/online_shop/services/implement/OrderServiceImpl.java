@@ -289,33 +289,32 @@ public class OrderServiceImpl implements OrderService {
         if(!cartRepository.areAllCartItemsValid(cart.getId()) || cart.getCartItems().isEmpty()){
             throw new IllegalArgumentException("Cart is not valid");
         }
+
         Order order = OrderMapper.fromCartToOrder(cart);
-        orderRepository.save(order);
-        Set<OrderItem> orderItems = order.getOrderItems();
-        orderItems.forEach(orderItem -> {
-            orderItem.setOrder(order);
-            orderItemRepository.save(orderItem);
-            Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
-            if(product != null){
-                product.setQuantity(product.getQuantity() - orderItem.getQuantity());
-                product.setSold(product.getSold() + orderItem.getQuantity());
-                productRepository.save(product);
-            }
-            else{
-                throw new IllegalArgumentException("Product is not available");
-            }
-        });
-        order.setOrderItems(orderItems);
         order.setCreationTime(LocalDateTime.now());
         order.setPaymentMethod("COD");
         order.setStatus(OrderStatus.PENDING);
         order.setPaymentStatus(false);
 
+        orderRepository.save(order); // save sớm để có ID
+
+        Set<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(orderItem -> {
+            orderItem.setOrder(order); // set FK
+            orderItemRepository.save(orderItem);
+
+            Product product = productRepository.findById(orderItem.getProduct().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not available"));
+            product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+            product.setSold(product.getSold() + orderItem.getQuantity());
+            productRepository.save(product);
+        });
+
         cartItemRepository.deleteByCartId(cart.getId());
-//        cart.setCartItems(null);
         cartRepository.save(cart);
 
-        return orderRepository.save(order);
+        return order;
     }
+
 
 }

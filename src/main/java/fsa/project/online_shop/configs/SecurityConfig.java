@@ -1,5 +1,6 @@
 package fsa.project.online_shop.configs;
 
+import fsa.project.online_shop.models.constant.UserRole;
 import fsa.project.online_shop.services.implement.CustomOAuth2UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +33,14 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/productImg/**", "/resend-code",
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
-            "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**",
+            "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**", "/access-denied",
+            "/privacy", "/toastify-message.js",
             "/api/**",  // Allow API endpoints for chat
             "/product/**"  // Allow product slug URLs with /product/ prefix
     };
-    private static final String[] AUTHENTICATED_ENDPOINTS = {
-            "/cart/**", "/cart-detail/**", "/admin/**"
-    };
+//    private static final String[] AUTHENTICATED_ENDPOINTS = {
+//            "/cart/**", "/cart-detail/**", "/admin/**"
+//    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -71,9 +73,8 @@ public class SecurityConfig {
                         auth -> auth
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(AUTHENTICATED_ENDPOINTS).authenticated()
-                                .requestMatchers("/admin/**").permitAll()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/admin/**").hasRole(UserRole.ADMIN)
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(
                         (sessionManagement) -> sessionManagement
@@ -103,7 +104,6 @@ public class SecurityConfig {
                                 .successHandler(customSuccessAuthHandler)
                                 .failureHandler(customFailureAuthHandler)
                                 .permitAll()
-
                 )
                 .oauth2Login(
                         oauth2 -> oauth2.loginPage("/login")

@@ -1,6 +1,6 @@
 <nav id="sidebar" class="sidebar js-sidebar" th:fragment="admin-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="/admin/dashboard">
+        <a class="sidebar-brand" th:href="@{/admin/dashboard}">
 					<span class="sidebar-brand-text align-middle">
 						Gaming Online Shop
 						<sup><small class="badge bg-primary text-uppercase">DASHBOARD</small></sup>
@@ -51,7 +51,7 @@
                 Facility
             </li>
             <li class="sidebar-item">
-                <a href="/admin/dashboard" class="sidebar-link">
+                <a th:href="@{/admin/dashboard}" class="sidebar-link">
                     <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                 </a>
             </li>

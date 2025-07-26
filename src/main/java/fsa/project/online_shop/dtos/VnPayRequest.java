@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VnPayRequest {
-    private Long amount;
+    private Double amount;
 //    private String orderInfo;
     private String receiverName;
     private String receiverPhone;
