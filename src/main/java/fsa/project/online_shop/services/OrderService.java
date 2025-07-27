@@ -70,4 +70,7 @@ public interface OrderService {
     Double getTotalOrderValueByUser(User user);
 
     public void updateOrderStatusInBulk(String orderStatus);
+
+    long countAll();
+
 }
