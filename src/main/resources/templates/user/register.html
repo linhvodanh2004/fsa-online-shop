@@ -46,13 +46,15 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="password" name="password"
+                    <input class="form-control form-control-lg" type="password" name="password" id="password"
                            placeholder="Enter password"/>
+                    <div id="password-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Confirm password<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="password" name="confirm-password"
+                    <input class="form-control form-control-lg" type="password" name="confirm-password" id="confirm-password"
                            placeholder="Confirm password"/>
+                    <div id="confirm-password-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Fullname</label>
@@ -94,7 +96,17 @@
     let validationState = {
         username: false,
         email: false,
+        password: false,
+        'confirm-password': false,
         phone: true // Phone is optional, so default to true
+    };
+
+    // Field required state
+    let fieldValues = {
+        username: '',
+        email: '',
+        password: '',
+        'confirm-password': ''
     };
 
     // Debounce function to avoid too many API calls
@@ -130,10 +142,30 @@
     // Update register button state
     function updateRegisterButton() {
         const registerBtn = document.getElementById('register-btn');
-        const allValid = Object.values(validationState).every(valid => valid);
-        registerBtn.disabled = !allValid;
-        registerBtn.style.opacity = allValid ? '1' : '0.6';
-        registerBtn.style.cursor = allValid ? 'pointer' : 'not-allowed';
+
+        // Check if all required fields have values (excluding optional phone)
+        const requiredFields = {
+            username: fieldValues.username,
+            email: fieldValues.email,
+            password: fieldValues.password,
+            'confirm-password': fieldValues['confirm-password']
+        };
+        const allRequiredFieldsFilled = Object.values(requiredFields).every(value => value.trim() !== '');
+
+        // Check if all validations passed
+        const allValidationsPassed = Object.values(validationState).every(valid => valid);
+
+        const shouldEnable = allRequiredFieldsFilled && allValidationsPassed;
+
+        registerBtn.disabled = !shouldEnable;
+        registerBtn.style.opacity = shouldEnable ? '1' : '0.6';
+        registerBtn.style.cursor = shouldEnable ? 'pointer' : 'not-allowed';
+    }
+
+    // Update field value and button state
+    function updateFieldValue(fieldName, value) {
+        fieldValues[fieldName] = value;
+        updateRegisterButton();
     }
 
     // Check username availability
@@ -160,7 +192,6 @@
                 hideError('username');
             }
         } catch (error) {
-            console.error('Error checking username:', error);
         }
     }, 500);
 
@@ -187,7 +218,6 @@
                 hideError('email');
             }
         } catch (error) {
-            console.error('Error checking email:', error);
         }
     }, 500);
 
@@ -214,7 +244,44 @@
                 hideError('phone');
             }
         } catch (error) {
-            console.error('Error checking phone:', error);
+        }
+    }, 500);
+
+    // Validate password
+    const validatePassword = debounce((password) => {
+        if (!password || password.trim() === '') {
+            // Hide error message but keep state invalid. The disabled button is enough feedback.
+            const errorDiv = document.getElementById('password-error');
+            errorDiv.style.display = 'none';
+            validationState['password'] = false;
+            updateRegisterButton();
+            return;
+        }
+
+        // Password regex: at least 8 characters, 1 lowercase, 1 uppercase, 1 digit, 1 special character
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
+
+        if (passwordRegex.test(password)) {
+            hideError('password');
+        } else {
+            showError('password', 'Password must be at least 8 characters with uppercase, lowercase, number and special character');
+        }
+    }, 500);
+
+    // Validate confirm password
+    const validateConfirmPassword = debounce((password, confirmPassword) => {
+        if (!confirmPassword || confirmPassword.trim() === '') {
+            const errorDiv = document.getElementById('confirm-password-error');
+            errorDiv.style.display = 'none';
+            validationState['confirm-password'] = false;
+            updateRegisterButton();
+            return;
+        }
+
+        if (password.trim() === confirmPassword.trim()) {
+            hideError('confirm-password');
+        } else {
+            showError('confirm-password', 'Passwords do not match');
         }
     }, 500);
 
@@ -223,8 +290,40 @@
         checkUsername(this.value.trim());
     });
 
+    document.getElementById('username').addEventListener('input', function() {
+        updateFieldValue('username', this.value);
+    });
+
     document.getElementById('email').addEventListener('blur', function() {
         checkEmail(this.value.trim());
+    });
+
+    document.getElementById('email').addEventListener('input', function() {
+        updateFieldValue('email', this.value);
+    });
+
+    document.getElementById('password').addEventListener('blur', function() {
+        validatePassword(this.value.trim());
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+        updateFieldValue('password', this.value);
+        // Also revalidate confirm password when password changes
+        const confirmPassword = document.getElementById('confirm-password').value;
+        if (confirmPassword) {
+            validateConfirmPassword(this.value.trim(), confirmPassword.trim());
+        }
+    });
+
+    document.getElementById('confirm-password').addEventListener('blur', function() {
+        const password = document.getElementById('password').value;
+        validateConfirmPassword(password.trim(), this.value.trim());
+    });
+
+    document.getElementById('confirm-password').addEventListener('input', function() {
+        updateFieldValue('confirm-password', this.value);
+        const password = document.getElementById('password').value;
+        validateConfirmPassword(password.trim(), this.value.trim());
     });
 
     document.getElementById('phone').addEventListener('blur', function() {
@@ -233,52 +332,14 @@
 
     // Form submission
     document.getElementById("registerForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const username = this.username.value.trim();
-        const password = this.password.value.trim();
-        const confirmPassword = this["confirm-password"].value.trim();
-        const fullname = this.fullname.value.trim();
-        const email = this.email.value.trim();
-        const phone = this.phone.value.trim();
-
-        const showToast = (msg) => {
-            Toastify({
-                text: msg,
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                newWindow: true,
-                close: true,
-                style: {
-                    background: "#f44336",
-                }
-            }).showToast();
-        };
-
-        // Basic validation - only check required fields
-        if (!username || !password || !confirmPassword || !email) {
-            showToast("Please fill in all required fields (Username, Password, Confirm Password, Email)");
-            return;
+        // If button is disabled, prevent submission
+        const registerBtn = document.getElementById('register-btn');
+        if (registerBtn.disabled) {
+            e.preventDefault();
         }
 
-        if (password.length < 6) {
-            showToast("Password must be at least 6 characters");
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            showToast("Password and confirm password must match");
-            return;
-        }
-
-        // Check if all validations passed
-        if (!Object.values(validationState).every(valid => valid)) {
-            showToast("Please fix the errors before submitting");
-            return;
-        }
-
-        this.submit();
+        // If all validations pass, allow form submission
+        // No need for additional validation here since button is only enabled when all validations pass
     });
 
     // Initialize button state
