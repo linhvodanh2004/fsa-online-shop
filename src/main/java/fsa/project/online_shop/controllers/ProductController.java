@@ -3,6 +3,7 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.services.*;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ public class ProductController {
     private final FileService fileService;
     private final CategoryService categoryService;
     private final CartItemService cartItemService;
+    private final EmailSenderService emailSenderService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -75,8 +77,8 @@ public class ProductController {
             String searchLower = search.toLowerCase().trim();
             products = products.stream()
                     .filter(p -> p.getName().toLowerCase().contains(searchLower) ||
-                               p.getDescription().toLowerCase().contains(searchLower) ||
-                               p.getCategory().getName().toLowerCase().contains(searchLower))
+                            p.getDescription().toLowerCase().contains(searchLower) ||
+                            p.getCategory().getName().toLowerCase().contains(searchLower))
                     .collect(Collectors.toList());
         }
 
@@ -194,11 +196,29 @@ public class ProductController {
         return "user/contact";
     }
 
+    @PostMapping("/contact")
+    public String handleContactForm(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam String subject,
+            @RequestParam String message,
+            Model model
+    ){
+        try {
+            emailSenderService.sendContactEmail(name, email, subject, message);
+        } catch (MessagingException e) {
+        }
+        finally {
+            return "redirect:/contact";
+        }
+    }
+
     @GetMapping("/about")
     public String showAboutPage(Model model) {
         model.addAttribute("pageType", "about");
         return "user/about";
     }
+
     @GetMapping("/privacy")
     public String showPryvacy(Model model) {
         model.addAttribute("pageType", "privacy");
@@ -273,13 +293,13 @@ public class ProductController {
         Category category = categoryService.getCategoryById(categoryId);
         product.setCategory(category);
 
-        try{
+        try {
             String fileName = fileService.handleUploadImage(image);
             if (fileName == null || fileName.isEmpty()) {
                 fileName = product.getImage();
             }
             product.setImage(fileName);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

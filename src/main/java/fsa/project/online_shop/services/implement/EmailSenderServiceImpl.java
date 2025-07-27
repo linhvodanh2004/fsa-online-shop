@@ -6,6 +6,7 @@ import fsa.project.online_shop.services.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +18,9 @@ import java.text.DecimalFormat;
 @RequiredArgsConstructor
 public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     @Override
     @Async
@@ -36,7 +40,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("linhvodanh2004@gmail.com");
+        helper.setFrom(fromEmail);
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(content, true); // true = isHtml
@@ -106,7 +110,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private void sendOrderEmail(String email, String subject, String content) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("linhvodanh2004@gmail.com");
+        helper.setFrom(fromEmail);
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(content, true);
@@ -197,5 +201,28 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 .append("</div>"); // End wrapper
 
         return content.toString();
+    }
+
+
+    @Async
+    @Override
+    public void sendContactEmail(String name, String email, String subject, String message) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+        String content = """
+                <p><strong>Name:</strong> %s</p>
+                <p><strong>Email:</strong> %s</p>
+                <p><strong>Message:</strong></p>
+                <p>%s</p>
+                """.formatted(name, email, message.replaceAll("(\r\n|\n)", "<br>"));
+
+        helper.setFrom("noreply@gos.com");
+        helper.setTo(fromEmail);
+        helper.setReplyTo(email); // So you can reply to the user's email
+        helper.setSubject("[Contact Form] " + subject);
+        helper.setText(content, true);
+
+        javaMailSender.send(mimeMessage);
     }
 }
