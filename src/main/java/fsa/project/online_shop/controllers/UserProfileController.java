@@ -2,6 +2,8 @@ package fsa.project.online_shop.controllers;
 
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
+import fsa.project.online_shop.models.constant.OrderStatus;
+import fsa.project.online_shop.services.EmailSenderService;
 import fsa.project.online_shop.services.OrderService;
 import fsa.project.online_shop.services.UserService;
 import fsa.project.online_shop.utils.SessionUtil;
@@ -28,6 +30,7 @@ public class UserProfileController {
     private final UserService userService;
     private final OrderService orderService;
     private final SessionUtil sessionUtil;
+    private final EmailSenderService emailSenderService;
 
     /**
      * Show user profile page
@@ -278,8 +281,11 @@ public class UserProfileController {
                 return "redirect:/my-orders";
             }
 
-            orderService.cancelOrder(orderId);
+//            orderService.cancelOrder(orderId);
+            // use this method to update inventory as well
+            orderService.updateOrderStatus(orderId, OrderStatus.CANCELLED);
             redirectAttributes.addFlashAttribute("success", "Order cancelled successfully");
+            emailSenderService.notifyOrderCancelled(order);
             
             log.info("❌ User {} cancelled order: {}", user.getEmail(), orderId);
             return "redirect:/my-orders";

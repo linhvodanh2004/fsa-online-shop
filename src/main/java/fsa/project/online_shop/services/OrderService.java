@@ -17,7 +17,7 @@ public interface OrderService {
     /**
      * Get all orders with pagination
      */
-    Page<Order> getAllOrders(Pageable pageable);
+    Page<Order> getAllOrders(Pageable pageable, String orderStatus);
 
     /**
      * Get orders by user with pagination
@@ -68,4 +68,6 @@ public interface OrderService {
      * Get total order value by user
      */
     Double getTotalOrderValueByUser(User user);
+
+    public void updateOrderStatusInBulk(String orderStatus);
 }

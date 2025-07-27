@@ -13,4 +13,7 @@ public interface EmailSenderService {
     void notifyOrderDelivered(Order order) throws MessagingException;
 
     void notifyOrderCancelled(Order order) throws MessagingException;
+
+    public void sendContactEmail(String name, String email, String subject, String message) throws MessagingException;
+
 }

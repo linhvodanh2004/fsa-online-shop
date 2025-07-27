@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords"
+          content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="/admin/img/icons/icon-48x48.png"/>
+
+    <link rel="canonical" href="#"/>
+
+    <title>User Manager | Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
+
+    <!-- Choose your prefered color scheme -->
+    <link href="/admin/css/light.css" rel="stylesheet">
+    <!-- <link href="css/dark.css" rel="stylesheet"> -->
+
+    <link href="/admin/css/custom.css" rel="stylesheet">
+
+    <!-- BEGIN SETTINGS -->
+    <!-- Remove this after purchasing -->
+    <link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
+    <script src="/admin/js/settings.js"></script>
+
+    <!-- END SETTINGS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120946860-10', {'anonymize_ip': true});
+    </script>
+    <!-- Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="/admin/js/active-nav.js"></script>
+    <style>
+        .text-truncate-custom {
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .payment-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .payment-cash {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .payment-card {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .payment-paypal {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .payment-bank {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-in-transit {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #74b9ff;
+        }
+
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #00b894;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #d63031;
+        }
+
+        .paid-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .paid-yes {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .paid-no {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-filter-btn {
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-filter-btn.active {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Order Detail Modal Styles */
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-in-transit {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #74b9ff;
+        }
+
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #00b894;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #e17055;
+        }
+
+        /* Payment method badges */
+        .payment-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .payment-cash {
+            background-color: #ddd6fe;
+            color: #5b21b6;
+            border: 1px solid #a855f7;
+        }
+
+        .payment-card {
+            background-color: #ccfbf1;
+            color: #0f766e;
+            border: 1px solid #14b8a6;
+        }
+
+        .payment-paypal {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        .payment-bank {
+            background-color: #ede9fe;
+            color: #6b21a8;
+            border: 1px solid #8b5cf6;
+        }
+
+        /* Payment status badges */
+        .paid-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .paid-yes {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #00b894;
+        }
+
+        .paid-no {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #e17055;
+        }
+    </style>
+    <script src="/order-service.js"></script>
+    <link href="/order-detail-modal.css" rel="stylesheet">
+
+</head>
+
+<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+<div class="wrapper">
+    <div th:replace="~{component/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="main">
+        <div th:replace="~{component/admin-navbar :: admin-navbar}"></div>
+
+        <main class="content">
+            <div class="container-fluid p-0">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title" style="color: black; font-size: 23px;">Order Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Status Filter Buttons -->
+                                <div class="mb-2">
+                                    <a class="status-filter-btn btn border border-warning"
+                                       th:classappend="${orderStatus != null and orderStatus == 'PENDING'} ? 'btn-warning' : 'btn-outline-warning'"
+                                       th:href="@{/admin/orders(orderStatus=PENDING)}">
+                                        <i data-feather="clock"></i> Pending
+                                    </a>
+                                    <a class="status-filter-btn btn border border-primary"
+                                       th:classappend="${orderStatus != null and orderStatus == 'IN TRANSIT'} ? 'btn-primary' : 'btn-outline-primary'"
+                                       th:href="@{/admin/orders(orderStatus='IN TRANSIT')}">
+                                        <i data-feather="truck"></i> In Transit
+                                    </a>
+                                    <a class="status-filter-btn btn border border-success"
+                                       th:classappend="${orderStatus != null and orderStatus == 'DELIVERED'} ? 'btn-success' : 'btn-outline-success'"
+                                       th:href="@{/admin/orders(orderStatus=DELIVERED)}">
+                                        <i data-feather="check-circle"></i> Delivered
+                                    </a>
+                                    <a class="status-filter-btn btn border border-danger"
+                                       th:classappend="${orderStatus != null and orderStatus == 'CANCELLED'} ? 'btn-danger' : 'btn-outline-danger'"
+                                       th:href="@{/admin/orders(orderStatus=CANCELLED)}">
+                                        <i data-feather="x-circle"></i> Cancelled
+                                    </a>
+                                </div>
+                                <!-- Bulk Update Button -->
+                                <div th:if="${orderStatus != null and (orderStatus == 'PENDING' or orderStatus == 'IN TRANSIT')}"
+                                     class="mb-2">
+                                    <a th:href="@{/admin/orders/update-bulk-status(orderStatus='IN TRANSIT')}"
+                                       class="btn btn-primary confirm-link"
+                                       th:if="${orderStatus == 'PENDING' and orders != null and !#lists.isEmpty(orders)}">
+                                        <i data-feather="truck"></i> Update All to In Transit
+                                    </a>
+                                    <a th:href="@{/admin/orders/update-bulk-status(orderStatus='DELIVERED')}"
+                                       class="btn btn-success confirm-link"
+                                       th:if="${orderStatus == 'IN TRANSIT' and orders != null and !#lists.isEmpty(orders)}">
+                                        <i data-feather="check-circle"></i> Update All to Delivered
+                                    </a>
+                                </div>
+
+                                <div th:if="${#lists.isEmpty(orders)}">
+                                    <div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
+                                </div>
+
+                                <table id="datatables-orders" class="table table-hover"
+                                       style="width:100%; text-align: center;"
+                                       th:if="${orders != null and !#lists.isEmpty(orders)}">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Payment Method</th>
+                                        <th>Total Amount</th>
+                                        <th>Customer</th>
+                                        <th>Order Date</th>
+                                        <th>Payment Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="order : ${orders}"
+                                        class="order-row"
+                                        th:attr="data-status=${order.status}, data-payment=${order.paymentMethod}, data-paid=${order.paymentStatus}">
+                                        <td>
+                                            <strong th:text="'#' + ${order.id}"></strong>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge"
+                                                  th:classappend="${order.status == 'PENDING'} ? 'status-pending' :
+                                                                 (${order.status == 'IN TRANSIT'} ? 'status-in-transit' :
+                                                                 (${order.status == 'DELIVERED'} ? 'status-delivered' : 'status-cancelled'))"
+                                                  th:text="${order.status}">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="payment-badge"
+                                                  th:classappend="${order.paymentMethod == 'COD'} ? 'payment-cash' :
+                                                                 (${order.paymentMethod == 'VNPAY'} ? 'payment-card' :
+                                                                 (${order.paymentMethod == 'VNPAY'} ? 'payment-paypal' : 'payment-bank'))"
+                                                  th:text="${order.paymentMethod}">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong th:text="${#numbers.formatDecimal(order.sum, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                                0 VND
+                                            </strong>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="text-truncate-custom text-center"
+                                                 th:text="${order.user != null ? order.user.username : 'N/A'}"
+                                                 th:title="${order.user != null ? order.user.username : 'N/A'}">
+                                            </div>
+                                        </td>
+                                        <td th:text="${#temporals.format(order.creationTime, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                                        <td>
+                                            <span class="paid-badge"
+                                                  th:classappend="${order.paymentStatus} ? 'paid-yes' : 'paid-no'"
+                                                  th:text="${order.paymentStatus} ? 'PAID' : 'UNPAID'">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-outline-warning"
+                                                   title="View order detail"
+                                                   th:data-order-id="${order.id}"
+                                                   data-action="view-detail">
+                                                    <i data-feather="eye"></i>
+                                                </button>
+
+                                                <!--                                                <a class="btn btn-sm btn-outline-warning"-->
+<!--                                                   th:href="@{/admin/orders/{orderId}(orderId=${order.id})}"-->
+<!--                                                   title="View order detail">-->
+<!--                                                    <i data-feather="eye"></i>-->
+<!--                                                </a>-->
+
+                                                <a class="btn btn-sm btn-outline-primary mx-1 confirm-link"
+                                                   th:if="${orderStatus == 'PENDING'}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}
+                                                   (orderStatus='IN TRANSIT', orderId=${order.id})}"
+                                                   title="Change order to In Transit">
+                                                    <i data-feather="truck"></i>
+                                                </a>
+                                                <a class="btn btn-sm btn-outline-success mx-1 confirm-link"
+                                                   th:if="${orderStatus == 'IN TRANSIT'}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}
+                                                   (orderStatus='DELIVERED', orderId=${order.id})}"
+                                                   title="Change order to Delivered">
+                                                    <i data-feather="check-circle"></i>
+                                                </a>
+                                                <a type="button"
+                                                   class="btn btn-sm btn-outline-danger confirm-link"
+                                                   th:if="${order.status != 'CANCELLED' and order.status != 'DELIVERED'}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}
+                                                   (orderStatus='CANCELLED', orderId=${order.id})}"
+                                                   title="Cancel Order">
+                                                    <i data-feather="x-circle"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div th:if="${orders != null and !#lists.isEmpty(orders)}">
+                                    <!-- Pagination -->
+                                    <nav>
+                                        <ul class="pagination justify-content-center">
+                                            <!-- Previous Page -->
+                                            <li class="page-item" th:classappend="${page == 1} ? 'disabled'">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${page - 1}, orderStatus=${orderStatus})}"
+                                                   aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <!-- Page Numbers -->
+                                            <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                                th:classappend="${page == i} ? 'active'">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${i}, orderStatus=${orderStatus})}"
+                                                   th:text="${i}"></a>
+                                            </li>
+                                            <!-- Next Page -->
+                                            <li class="page-item" th:classappend="${page == totalPages} ? 'disabled'">
+                                                <a class="page-link"
+                                                   th:href="@{/admin/orders(page=${page + 1}, orderStatus=${orderStatus})}"
+                                                   aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to make changes?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmContinue">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{component/admin-footer :: admin-footer}"></div>
+    </div>
+</div>
+
+<script src="/admin/js/app.js"></script>
+<script src="/admin/js/datatables.js"></script>
+<script src="/admin/js/custom.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
+<script>
+    let targetHref = null;
+    document.querySelectorAll('.confirm-link').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default navigation
+            targetHref = this.href; // Store the href
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+        });
+    });
+    document.getElementById('confirmContinue').addEventListener('click', function () {
+        if (targetHref) {
+            window.location.href = targetHref;
+        }
+    });
+</script>
+
+</body>
+</html>

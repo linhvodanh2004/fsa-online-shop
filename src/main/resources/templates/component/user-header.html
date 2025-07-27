@@ -41,9 +41,6 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/shop">Shop</a>
                     </li>
                     <li class="nav-item">
@@ -51,6 +48,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                 </ul>
             </div>
@@ -96,6 +96,10 @@
                                 overflow: hidden;text-overflow: ellipsis;vertical-align: middle;">Full Name</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+                                <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" th:href="@{/admin/dashboard}">
+                                    <i class="fas fa-sliders-h me-2"></i>Dashboard
+                                </a></li>
                                 <li><a class="dropdown-item" th:href="@{/my-profile}">
                                     <i class="fas fa-user me-2"></i>My Profile
                                 </a></li>

@@ -38,7 +38,7 @@ public class VnPayServiceImpl implements VnPayService {
         String vnp_CreateDate = formatter.format(cld.getTime());
         cld.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = formatter.format(cld.getTime());
-
+        Double amount = vnPayRequest.getAmount();
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
@@ -53,7 +53,7 @@ public class VnPayServiceImpl implements VnPayService {
         vnp_Params.put("vnp_IpAddr", ipAddress);
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-        vnp_Params.put("vnp_Amount", String.valueOf(vnPayRequest.getAmount() * 100));
+        vnp_Params.put("vnp_Amount", String.valueOf(amount.longValue() * 100));
 
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);

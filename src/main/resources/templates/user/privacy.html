@@ -22,7 +22,7 @@
     <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
+    <script src="/cart-service.js" defer></script>
     <!-- Embedded CSS -->
     <style>
         /* Privacy Section Styling */
@@ -170,6 +170,8 @@
 <!-- Start Footer -->
 <div th:replace="~{component/user-footer :: user-footer}"></div>
 <!-- End Footer -->
+<!-- GOS Chat Widget Component -->
+<div th:replace="~{component/chat-widget :: chat-widget('shop', '🛒', 'GOS Shop Support', '● Tư vấn mua sắm', '🛒 <strong>Chào mừng đến GOS Shop!</strong><br>Tôi có thể giúp bạn:<br>• Tìm sản phẩm phù hợp<br>• So sánh giá cả<br>• Thông tin khuyến mãi<br>• Hỗ trợ đặt hàng<br><br>Bạn đang tìm sản phẩm gì? 😊')}"></div>
 
 <!-- Start Script -->
 <script src="/user/js/jquery-1.11.0.min.js"></script>

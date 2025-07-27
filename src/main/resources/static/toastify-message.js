@@ -20,6 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
         "failed-to-upload-category-image": "An error occurred while uploading category image",
         "failed-to-delete-category-image": "An error occurred while deleting category image",
         "category-has-products": "Category is temporarily unable to be deleted due to the existence of products",
+        "email-failed": "An error occurred while sending email",
+        "checkout-success": "Checkout successfully",
+        "checkout-failed": "Checkout failed",
+        "update-order-status-successfully": "Update status of order successfully",
+        "fail-to-update-order-status": "Fail to update order status"
     }
 
     if (params.has("success")) {

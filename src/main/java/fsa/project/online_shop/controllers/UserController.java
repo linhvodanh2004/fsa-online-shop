@@ -1,12 +1,16 @@
 package fsa.project.online_shop.controllers;
 
+import fsa.project.online_shop.models.Role;
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.CategoryService;
 import fsa.project.online_shop.services.FileService;
 import fsa.project.online_shop.services.ProductService;
+import fsa.project.online_shop.services.RoleService;
 import fsa.project.online_shop.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +30,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private final ProductService productService;
     private final ProductRepository productRepository;
     public final CategoryService categoryService;
     private final UserService userService;
     private final FileService fileService;
+    private final RoleService roleService; // Add this dependency
 
     // GET mapping for user management page
     @GetMapping("/admin/users")
@@ -67,6 +75,120 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    // POST mapping for promoting user role (from role_id 2 to role_id 1)
+    @PostMapping("/admin/promote-user/{userId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> promoteUser(@PathVariable Long userId) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            User user = userService.findById(userId);
+
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "User not found");
+                return ResponseEntity.ok(response);
+            }
+
+            if (user.getRole() == null) {
+                response.put("success", false);
+                response.put("message", "User has no role assigned");
+                return ResponseEntity.ok(response);
+            }
+
+            Long currentRoleId = user.getRole().getId();
+
+            // Only allow promotion from role_id 2 to role_id 1 (highest role)
+            if (currentRoleId != 2) {
+                response.put("success", false);
+                response.put("message", "User can only be promoted from User role");
+                return ResponseEntity.ok(response);
+            }
+
+            // Find role with ID 1 (Admin role - highest role)
+            Role adminRole = roleService.findById(1L);
+
+            if (adminRole == null) {
+                response.put("success", false);
+                response.put("message", "Admin role not found");
+                return ResponseEntity.ok(response);
+            }
+
+            // Update user's role to Admin
+            user.setRole(adminRole);
+            userService.save(user);
+
+            response.put("success", true);
+            response.put("message", "User promoted to Admin successfully");
+            response.put("oldRole", "User");
+            response.put("newRole", adminRole.getName());
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error promoting user: " + e.getMessage());
+            logger.error("Error promoting user with ID {}: {}", userId, e.getMessage(), e);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    // POST mapping for demoting user role (from role_id 1 to role_id 2)
+    @PostMapping("/admin/demote-user/{userId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> demoteUser(@PathVariable Long userId) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            User user = userService.findById(userId);
+
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "User not found");
+                return ResponseEntity.ok(response);
+            }
+
+            if (user.getRole() == null) {
+                response.put("success", false);
+                response.put("message", "User has no role assigned");
+                return ResponseEntity.ok(response);
+            }
+
+            Long currentRoleId = user.getRole().getId();
+
+            // Only allow demotion from role_id 1 to role_id 2 (from highest role)
+            if (currentRoleId != 1) {
+                response.put("success", false);
+                response.put("message", "User can only be demoted from Admin role");
+                return ResponseEntity.ok(response);
+            }
+
+            // Find role with ID 2 (User role)
+            Role userRole = roleService.findById(2L);
+
+            if (userRole == null) {
+                response.put("success", false);
+                response.put("message", "User role not found");
+                return ResponseEntity.ok(response);
+            }
+
+            // Update user's role to User
+            user.setRole(userRole);
+            userService.save(user);
+
+            response.put("success", true);
+            response.put("message", "Admin demoted to User successfully");
+            response.put("oldRole", "Admin");
+            response.put("newRole", userRole.getName());
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error demoting user: " + e.getMessage());
+            logger.error("Error demoting user with ID {}: {}", userId, e.getMessage(), e);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     // DELETE mapping for deleting user (AJAX)

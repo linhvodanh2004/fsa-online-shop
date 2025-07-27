@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta charset="utf-8">
@@ -43,7 +45,9 @@
 		gtag('js', new Date());
 
 		gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
-	</script></head>
+	</script>
+	<script src="/admin/js/active-nav.js"></script>
+</head>
 <!--
   HOW TO USE:
   data-theme: default (default), dark, light, colored

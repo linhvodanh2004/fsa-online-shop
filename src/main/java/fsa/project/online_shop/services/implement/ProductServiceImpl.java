@@ -24,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getFeaturedProducts(int limit) {
-        return productRepository.findFeaturedProductsByHighestPrice(PageRequest.of(0, limit));
+        return productRepository.getFeaturedActiveProductsSimple(PageRequest.of(0, limit));
     }
 
     @Override

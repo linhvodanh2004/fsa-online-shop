@@ -253,7 +253,7 @@ function toggleStatus(icon) {
         headers[csrfHeader] = csrfToken;
     }
 
-    fetch(`/admin/user/${userId}/status`, {
+    fetch(`/admin/users/${userId}/status`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ status: newStatus })
@@ -294,7 +294,7 @@ function deleteUser(userId) {
             headers[csrfHeader] = csrfToken;
         }
 
-        fetch(`/admin/user/${userId}/delete`, {
+        fetch(`/admin/users/${userId}/delete`, {
             method: 'DELETE',
             headers: headers
         })
@@ -449,4 +449,159 @@ function setupFormValidation() {
             this.submit();
         });
     }
+}
+
+// Enhanced showToast function with different styles for different message types
+function showToast(message, type = 'info', duration = 3000) {
+    let backgroundColor, textColor;
+
+    switch(type) {
+        case 'success':
+        case 'promotion':
+            backgroundColor = 'linear-gradient(to right, #00b09b, #96c93d)';
+            textColor = '#ffffff';
+            break;
+        case 'error':
+            backgroundColor = 'linear-gradient(to right, #ff5f6d, #ffc371)';
+            textColor = '#ffffff';
+            break;
+        case 'warning':
+        case 'demotion':
+            backgroundColor = 'linear-gradient(to right, #f093fb, #f5576c)';
+            textColor = '#ffffff';
+            break;
+        case 'info':
+        default:
+            backgroundColor = 'linear-gradient(to right, #4facfe, #00f2fe)';
+            textColor = '#ffffff';
+            break;
+    }
+
+    Toastify({
+        text: message,
+        duration: duration,
+        close: true,
+        gravity: "top", // top or bottom
+        position: "right", // left, center or right
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: backgroundColor,
+            color: textColor,
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: "500",
+            padding: "12px 16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+        },
+        onClick: function(){} // Callback after click
+    }).showToast();
+}
+
+// Alternative simpler version if you prefer basic styling
+function showToastSimple(message, type = 'info', duration = 3000) {
+    const colors = {
+        success: '#4CAF50',
+        promotion: '#2196F3',
+        error: '#f44336',
+        warning: '#ff9800',
+        demotion: '#FF5722',
+        info: '#2196F3'
+    };
+
+    Toastify({
+        text: message,
+        duration: duration,
+        close: true,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+        style: {
+            background: colors[type] || colors.info,
+            borderRadius: "6px",
+            fontSize: "14px"
+        }
+    }).showToast();
+}
+
+// Your updated role management functions using the enhanced toast
+function promoteUser(userId) {
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i data-feather="loader" class="feather-rotate"></i>';
+    button.disabled = true;
+
+    showToast('🔄 Processing promotion request...', 'info', 2000);
+
+    fetch(`/admin/promote-user/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to promote user');
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            showToast('✅ User promoted to Admin successfully!', 'promotion', 4000);
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            throw new Error(data.message || 'Failed to promote user');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('❌ Failed to promote user: ' + error.message, 'error', 5000);
+
+        button.innerHTML = originalContent;
+        button.disabled = false;
+        feather.replace();
+    });
+}
+
+function demoteUser(userId) {
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i data-feather="loader" class="feather-rotate"></i>';
+    button.disabled = true;
+
+    showToast('🔄 Processing demotion request...', 'info', 2000);
+
+    fetch(`/admin/demote-user/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to demote user');
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            showToast('⬇️ Admin demoted to User successfully!', 'demotion', 4000);
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            throw new Error(data.message || 'Failed to demote user');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('❌ Failed to demote user: ' + error.message, 'error', 5000);
+
+        button.innerHTML = originalContent;
+        button.disabled = false;
+        feather.replace();
+    });
 }

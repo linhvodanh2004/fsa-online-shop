@@ -28,13 +28,13 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="/cart-service.js" defer></script>
     <style>
-        input[type=text]::-webkit-inner-spin-button,
-        input[type=text]::-webkit-outer-spin-button {
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
 
-        input[type=text] {
+        input[type=number] {
             -moz-appearance: textfield;
         }
         .opacity-50 {
@@ -150,15 +150,15 @@
                     <form id="checkout-form">
                         <div class="form-group mb-3">
                             <label>Receiver Name</label>
-                            <input type="text" name="receiverName" class="form-control">
+                            <input type="text" name="receiverName" class="form-control" th:value="${receiverName}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Phone</label>
-                            <input type="text" name="receiverPhone" class="form-control">
+                            <input type="text" name="receiverPhone" class="form-control" th:value="${receiverPhone}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Email</label>
-                            <input type="text" name="receiverEmail" class="form-control">
+                            <input type="text" name="receiverEmail" class="form-control" th:value="${receiverEmail}">
                         </div>
                         <div class="form-group mb-3">
                             <label>Address</label>
@@ -173,7 +173,7 @@
                         <div class="payment-option cash-delivery" data-method="COD" onclick="selectPayment('COD', this)">
                             <div class="d-flex align-items-center">
                                 <div class="payment-icon cash-icon me-3">
-                                    <img src="/user/img/cash-on-delivery_16589524.png" width="40" height="40" />
+                                <img src="/user/img/cash-on-delivery_16589524.png" width="40" height="40" />
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="payment-title fw-bold">COD</div>
@@ -216,6 +216,8 @@
 <!-- Start Footer -->
 <div th:replace="~{component/user-footer :: user-footer}"></div>
 <!-- End Footer -->
+<!-- GOS Chat Widget Component -->
+<div th:replace="~{component/chat-widget :: chat-widget('shop', '🛒', 'GOS Shop Support', '● Tư vấn mua sắm', '🛒 <strong>Chào mừng đến GOS Shop!</strong><br>Tôi có thể giúp bạn:<br>• Tìm sản phẩm phù hợp<br>• So sánh giá cả<br>• Thông tin khuyến mãi<br>• Hỗ trợ đặt hàng<br><br>Bạn đang tìm sản phẩm gì? 😊')}"></div>
 
 <!-- Start Script -->
 <script src="/user/js/jquery-1.11.0.min.js"></script>
@@ -283,19 +285,19 @@
             }
 
             if (paymentMethod === "COD") {
-                // Submit form normally (POST to /cart/checkout)
-                form.action = "/cart/checkout";
+                // Nộp đơn hàng qua form bình thường (POST tới /cart/checkout)
+                form.action = "/cart-detail/checkout";
                 form.method = "POST";
                 form.submit();
             } else if (paymentMethod === "VNPAY") {
                 try {
                     const response = await fetch("/payment/api/create", {
-                        method: "POST", // Use GET if controller is @GetMapping
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            amount: getCartTotal(), // Use cart total
+                            amount: getCartTotal(),
                             receiverName: data.receiverName,
                             receiverPhone: data.receiverPhone,
                             receiverEmail: data.receiverEmail,
@@ -306,8 +308,6 @@
                     });
                     const result = await response.json();
                     if (result.status === "success" && result.url) {
-                        // Save pending order info (optional)
-                        // localStorage.setItem("pendingOrder", JSON.stringify(data));
                         window.location.href = result.url;
                     } else {
                         showToast(result.message);
@@ -411,8 +411,8 @@
 
                     <div class="d-flex align-items-center gap-2 mt-2">
                         <button class="btn btn-outline-success btn-sm" onclick="decreaseQuantity(${item.productId}, reloadCart)">−</button>
-                        <input type="text" value="${item.quantity}" class="form-control form-control-sm text-center quantity-input"
-                            data-product-id="${item.productId}" style="width: 60px;" readonly>
+                        <input type="number" value="${item.quantity}" class="form-control form-control-sm text-center quantity-input"
+                            data-product-id="${item.productId}" style="width: 60px;" min="1" readonly>
                         <button class="btn btn-outline-success btn-sm" onclick="increaseQuantity(${item.productId}, reloadCart)">+</button>
                     </div>
                 </div>

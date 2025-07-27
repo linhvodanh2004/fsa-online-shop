@@ -6,298 +6,315 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Include the CSRF token for security -->
-<!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
-<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+    <!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
+    <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
-    <link rel="apple-touch-icon" href="user/img/apple-icon.png">
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
 
-    <link rel="stylesheet" href="user/css/bootstrap.min.css">
-    <link rel="stylesheet" href="user/css/templatemo.css">
-    <link rel="stylesheet" href="user/css/custom.css">
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="user/css/fontawesome.min.css">
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
 
     <!-- Slick -->
-    <link rel="stylesheet" type="text/css" href="user/css/slick.min.css">
-    <link rel="stylesheet" type="text/css" href="user/css/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/slick-theme.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="/cart-service.js" defer></script>
+
 </head>
 
 <body>
-    <!-- Start Top Nav -->
-    <div th:replace="~{component/user-navbar :: user-navbar}"></div>
-    <!-- Close Top Nav -->
+<!-- Start Top Nav -->
+<div th:replace="~{component/user-navbar :: user-navbar}"></div>
+<!-- Close Top Nav -->
 
 
-    <!-- Header -->
-    <div th:replace="~{component/user-header :: user-header}"></div>
-    <!-- Close Header -->
+<!-- Header -->
+<div th:replace="~{component/user-header :: user-header}"></div>
+<!-- Close Header -->
 
-    <!-- Modal -->
-    <div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
+<!-- Modal -->
+<div th:replace="~{component/user-searchbar :: user-searchbar}"></div>
 
-    <!-- Start Banner Hero -->
-    <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="active"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="./user/img/banner_img_01.jpg" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left align-self-center">
-                                <h1 class="h1 text-success"><b>Gaming</b> PCs</h1>
-                                <h3 class="h2">Ultimate Gaming Experience</h3>
-                                <p>
-                                    Discover our premium collection of gaming PCs, laptops, and accessories designed for
-                                    serious gamers. From high-performance custom builds to professional workstations,
-                                    we have everything you need to dominate the game.
-                                    <a rel="sponsored" class="text-success" href="https://www.nvidia.com/"
-                                        target="_blank">NVIDIA</a>,
-                                    <a rel="sponsored" class="text-success" href="https://www.amd.com/"
-                                        target="_blank">AMD</a>
-                                </p>
-                            </div>
-                        </div>
+<!-- Start Banner Hero -->
+<div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1"></li>
+        <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="container">
+                <div class="row p-5">
+                    <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+                        <img class="img-fluid" src="./user/img/banner_img_01.jpg" alt="">
                     </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="./user/img/banner_img_02.jpg" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left">
-                                <h1 class="h1"><b>Gaming</b> Monitors</h1>
-                                <h3 class="h2">Crystal Clear Gaming Displays</h3>
-                                <p>
-                                    Experience gaming like never before with our premium gaming monitors. Featuring
-                                    ultra-high refresh rates, 4K resolution, HDR support, and lightning-fast response
-                                    times for the ultimate competitive advantage.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="./user/img/banner_img_03.jpg" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left">
-                                <h1 class="h1"><b>Gaming</b> Accessories</h1>
-                                <h3 class="h2">Complete Your Gaming Setup</h3>
-                                <p>
-                                    From mechanical keyboards and precision mice to high-quality headsets and RGB lighting,
-                                    we offer a complete range of gaming accessories to enhance your performance and
-                                    create the perfect gaming environment.
-                                </p>
-                            </div>
+                    <div class="col-lg-6 mb-0 d-flex align-items-center">
+                        <div class="text-align-left align-self-center">
+                            <h1 class="h1 text-success"><b>Gaming</b> PCs</h1>
+                            <h3 class="h2">Ultimate Gaming Experience</h3>
+                            <p>
+                                Discover our premium collection of gaming PCs, laptops, and accessories designed for
+                                serious gamers. From high-performance custom builds to professional workstations,
+                                we have everything you need to dominate the game.
+                                <a rel="sponsored" class="text-success" href="https://www.nvidia.com/"
+                                   target="_blank">NVIDIA</a>,
+                                <a rel="sponsored" class="text-success" href="https://www.amd.com/"
+                                   target="_blank">AMD</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel"
-            role="button" data-bs-slide="prev">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-        <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel"
-            role="button" data-bs-slide="next">
-            <i class="fas fa-chevron-right"></i>
-        </a>
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row p-5">
+                    <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+                        <img class="img-fluid" src="./user/img/banner_img_02.jpg" alt="">
+                    </div>
+                    <div class="col-lg-6 mb-0 d-flex align-items-center">
+                        <div class="text-align-left">
+                            <h1 class="h1"><b>Gaming</b> Monitors</h1>
+                            <h3 class="h2">Crystal Clear Gaming Displays</h3>
+                            <p>
+                                Experience gaming like never before with our premium gaming monitors. Featuring
+                                ultra-high refresh rates, 4K resolution, HDR support, and lightning-fast response
+                                times for the ultimate competitive advantage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row p-5">
+                    <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+                        <img class="img-fluid" src="./user/img/banner_img_03.jpg" alt="">
+                    </div>
+                    <div class="col-lg-6 mb-0 d-flex align-items-center">
+                        <div class="text-align-left">
+                            <h1 class="h1"><b>Gaming</b> Accessories</h1>
+                            <h3 class="h2">Complete Your Gaming Setup</h3>
+                            <p>
+                                From mechanical keyboards and precision mice to high-quality headsets and RGB lighting,
+                                we offer a complete range of gaming accessories to enhance your performance and
+                                create the perfect gaming environment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- End Banner Hero -->
+    <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel"
+       role="button" data-bs-slide="prev">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel"
+       role="button" data-bs-slide="next">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+</div>
+<!-- End Banner Hero -->
 
 
-    <!-- Start Categories of The Month -->
-    <section class="collection-section" th:if="${categories != null and !#lists.isEmpty(categories)}">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Categories of The Month</h1>
-                    <p>
-                        Discover our featured categories of the month, showcasing a curated selection of products that
-                        highlight the latest trends and innovations in the gaming industry.
-                    </p>
-                </div>
-            </div>
-            <div class="collection-container">
-                <button class="nav-button prev" id="prevBtn" disabled>
-                    <span class="arrow arrow-left"></span>
-                </button>
-                <div class="collection-scroll-area" id="collectionScroll">
-                    <div th:each="category : ${categories}" class="collection-card">
-                        <a th:href="@{/shop-category/{id}(id=${category.id})}">
-                            <img th:src="${category.image}" th:alt="${category.name}">
-                            <div class="collection-card-content">
-                                <h6 th:text="${category.name}">Category Name</h6>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <button class="nav-button next" id="nextBtn">
-                    <span class="arrow arrow-right"></span>
-                </button>
+<!-- Start Categories of The Month -->
+<section class="collection-section" th:if="${categories != null and !#lists.isEmpty(categories)}">
+    <div class="container py-5">
+        <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Categories of The Month</h1>
+                <p>
+                    Discover our featured categories of the month, showcasing a curated selection of products that
+                    highlight the latest trends and innovations in the gaming industry.
+                </p>
             </div>
         </div>
-    </section>
-    <!-- End Categories of The Month -->
-
-    <!--Empty categories-->
-    <div th:if="${#lists.isEmpty(categories)}">
-        <div th:replace="component/no-item-notification :: no-item-notification"></div>
+        <div class="collection-container">
+            <button class="nav-button prev" id="prevBtn" disabled>
+                <span class="arrow arrow-left"></span>
+            </button>
+            <div class="collection-scroll-area" id="collectionScroll">
+                <div th:each="category : ${categories}" class="collection-card">
+                    <a th:href="@{/shop-category/{id}(id=${category.id})}">
+                        <img th:src="${category.image}" th:alt="${category.name}">
+                        <div class="collection-card-content">
+                            <h6 th:text="${category.name}">Category Name</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <button class="nav-button next" id="nextBtn">
+                <span class="arrow arrow-right"></span>
+            </button>
+        </div>
     </div>
+</section>
+<!-- End Categories of The Month -->
+
+<!--Empty categories-->
+<div th:if="${#lists.isEmpty(categories)}">
+    <div th:replace="component/no-item-notification :: no-item-notification"></div>
+</div>
 
 
-    <!-- Start Latest Product -->
-    <section class="bg-light">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Latest Gaming PCs</h1>
-                    <p>
-                        Discover our newest gaming PCs and components, featuring the latest processors, graphics cards,
-                        and cutting-edge technology designed to deliver unmatched gaming performance and reliability.
-                    </p>
-                </div>
-            </div>
-            <div th:if="${#lists.isEmpty(latestProducts)}">
-                <div th:replace="component/no-item-notification :: no-item-notification"></div>
-            </div>
-            <div class="row" th:if="${latestProducts != null and !#lists.isEmpty(latestProducts)}">
-                <div th:each="product : ${latestProducts}" class="col-12 col-md-4 mb-4">
-                    <div class="card h-100 product-wap rounded-0">
-                        <div class="card rounded-0">
-                            <img class="card-img rounded-0 img-fluid" th:src="${product.image}" th:alt="${product.name}">
-                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                                <ul class="list-unstyled">
-                                    <li><a class="btn btn-success text-white mt-2" href="#"><i class="far fa-eye"></i></a></li>
-                                    <li><button class="btn btn-success text-white mt-2 add-to-cart-btn"
-                                                th:data-product-id="${product.id}"
-                                                data-quantity="1"><i class="fas fa-cart-plus"></i></button></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <div class="position-absolute top-0 end-0 m-2">
-                                    <span class="badge bg-danger">Latest</span>
-                                </div>
-                                <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
-                                   class="text-decoration-none">
-                                    <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
-                                        th:text="${product.name}">Product Name</h5>
-                                </a>
-                            </div>
-                            <div class="justify-content-between d-flex">
-                                <span class="text-danger fw-bold mb-0 h3"
-                                    th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
-                                    0 VND
-                                </span>
-                                <span class="text-success fw-bold" th:text="${product.sold + ' Sold'} ">
-                                    0 Sold
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Start Latest Product -->
+<section class="bg-light">
+    <div class="container py-5">
+        <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Latest Gaming PCs</h1>
+                <p>
+                    Discover our newest gaming PCs and components, featuring the latest processors, graphics cards,
+                    and cutting-edge technology designed to deliver unmatched gaming performance and reliability.
+                </p>
             </div>
         </div>
-    </section>
-    <!-- End Latest Product -->
-
-    <!-- Start Featured Product -->
-    <section class="bg-light">
-        <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Gaming Rigs</h1>
-                    <p>
-                        Explore our handpicked selection of premium gaming PCs and workstations, featuring flagship
-                        components and custom configurations for professional gamers and content creators.
-                    </p>
-                </div>
-            </div>
-            <div th:if="${#lists.isEmpty(featuredProducts)}">
-                <div th:replace="component/no-item-notification :: no-item-notification"></div>
-            </div>
-            <div class="row" th:if="${featuredProducts != null and !#lists.isEmpty(featuredProducts)}">
-                <div th:each="product : ${featuredProducts}" class="col-12 col-md-4 mb-4">
-                    <div class="card h-100 product-wap rounded-0">
-                        <div class="card rounded-0">
+        <div th:if="${#lists.isEmpty(latestProducts)}">
+            <div th:replace="component/no-item-notification :: no-item-notification"></div>
+        </div>
+        <div class="row" th:if="${latestProducts != null and !#lists.isEmpty(latestProducts)}">
+            <div th:each="product : ${latestProducts}" class="col-12 col-md-4 mb-4">
+                <div class="card h-100 product-wap rounded-0 mx-1">
+                    <div class="card rounded-0 product-card">
+                        <img class="card-img rounded-0 img-fluid"
+                             style="height: 300px; object-fit: cover;"
+                             th:src="${product.image}" th:alt="${product.name}">
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                            <ul class="list-unstyled">
+                                <li><a class="btn btn-success text-white mt-2"
+                                       th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                                       title="View Details"><i class="far fa-eye"></i></a></li>
+                                <li>
+                                    <button class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                            th:data-product-id="${product.id}"
+                                            data-quantity="1"><i class="fas fa-cart-plus"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
                             <div class="position-absolute top-0 end-0 m-2">
-                                <span class="badge bg-danger">Featured</span>
+                                <span class="badge bg-danger">Latest</span>
                             </div>
-                            <img class="card-img rounded-0 img-fluid" th:src="${product.image}" th:alt="${product.name}">
-                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                                <ul class="list-unstyled">
-                                    <li><a class="btn btn-success text-white mt-2" href="#"><i class="far fa-eye"></i></a></li>
-                                    <li><button class="btn btn-success text-white mt-2 add-to-cart-btn"
-                                                th:data-product-id="${product.id}"
-                                                data-quantity="1"><i class="fas fa-cart-plus"></i></button></li>
-                                </ul>
-                            </div>
+                            <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                               class="text-decoration-none">
+                                <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
+                                    th:text="${product.name}">Product Name</h5>
+                            </a>
                         </div>
-                        <div class="card-body p-4">
-                            <div class="mb-3">
-                                <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
-                                   class="text-decoration-none">
-                                    <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
-                                        th:text="${product.name}">Product Name</h5>
-                                </a>
-                            </div>
-                            <div class="justify-content-between d-flex">
-                                <span class="text-danger fw-bold mb-0 h3"
+                        <div class="justify-content-between d-flex">
+                                <span class="text-success fw-bolder mb-0 h3"
                                       th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </span>
-                                <span class="text-success fw-bold" th:text="${product.sold + ' Sold'} ">
-                                    0 Sold
+                                <span class="bg-success fw-bolder p-1 m-0 text-white rounded-1 text-sm">
+                                   <i class="fa fa-shopping-cart"></i> <span th:text="${product.sold + ' Sold'} ">0 Sold</span>
                                 </span>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- End Featured Product -->
+    </div>
+</section>
+<!-- End Latest Product -->
 
-    <!-- Start Footer -->
-    <div th:replace="~{component/user-footer :: user-footer}"></div>
-    <!-- End Footer -->
+<!-- Start Featured Product -->
+<section class="bg-light">
+    <div class="container py-5">
+        <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Featured Gaming Rigs</h1>
+                <p>
+                    Explore our handpicked selection of premium gaming PCs and workstations, featuring flagship
+                    components and custom configurations for professional gamers and content creators.
+                </p>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(featuredProducts)}">
+            <div th:replace="component/no-item-notification :: no-item-notification"></div>
+        </div>
+        <div class="row" th:if="${featuredProducts != null and !#lists.isEmpty(featuredProducts)}">
+            <div th:each="product : ${featuredProducts}" class="col-12 col-md-4 mb-4">
+                <div class="card h-100 product-wap rounded-0 mx-1">
+                    <div class="card rounded-0 product-card">
+                        <img class="card-img rounded-0 img-fluid"
+                             style="height: 300px; object-fit: cover;"
+                             th:src="${product.image}" th:alt="${product.name}">
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                            <ul class="list-unstyled">
+                                <li><a class="btn btn-success text-white mt-2"
+                                       th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                                       title="View Details"><i class="far fa-eye"></i></a></li>
+                                <li sec:authorize="isAuthenticated()">
+                                    <button class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                            th:data-product-id="${product.id}"
+                                            data-quantity="1"><i class="fas fa-cart-plus"></i></button>
+                                </li>
+                                <li sec:authorize="isAnonymous()">
+                                    <a class="btn btn-success text-white mt-2 add-to-cart-btn"
+                                            th:href="@{/login}"><i class="fas fa-cart-plus"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-danger">Latest</span>
+                            </div>
+                            <a th:href="@{${product.slug != null && !product.slug.isEmpty() ? '/product/' + product.slug : '/shop-single/' + product.id}}"
+                               class="text-decoration-none">
+                                <h5 class="card-title text-dark fw-bold mb-0 hover-text-primary"
+                                    th:text="${product.name}">Product Name</h5>
+                            </a>
+                        </div>
+                        <div class="justify-content-between d-flex">
+                                <span class="text-success fw-bolder mb-0 h3"
+                                      th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </span>
+                            <span class="bg-success fw-bolder p-1 m-0 text-white rounded-1 text-sm">
+                                   <i class="fa fa-shopping-cart"></i> <span th:text="${product.sold + ' Sold'} ">0 Sold</span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Featured Product -->
 
-    <!-- GOS Chat Widget Component -->
-    <div th:replace="~{component/chat-widget :: chat-widget('home', '🎮', 'GOS Gaming Support', '● Tư vấn gaming', '🎮 <strong>Chào mừng đến GOS Gaming!</strong><br>Tôi có thể giúp bạn tư vấn về:<br>• PC Gaming & Laptop<br>• Gaming Gear & Phụ kiện<br>• Giá cả & Khuyến mãi<br><br>Bạn cần hỗ trợ gì hôm nay? 😊')}"></div>
+<!-- Start Footer -->
+<div th:replace="~{component/user-footer :: user-footer}"></div>
+<!-- End Footer -->
 
-    <!-- Start Script -->
-    <script src="user/js/jquery-1.11.0.min.js"></script>
-    <script src="user/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="user/js/bootstrap.bundle.min.js"></script>
-    <script src="user/js/templatemo.js"></script>
-    <script src="user/js/custom.js"></script>
-    <!-- End Script -->
+<!-- GOS Chat Widget Component -->
+<div th:replace="~{component/chat-widget :: chat-widget('home', '🎮', 'GOS Gaming Support', '● Tư vấn gaming', '🎮 <strong>Chào mừng đến GOS Gaming!</strong><br>Tôi có thể giúp bạn tư vấn về:<br>• PC Gaming & Laptop<br>• Gaming Gear & Phụ kiện<br>• Giá cả & Khuyến mãi<br><br>Bạn cần hỗ trợ gì hôm nay? 😊')}"></div>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="toastify-message.js"></script>
+<!-- Start Script -->
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
+<!-- End Script -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/toastify-message.js"></script>
 </body>
 
 </html>

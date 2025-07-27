@@ -34,9 +34,9 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Order> getAllOrders(Pageable pageable) {
+    public Page<Order> getAllOrders(Pageable pageable, String orderStatus) {
         try {
-            return orderRepository.findAllByOrderByCreationTimeDesc(pageable);
+            return orderRepository.findByStatusOrderByPaymentStatusAscCreationTimeDesc(orderStatus, pageable);
         } catch (Exception e) {
             log.error("Error getting all orders: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to get orders", e);
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
     public void handlePaymentSuccess(Long orderId, String transactionId) {
         Order order = orderRepository.findById(orderId).orElse(null);
         order.setPaymentStatus(true);
-        order.setPaymentTransactionId(transactionId);
+        order.setPaymentTransactionId((transactionId == null || transactionId.isEmpty()) ? null : transactionId.trim());
         order.setPaymentDate(LocalDateTime.now());
         orderRepository.save(order);
     }
@@ -164,22 +164,31 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-            String oldStatus = order.getStatus();
+//            String oldStatus = order.getStatus();
             order.setStatus(status);
-
             // Set appropriate timestamps based on status
             switch (status.toUpperCase()) {
-                case "TRANSIT":
+                case OrderStatus.IN_TRANSIT:
                     order.setTransitTime(LocalDateTime.now());
                     break;
-                case "DELIVERED":
+                case OrderStatus.DELIVERED:
                     order.setDeliveryTime(LocalDateTime.now());
+                    order.setPaymentDate(LocalDateTime.now());
+                    order.setPaymentStatus(true);
                     break;
-                case "CANCELLED":
+                case OrderStatus.CANCELLED:
                     order.setCancellationTime(LocalDateTime.now());
+                    Set<OrderItem> orderItems = order.getOrderItems();
+                    orderItems.forEach(orderItem -> {
+                        Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
+                        if(product != null){
+                            product.setQuantity(product.getQuantity() + orderItem.getQuantity());
+                            product.setSold(product.getSold() - orderItem.getQuantity());
+                            productRepository.save(product);
+                        }
+                    });
                     break;
             }
-
             orderRepository.save(order);
 
         } catch (Exception e) {
@@ -214,7 +223,8 @@ public class OrderServiceImpl implements OrderService {
             if (status == null) {
                 throw new IllegalArgumentException("Status cannot be null");
             }
-            return orderRepository.findByStatus(status);
+            return orderRepository.findByStatusWithItems(status);
+
         } catch (Exception e) {
             log.error("Error getting orders by status {}: {}", status, e.getMessage(), e);
             throw new RuntimeException("Failed to get orders by status", e);
@@ -261,38 +271,50 @@ public class OrderServiceImpl implements OrderService {
             return 0.0;
         }
     }
+
+    @Override
+    @Transactional
+    public void updateOrderStatusInBulk(String orderStatus) {
+        if(orderStatus.equals(OrderStatus.IN_TRANSIT)){
+            orderRepository.updatePendingOrdersToInTransit(LocalDateTime.now());
+        }
+        else if(orderStatus.equals(OrderStatus.DELIVERED)){
+            orderRepository.updateInTransitOrdersToDelivered(LocalDateTime.now());
+        }
+    }
+
     @Override
     @Transactional
     public Order createOrder(Cart cart) {
         if(!cartRepository.areAllCartItemsValid(cart.getId()) || cart.getCartItems().isEmpty()){
             throw new IllegalArgumentException("Cart is not valid");
         }
+
         Order order = OrderMapper.fromCartToOrder(cart);
-        orderRepository.save(order);
-        Set<OrderItem> orderItems = order.getOrderItems();
-        orderItems.forEach(orderItem -> {
-            orderItem.setOrder(order);
-            orderItemRepository.save(orderItem);
-            Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
-            if(product != null){
-                product.setQuantity(product.getQuantity() - orderItem.getQuantity());
-                product.setSold(product.getSold() + orderItem.getQuantity());
-                productRepository.save(product);
-            }
-            else{
-                throw new IllegalArgumentException("Product is not available");
-            }
-        });
-        order.setOrderItems(orderItems);
         order.setCreationTime(LocalDateTime.now());
         order.setPaymentMethod("COD");
         order.setStatus(OrderStatus.PENDING);
         order.setPaymentStatus(false);
 
+        orderRepository.save(order); // save sớm để có ID
+
+        Set<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(orderItem -> {
+            orderItem.setOrder(order); // set FK
+            orderItemRepository.save(orderItem);
+
+            Product product = productRepository.findById(orderItem.getProduct().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not available"));
+            product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+            product.setSold(product.getSold() + orderItem.getQuantity());
+            productRepository.save(product);
+        });
+
         cartItemRepository.deleteByCartId(cart.getId());
-        cart.setCartItems(null);
         cartRepository.save(cart);
 
-        return orderRepository.save(order);
+        return order;
     }
+
+
 }

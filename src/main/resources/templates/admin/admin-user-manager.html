@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -29,6 +30,8 @@
     <!-- Remove this after purchasing -->
     <link class="js-stylesheet" href="/admin/css/light.css" rel="stylesheet">
     <script src="/admin/js/settings.js"></script>
+    <script src="/admin/js/active-nav.js"></script>
+
 
     <!-- END SETTINGS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120946860-10"></script>
@@ -89,18 +92,18 @@
                                         <option value="GOOGLE">Google</option>
                                         <option value="FACEBOOK">Facebook</option>
                                     </select>
-                                    <div class="ms-auto">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="location.href='/admin/add-user';">
-                                            <i data-feather="plus"></i> Add New User
-                                        </button>
-                                    </div>
+<!--                                    <div class="ms-auto">-->
+<!--                                        <button type="button" class="btn btn-primary"-->
+<!--                                                onclick="location.href='/admin/add-user';">-->
+<!--                                            <i data-feather="plus"></i> Add New User-->
+<!--                                        </button>-->
+<!--                                    </div>-->
                                 </div>
-                                
+
                                 <div th:if="${#lists.isEmpty(users)}">
                                     <div th:replace="~{component/no-item-notification :: no-item-notification}"></div>
                                 </div>
-                                
+
                                 <table id="datatables-column-search-text-inputs" class="table"
                                        style="width:100%; text-align: center;"
                                        th:if="${users != null and !#lists.isEmpty(users)}">
@@ -119,11 +122,10 @@
                                     </thead>
                                     <tbody id="userTableBody">
                                     <tr th:each="user : ${users}"
-                                        th:if="${user.role != null and user.role.id == 2}"
                                         th:classappend="${!user.status} ? 'opacity-50'"
                                         style="cursor: pointer;">
-                                            <!--User Updating (add in tr tag if use)-->
-                                            <!--th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'"-->
+                                        <!--User Updating (add in tr tag if use)-->
+                                        <!--th:onclick="'location.href=\'/admin/update-user/' + ${user.id} + '\';'"-->
                                         <td>
                                             <div class="user-avatar"
                                                  th:text="${#strings.substring(user.fullname != null ? user.fullname : user.username, 0, 1).toUpperCase()}">
@@ -140,7 +142,7 @@
                                                           th:text="${user.provider}">
 													</span>
                                         </td>
-                                        <td>
+                                        <td th:unless="${user.role != null and user.role.id == 1}">
 													<span class="align-middle" onclick="event.stopPropagation();">
 														<i class="align-middle" th:if="${user.status}"
                                                            data-feather="toggle-right"
@@ -148,7 +150,7 @@
                                                            th:attr="data-id=${user.id}, data-status=${user.status}"
                                                            onclick="toggleStatus(this)">
 														</i>
-														<i class="align-middle" th:unless="${user.status}"
+                                                        <i class="align-middle" th:unless="${user.status}"
                                                            data-feather="toggle-left"
                                                            style="cursor:pointer; color: red;"
                                                            th:attr="data-id=${user.id}, data-status=${user.status}"
@@ -156,13 +158,28 @@
 														</i>
 													</span>
                                         </td>
-                                        <td style="width: 10px;">
-										
-<!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
-<!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
-<!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
-<!--                                                <i data-feather="trash-2"></i>-->
-<!--                                            </button>-->
+                                        <td th:unless="${user.role != null and user.role.id == 1}" style="width: 10px;">
+                                            <!-- Role Promotion Button - Only show if role_id is 2 (promote to role_id 1) -->
+                                            <button type="button" class="btn btn-sm btn-outline-success ms-2"
+                                                    th:onclick="|promoteUser(${user.id}); event.stopPropagation();|"
+                                                    th:if="${user.role != null and user.role.id == 2}"
+                                                    title="Promote to Admin">
+                                                <i data-feather="arrow-up"></i>
+                                            </button>
+
+                                            <!-- Role Demotion Button - Only show if role_id is 1 (demote to role_id 2) -->
+                                            <button type="button" class="btn btn-sm btn-outline-warning ms-2"
+                                                    th:onclick="|demoteUser(${user.id}); event.stopPropagation();|"
+                                                    th:if="${user.role != null and user.role.id == 1}"
+                                                    title="Demote to User">
+                                                <i data-feather="arrow-down"></i>
+                                            </button>
+
+                                            <!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
+                                            <!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
+                                            <!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
+                                            <!--                                                <i data-feather="trash-2"></i>-->
+                                            <!--                                            </button>-->
 
                                             <button type="button" class="btn btn-sm ms-2"
                                                     onclick="location.reload(); event.stopPropagation();">
@@ -170,14 +187,14 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">
-                                        <td colspan="9" style="text-align: center;">
-                                            <i data-feather="plus"></i>
-                                        </td>
-                                    </tr>
+                                    <!--                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">-->
+                                    <!--                                        <td colspan="9" style="text-align: center;">-->
+                                    <!--                                            <i data-feather="plus"></i>-->
+                                    <!--                                        </td>-->
+                                    <!--                                    </tr>-->
                                     </tbody>
                                 </table>
-                                
+
                                 <!-- Pagination Controls -->
                                 <div class="pagination-controls" th:if="${users != null and !#lists.isEmpty(users)}">
                                     <div class="items-per-page-container">
@@ -190,11 +207,11 @@
                                         </select>
                                         <span>items per page</span>
                                     </div>
-                                    
+
                                     <div class="pagination-info">
                                         <span id="paginationInfo">Showing 1 to 10 of 100 entries</span>
                                     </div>
-                                    
+
                                     <nav aria-label="User list pagination">
                                         <ul class="pagination pagination-sm" id="paginationNav">
                                             <li class="page-item" id="prevPage">
