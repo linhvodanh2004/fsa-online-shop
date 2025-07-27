@@ -131,7 +131,8 @@
                                                  th:text="${#strings.substring(user.fullname != null ? user.fullname : user.username, 0, 1).toUpperCase()}">
                                             </div>
                                         </td>
-                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.username}" style="max-width: 150px; white-space: nowrap;
+                                            overflow: hidden; text-overflow: ellipsis;"></td>
                                         <td th:text="${user.fullname ?: 'N/A'}"></td>
                                         <td th:text="${user.email}"></td>
                                         <td th:text="${user.phone ?: 'N/A'}"></td>
@@ -181,10 +182,10 @@
                                             <!--                                                <i data-feather="trash-2"></i>-->
                                             <!--                                            </button>-->
 
-                                            <button type="button" class="btn btn-sm ms-2"
-                                                    onclick="location.reload(); event.stopPropagation();">
-                                                <i data-feather="refresh-cw"></i>
-                                            </button>
+<!--                                            <button type="button" class="btn btn-sm ms-2"-->
+<!--                                                    onclick="location.reload(); event.stopPropagation();">-->
+<!--                                                <i data-feather="refresh-cw"></i>-->
+<!--                                            </button>-->
                                         </td>
                                     </tr>
                                     <!--                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">-->

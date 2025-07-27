@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(Pageable pageable) {
         try {
-            return userRepository.findAll(pageable);
+            return userRepository.findAllOrderByRolePriority(pageable);
         } catch (Exception e) {
             throw new RuntimeException("Error fetching users with pagination: " + e.getMessage(), e);
         }

@@ -1,6 +1,8 @@
 package fsa.project.online_shop.repositories;
 
 import fsa.project.online_shop.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -69,4 +71,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Find recently created users
     @Query("SELECT u FROM User u WHERE u.id IN (SELECT MAX(u2.id) FROM User u2 GROUP BY u2.id) ORDER BY u.id DESC")
     List<User> findRecentUsers(org.springframework.data.domain.Pageable pageable);
+
+    @Query("SELECT u FROM User u ORDER BY " +
+            "CASE u.role.name " +
+            "WHEN 'ADMIN' THEN 1 " +
+            "WHEN 'USER' THEN 2 " +
+            "ELSE 3 END")
+    Page<User> findAllOrderByRolePriority(Pageable pageable);
+
 }
