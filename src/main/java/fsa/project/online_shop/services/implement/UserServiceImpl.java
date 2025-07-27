@@ -331,7 +331,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User handleSaveUser(User user) {
-        if(user.getCart() == null) {
+        if (user.getCart() == null) {
             Cart cart = Cart.builder()
                     .user(userRepository.save(user))
                     .sum(0D)
@@ -350,6 +350,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(Long userId, String newPassword) {
+        User user = findById(userId);
+        if (user != null && StringUtils.hasText(newPassword)) {
+            PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
+            user.setPassword(encoder.encode(newPassword));
+            userRepository.save(user); // Explicitly save
+        }
     }
 
 }

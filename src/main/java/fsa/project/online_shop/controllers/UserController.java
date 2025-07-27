@@ -8,6 +8,7 @@ import fsa.project.online_shop.services.FileService;
 import fsa.project.online_shop.services.ProductService;
 import fsa.project.online_shop.services.RoleService;
 import fsa.project.online_shop.services.UserService;
+import fsa.project.online_shop.utils.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +41,7 @@ public class UserController {
     private final UserService userService;
     private final FileService fileService;
     private final RoleService roleService; // Add this dependency
+    private final SessionUtil sessionUtil;
 
     // GET mapping for user management page
     @GetMapping("/admin/users")
@@ -59,7 +63,7 @@ public class UserController {
     @PostMapping("/admin/users/{id}/status")
     @ResponseBody
     public ResponseEntity<?> updateUserStatus(@PathVariable("id") Long id,
-                                              @RequestBody Map<String, Boolean> statusRequest) {
+            @RequestBody Map<String, Boolean> statusRequest) {
         try {
             Boolean newStatus = statusRequest.get("status");
             User user = userService.findById(id);
@@ -192,35 +196,35 @@ public class UserController {
     }
 
     // DELETE mapping for deleting user (AJAX)
-//    @DeleteMapping("/user/{id}/delete")
-//    @ResponseBody
-//    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-//        try {
-//            User user = userService.findById(id);
-//
-//            if (user == null) {
-//                return ResponseEntity.notFound().build();
-//            }
-//
-//            // Prevent deletion of admin users
-//            if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
-//                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                        .body(Map.of("error", "Cannot delete admin users"));
-//            }
-//
-//            userService.deleteById(id);
-//            return ResponseEntity.ok().build();
-//
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(Map.of("error", "Failed to delete user"));
-//        }
-//    }
+    // @DeleteMapping("/user/{id}/delete")
+    // @ResponseBody
+    // public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+    // try {
+    // User user = userService.findById(id);
+    //
+    // if (user == null) {
+    // return ResponseEntity.notFound().build();
+    // }
+    //
+    // // Prevent deletion of admin users
+    // if (user.getRole() != null && "ADMIN".equals(user.getRole().getName())) {
+    // return ResponseEntity.status(HttpStatus.FORBIDDEN)
+    // .body(Map.of("error", "Cannot delete admin users"));
+    // }
+    //
+    // userService.deleteById(id);
+    // return ResponseEntity.ok().build();
+    //
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body(Map.of("error", "Failed to delete user"));
+    // }
+    // }
 
     // POST mapping for creating new user
     @PostMapping("/admin/users/add-user")
     public String addUser(@ModelAttribute("user") User user,
-                          RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) {
         try {
             // Set default values
             if (user.getStatus() == null) {
@@ -238,56 +242,57 @@ public class UserController {
     }
 
     // POST mapping for updating user
-//    @PostMapping("/update-user/{id}")
-//    public String updateUser(@PathVariable("id") Long id,
-//                             @ModelAttribute("user") User user,
-//                             RedirectAttributes redirectAttributes) {
-//        try {
-//            User existingUser = userService.findById(id);
-//
-//            if (existingUser == null) {
-//                redirectAttributes.addFlashAttribute("error", "User not found");
-//                return "redirect:/admin/users";
-//            }
-//
-//            // Update user fields
-//            existingUser.setUsername(user.getUsername());
-//            existingUser.setFullname(user.getFullname());
-//            existingUser.setEmail(user.getEmail());
-//            existingUser.setPhone(user.getPhone());
-//            existingUser.setStatus(user.getStatus());
-//            existingUser.setRole(user.getRole());
-//
-//            // Don't update password if it's empty
-//            if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
-//                existingUser.setPassword(user.getPassword());
-//            }
-//
-//            userService.save(existingUser);
-//            redirectAttributes.addFlashAttribute("success", "User updated successfully!");
-//            return "redirect:/admin/users";
-//
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("error", "Failed to update user: " + e.getMessage());
-//            return "redirect:/admin/update-user/" + id;
-//        }
-//    }
+    // @PostMapping("/update-user/{id}")
+    // public String updateUser(@PathVariable("id") Long id,
+    // @ModelAttribute("user") User user,
+    // RedirectAttributes redirectAttributes) {
+    // try {
+    // User existingUser = userService.findById(id);
+    //
+    // if (existingUser == null) {
+    // redirectAttributes.addFlashAttribute("error", "User not found");
+    // return "redirect:/admin/users";
+    // }
+    //
+    // // Update user fields
+    // existingUser.setUsername(user.getUsername());
+    // existingUser.setFullname(user.getFullname());
+    // existingUser.setEmail(user.getEmail());
+    // existingUser.setPhone(user.getPhone());
+    // existingUser.setStatus(user.getStatus());
+    // existingUser.setRole(user.getRole());
+    //
+    // // Don't update password if it's empty
+    // if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+    // existingUser.setPassword(user.getPassword());
+    // }
+    //
+    // userService.save(existingUser);
+    // redirectAttributes.addFlashAttribute("success", "User updated
+    // successfully!");
+    // return "redirect:/admin/users";
+    //
+    // } catch (Exception e) {
+    // redirectAttributes.addFlashAttribute("error", "Failed to update user: " +
+    // e.getMessage());
+    // return "redirect:/admin/update-user/" + id;
+    // }
+    // }
 
     // GET mapping with search, filter, and pagination parameters
     @GetMapping("/admin/users/search")
     public String searchUsers(@RequestParam(value = "query", required = false) String query,
-                              @RequestParam(value = "role", required = false) String role,
-                              @RequestParam(value = "provider", required = false) String provider,
-                              @RequestParam(value = "status", required = false) Boolean status,
-                              @RequestParam(value = "page", defaultValue = "0") int page,
-                              @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "sort", defaultValue = "id") String sort,
-                              @RequestParam(value = "direction", defaultValue = "asc") String direction,
-                              Model model) {
+            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "provider", required = false) String provider,
+            @RequestParam(value = "status", required = false) Boolean status,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            Model model) {
 
         // Create pageable object
-        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ?
-                Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
         Page<User> userPage;
@@ -302,8 +307,8 @@ public class UserController {
             // Manual pagination for filtered results
             int start = (int) pageable.getOffset();
             int end = Math.min((start + pageable.getPageSize()), allFilteredUsers.size());
-            List<User> pageContent = start >= allFilteredUsers.size() ?
-                    Collections.emptyList() : allFilteredUsers.subList(start, end);
+            List<User> pageContent = start >= allFilteredUsers.size() ? Collections.emptyList()
+                    : allFilteredUsers.subList(start, end);
 
             userPage = new PageImpl<>(pageContent, pageable, allFilteredUsers.size());
             users = pageContent;
@@ -339,35 +344,67 @@ public class UserController {
     }
 
     @GetMapping("/admin/edit-profile")
-    public String editAdminProfile(Model model, Authentication authentication) {
-        try{
-            User user = getCurrentUser(authentication);
+    public String editAdminProfile(Model model) {
+        try {
+            User user = getCurrentUser();
             if (user == null) {
                 return "redirect:/login";
             }
             model.addAttribute("user", user);
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         return "admin/admin-profile";
     }
 
-    private User getCurrentUser(Authentication authentication) {
-        if (authentication == null) {
-            return null;
+    private User getCurrentUser() {
+        return sessionUtil.getUserFromSession();
+    }
+
+    @PostMapping("/admin/change-password")
+    public String changePassword(
+            @RequestParam("password") String password,
+            @RequestParam("rePassword") String rePassword,
+            RedirectAttributes redirectAttributes) {
+        if (!password.equals(rePassword)) {
+            redirectAttributes.addFlashAttribute("error", "Passwords do not match.");
+            return "redirect:/admin/edit-profile";
+        }
+        User user = getCurrentUser();
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "User not found.");
+            return "redirect:/login";
+        }
+        userService.updatePassword(user.getId(), password);
+        redirectAttributes.addFlashAttribute("success", "Password changed successfully.");
+        return "redirect:/admin/edit-profile";
+    }
+
+    @PostMapping("/admin/profile")
+    public String updateAdminProfile(
+            @RequestParam("username") String username,
+            @RequestParam("fullname") String fullname,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser();
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "User not found.");
+            return "redirect:/login";
         }
 
-        try {
-            if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
-                String email = oAuth2User.getAttribute("email");
-                return userService.findByEmail(email);
-            }
 
-            String username = authentication.getName();
-            return userService.findByUsername(username);
+        user.setUsername(username);
+        user.setFullname(fullname);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setAddress(address);
 
-        } catch (Exception e) {
-            return null;
-        }
+        userService.save(user);
+        sessionUtil.updateSessionUserInfo(user);
+
+        redirectAttributes.addFlashAttribute("success", "Profile updated successfully.");
+        return "redirect:/admin/edit-profile";
     }
 }

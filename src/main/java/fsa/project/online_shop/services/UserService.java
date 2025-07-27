@@ -36,4 +36,5 @@ public interface UserService {
     public User getUserByEmail(String email);
     public User getUserById(Long id);
     public User handleSaveUser(User user);
+    public void updatePassword(Long userId, String newPassword);
 }
