@@ -22,52 +22,74 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('userSearchBox');
     if (searchBox) {
         searchBox.addEventListener('input', applyFilters);
-        searchBox.addEventListener('keyup', applyFilters); // Keep both for compatibility
     }
-    
+
     const sortSelect = document.getElementById('sortSelect');
     if (sortSelect) {
         sortSelect.addEventListener('change', applyFilters);
     }
-    
+
     const roleFilter = document.getElementById('roleFilter');
     if (roleFilter) {
         roleFilter.addEventListener('change', applyFilters);
     }
-    
+
     const providerFilter = document.getElementById('providerFilter');
     if (providerFilter) {
         providerFilter.addEventListener('change', applyFilters);
     }
-    
+
     // Form validation setup
     setupFormValidation();
-    
+
     // Initial table update
     applyFilters();
 });
 
 function initializeUsers() {
     const tableBody = document.getElementById('userTableBody') || document.querySelector('#datatables-column-search-text-inputs tbody');
-    if (!tableBody) return;
-    
-    const rows = tableBody.querySelectorAll('tr:not(:last-child)'); // Exclude the "add user" row
-    
+    if (!tableBody) {
+        console.error('Table body not found');
+        return;
+    }
+
+    const rows = tableBody.querySelectorAll('tr');
+
     allUsers = [];
-    rows.forEach(row => {
-        if (row.cells.length > 0) {
-            allUsers.push({
+    rows.forEach((row, index) => {
+        // Skip empty rows or rows that don't have enough cells
+        if (row.cells.length < 7) return;
+
+        // Skip the "add user" row (usually the last row or has specific classes)
+        if (row.classList.contains('add-user-row') ||
+            row.querySelector('input[type="text"]') ||
+            row.querySelector('button[type="submit"]')) {
+            return;
+        }
+
+        try {
+            const userData = {
                 element: row.cloneNode(true),
-                username: row.cells[1].textContent.trim(),
-                fullname: row.cells[2].textContent.trim(),
-                email: row.cells[3].textContent.trim(),
-                phone: row.cells[4].textContent.trim(),
-                role: row.cells[5].textContent.trim(),
-                provider: row.cells[6].textContent.trim(),
-                status: row.cells[7].querySelector('i') ? row.cells[7].querySelector('i').getAttribute('data-status') === 'true' : false
-            });
+                username: row.cells[1] ? row.cells[1].textContent.trim() : '',
+                fullname: row.cells[2] ? row.cells[2].textContent.trim() : '',
+                email: row.cells[3] ? row.cells[3].textContent.trim() : '',
+                phone: row.cells[4] ? row.cells[4].textContent.trim() : '',
+                role: row.cells[5] ? row.cells[5].textContent.trim() : '',
+                provider: row.cells[6] ? row.cells[6].textContent.trim() : '',
+                status: row.cells[7] ? (row.cells[7].querySelector('i') ?
+                    row.cells[7].querySelector('i').getAttribute('data-status') === 'true' : false) : false
+            };
+
+            // Only add if we have at least username or email
+            if (userData.username || userData.email) {
+                allUsers.push(userData);
+            }
+        } catch (error) {
+            console.warn('Error processing row:', error, row);
         }
     });
+
+    console.log('Initialized users:', allUsers.length);
 }
 
 function applyFilters() {
@@ -75,31 +97,49 @@ function applyFilters() {
     const sortSelect = document.getElementById('sortSelect');
     const roleFilter = document.getElementById('roleFilter');
     const providerFilter = document.getElementById('providerFilter');
-    
-    const searchTerm = searchBox ? searchBox.value.toLowerCase() : '';
+
+    const searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : '';
     const sortValue = sortSelect ? sortSelect.value : '';
     const roleFilterValue = roleFilter ? roleFilter.value : '';
     const providerFilterValue = providerFilter ? providerFilter.value : '';
-    
+
+    console.log('Applying filters:', { searchTerm, roleFilterValue, providerFilterValue });
+
     // Filter users
     filteredUsers = allUsers.filter(user => {
-        const matchesSearch = user.username.toLowerCase().includes(searchTerm) ||
-                            user.fullname.toLowerCase().includes(searchTerm) ||
-                            user.email.toLowerCase().includes(searchTerm);
-        
-        const matchesRole = !roleFilterValue || user.role === roleFilterValue;
-        const matchesProvider = !providerFilterValue || user.provider === providerFilterValue;
-        
+        let matchesSearch = true;
+        let matchesRole = true;
+        let matchesProvider = true;
+
+        // Search filter
+        if (searchTerm) {
+            matchesSearch = user.username.toLowerCase().includes(searchTerm) ||
+                           user.fullname.toLowerCase().includes(searchTerm) ||
+                           user.email.toLowerCase().includes(searchTerm);
+        }
+
+        // Role filter
+        if (roleFilterValue) {
+            matchesRole = user.role === roleFilterValue;
+        }
+
+        // Provider filter
+        if (providerFilterValue) {
+            matchesProvider = user.provider === providerFilterValue;
+        }
+
         return matchesSearch && matchesRole && matchesProvider;
     });
-    
+
+    console.log('Filtered users:', filteredUsers.length);
+
     // Sort users
     if (sortValue) {
         const [field, direction] = sortValue.split('-');
         filteredUsers.sort((a, b) => {
-            let aValue = a[field].toLowerCase();
-            let bValue = b[field].toLowerCase();
-            
+            let aValue = (a[field] || '').toLowerCase();
+            let bValue = (b[field] || '').toLowerCase();
+
             if (direction === 'asc') {
                 return aValue.localeCompare(bValue);
             } else {
@@ -107,38 +147,48 @@ function applyFilters() {
             }
         });
     }
-    
+
     currentPage = 1;
     updateTable();
 }
 
 function updateTable() {
     const tableBody = document.getElementById('userTableBody') || document.querySelector('#datatables-column-search-text-inputs tbody');
-    if (!tableBody) return;
-    
+    if (!tableBody) {
+        console.error('Table body not found for update');
+        return;
+    }
+
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const pageUsers = filteredUsers.slice(startIndex, endIndex);
-    
-    // Clear table body except for the "add user" row
-    const addUserRow = tableBody.querySelector('tr:last-child');
+
+    // Find and preserve the "add user" row
+    const addUserRow = Array.from(tableBody.querySelectorAll('tr')).find(row =>
+        row.classList.contains('add-user-row') ||
+        row.querySelector('input[type="text"]') ||
+        row.querySelector('button[type="submit"]')
+    );
+
+    // Clear table body
     tableBody.innerHTML = '';
-    
+
     // Add filtered users for current page
     pageUsers.forEach(user => {
-        tableBody.appendChild(user.element.cloneNode(true));
+        const clonedRow = user.element.cloneNode(true);
+        tableBody.appendChild(clonedRow);
     });
-    
+
     // Re-add the "add user" row if it exists
     if (addUserRow) {
-        tableBody.appendChild(addUserRow);
+        tableBody.appendChild(addUserRow.cloneNode(true));
     }
-    
+
     // Reinitialize feather icons for the new content
     if (typeof feather !== 'undefined') {
         feather.replace();
     }
-    
+
     updatePaginationInfo();
     updatePaginationNav();
 }
