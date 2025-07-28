@@ -2,7 +2,10 @@ package fsa.project.online_shop.controllers;
 
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.models.constant.UserRole;
+import fsa.project.online_shop.services.CategoryService;
 import fsa.project.online_shop.services.EmailSenderService;
+import fsa.project.online_shop.services.OrderService;
+import fsa.project.online_shop.services.ProductService;
 import fsa.project.online_shop.services.RoleService;
 import fsa.project.online_shop.services.UserService;
 import jakarta.mail.MessagingException;
@@ -26,6 +29,9 @@ public class AuthController implements ErrorController {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailSenderService;
+    private final OrderService orderService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
 
     @GetMapping("/register")
@@ -134,8 +140,10 @@ public class AuthController implements ErrorController {
     }
 
     @GetMapping("/admin/dashboard")
-    public String getAdminDashboardPage(
-    ){
-        return "admin/dashboard";
-    }
+    public String dashboard(Model model) {
+    model.addAttribute("orderCount", orderService.countAll());
+    model.addAttribute("latestProducts", productService.getLatestProducts(5));
+    model.addAttribute("categoriesOfMonth", categoryService.getAllCategories());
+    return "admin/dashboard";
+}
 }

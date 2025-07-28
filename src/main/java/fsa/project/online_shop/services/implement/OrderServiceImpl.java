@@ -7,7 +7,6 @@ import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.models.constant.OrderStatus;
 import fsa.project.online_shop.repositories.*;
 import fsa.project.online_shop.models.User;
-import fsa.project.online_shop.repositories.OrderRepository;
 import fsa.project.online_shop.services.OrderService;
 import fsa.project.online_shop.utils.OrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -316,5 +315,10 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    @Override
+    public long countAll() {
+        return orderRepository.count();
+    }
 
+    
 }
