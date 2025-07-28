@@ -31,6 +31,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final AuthenticationSuccessHandler customSuccessAuthHandler;
     private final AuthenticationFailureHandler customFailureAuthHandler;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${remember-me.key}")
     private String rememberMeKey;
@@ -47,10 +48,7 @@ public class SecurityConfig {
 //            "/cart/**", "/cart-detail/**", "/admin/**"
 //    };
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 
     @Bean
@@ -62,8 +60,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authProvider(
-            PasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);

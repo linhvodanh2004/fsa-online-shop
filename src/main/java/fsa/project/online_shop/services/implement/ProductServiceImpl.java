@@ -1,6 +1,7 @@
 package fsa.project.online_shop.services.implement;
 
 import fsa.project.online_shop.models.Product;
+import fsa.project.online_shop.repositories.OrderItemRepository;
 import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.ProductService;
 import fsa.project.online_shop.utils.SlugUtils;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,6 +18,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     public List<Product> getLatestProducts(int limit) {
@@ -85,7 +88,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int getTotalSold() {
-        Integer total = productRepository.sumAllSold();
+//        Integer total = productRepository.sumAllSold();
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        Integer total = orderItemRepository.sumQuantityFromValidOrders(sevenDaysAgo);
         return total != null ? total : 0;
     }
 }

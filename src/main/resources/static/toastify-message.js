@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "register-successfully": "Register successfully",
         "username-exists": "Username already exists",
         "email-exists": "Email already exists",
+        "phone-exists": "Phone already exists",
         "bad-credentials": "Username or password is incorrect",
         "disabled": "Your account is disabled",
         "login-error": "An error occurred while logging in",
@@ -24,7 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "checkout-success": "Checkout successfully",
         "checkout-failed": "Checkout failed",
         "update-order-status-successfully": "Update status of order successfully",
-        "fail-to-update-order-status": "Fail to update order status"
+        "fail-to-update-order-status": "Fail to update order status",
+        "profile-updated-successfully": "Profile updated successfully",
+        "old-password-invalid": "Old password is invalid",
     }
 
     if (params.has("success")) {

@@ -98,4 +98,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT SUM(o.sum) FROM Order o")
     Double sumAllEarnings();
 
+    @Query("""
+    SELECT SUM(o.sum) 
+    FROM Order o 
+    WHERE o.status <> 'CANCELLED' 
+      AND o.creationTime >= :fromDate
+""")
+    Double sumAllEarningsWithin7Days(@Param("fromDate") LocalDateTime fromDate);
+
+    @Query("""
+            SELECT COUNT(o) 
+            FROM Order o 
+            WHERE o.status <> 'CANCELLED' 
+            AND o.creationTime >= :fromDate
+            """)
+    Integer countOrdersWithing7Days(@Param("fromDate") LocalDateTime fromDate);
+
 }

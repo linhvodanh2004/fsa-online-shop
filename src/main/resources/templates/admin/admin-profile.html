@@ -41,6 +41,7 @@
 
     gtag('config', 'UA-120946860-10', { 'anonymize_ip': true });
   </script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="/admin/js/active-nav.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -54,15 +55,16 @@
 
       <main class="content">
         <div class="container-fluid p-0">
-          <div class="row">
-            <div class="col-12">
+          <div class="row justify-content-center d-flex ">
+            <div class="col-12 ">
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title" style="color: black; font-size: 23px;">Profile</h5>
                 </div>
                 <div class="card-body">
                   <div class="mb-3 d-flex justify-content-start">
-                    <form th:action="@{/admin/profile}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/admin/edit-profile}" method="post"
+                          enctype="multipart/form-data" id="editProfileForm">
                       <!-- <div class="mb-3 row">
                         <div class="col-md-6">
                           <label class="form-label">Avatar:</label>
@@ -74,8 +76,7 @@
                       </div> -->
                       <div class="mb-3">
                         <label class="form-label">Username:</label>
-                        <input type="text" class="form-control" name="username" th:value="${user.username}"
-                          th:disabled="${user.provider != 'GOOGLE'}">
+                        <input type="text" class="form-control" name="username" th:value="${user.username}" disabled>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Full Name:<span class="text-danger">*</span></label>
@@ -84,11 +85,11 @@
                       <div class="mb-3 row">
                         <div class="col-md-6">
                           <label class="form-label">Email:</label>
-                          <input type="email" class="form-control" name="email" th:value="${user.email}"
-                            th:disabled="${user.provider == 'GOOGLE'}">
-                          <span th:if="${user.provider == 'GOOGLE'}">
-                            <input type="hidden" name="email" th:value="${user.email}">
-                          </span>
+                          <input type="text" class="form-control" name="email" th:value="${user.email}"
+                            th:readonly="${user.provider == 'GOOGLE'}">
+<!--                          <span th:if="${user.provider == 'GOOGLE'}">-->
+<!--                            <input type="hidden" name="email" th:value="${user.email}">-->
+<!--                          </span>-->
                         </div>
                         <div class="col-md-6">
                           <label class="form-label">Phone Number:</label>
@@ -102,7 +103,7 @@
                       <!-- Change Password Button -->
                       <div class="mb-3">
                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                          data-bs-target="#changePasswordModal">
+                          data-bs-target="#changePasswordModal" th:disabled="${user.provider == 'GOOGLE'}">
                           Change Password
                         </button>
                       </div>
@@ -133,11 +134,15 @@
           </div>
           <div class="modal-body">
             <div class="mb-3 row">
-              <div class="col-md-6">
-                <label class="form-label">Password:</label>
-                <input type="password" class="form-control" name="password">
+              <div class="col-12">
+                <label class="form-label">Old password:</label>
+                <input type="password" class="form-control" name="oldPassword">
               </div>
-              <div class="col-md-6">
+              <div class="col-12">
+                <label class="form-label">Password:</label>
+                <input type="password" class="form-control" name="newPassword">
+              </div>
+              <div class="col-12">
                 <label class="form-label">Confirm Password:</label>
                 <input type="password" class="form-control" name="rePassword">
               </div>
@@ -151,20 +156,65 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="/toastify-message.js"></script>
+  <script src="/admin/js/app.js"></script>
+
   <script>
-    function previewImage(input, previewId) {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const preview = document.querySelector(previewId);
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
+    function showToast(msg){
+      Toastify({
+        text: msg,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        newWindow: true,
+        close: true,
+        style: {
+          background: "#f44336",
+        }
+      }).showToast();
     }
+    document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+      const fullname = this.fullname.value.trim();
+      const phone = this.phone.value.trim();
+      const email = this.email.value.trim();
+      e.preventDefault();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?\d{10,15}$/;
+
+      if (!fullname || !phone || !email) {
+        showToast("Full Name, Phone, and Email must not be empty.");
+      }
+      else if (emailRegex.test(email) === false) {
+        showToast("Invalid email.");
+      }
+      else if (phoneRegex.test(phone) === false){
+        showToast("Invalid phone number")
+      }
+      else {
+        this.submit();
+      }
+    });
+    document.getElementById('changeEmailPassword').addEventListener('submit', function (e) {
+      const password = this.newPassword.value;
+      const rePassword = this.rePassword.value;
+      e.preventDefault();
+
+      if (!password || !rePassword) {
+        showToast("Password and Confirm Password must not be empty.");
+      }
+      else if (/\s/.test(password)) {
+        showToast("Password must not contain whitespace.");
+      }
+      else if (password !== rePassword) {
+        showToast("Passwords do not match.");
+      }
+      else {
+        this.submit();
+      }
+    });
   </script>
+
 </body>
 
 </html>

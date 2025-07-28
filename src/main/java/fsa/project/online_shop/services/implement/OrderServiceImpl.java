@@ -321,12 +321,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public long countAll() {
-        return orderRepository.count();
+//        return orderRepository.count();
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        return orderRepository.countOrdersWithing7Days(sevenDaysAgo);
     }
 
     @Override
     public double getTotalEarnings() {
-        Double total = orderRepository.sumAllEarnings();
+//        Double total = orderRepository.sumAllEarnings();
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        Double total = orderRepository.sumAllEarningsWithin7Days(sevenDaysAgo);
         return total != null ? total : 0.0;
     }
 

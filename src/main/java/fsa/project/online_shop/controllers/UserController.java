@@ -16,6 +16,7 @@ import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +43,7 @@ public class UserController {
     private final FileService fileService;
     private final RoleService roleService; // Add this dependency
     private final SessionUtil sessionUtil;
+    private final PasswordEncoder passwordEncoder;
 
     // GET mapping for user management page
     @GetMapping("/admin/users")
@@ -363,48 +365,52 @@ public class UserController {
 
     @PostMapping("/admin/change-password")
     public String changePassword(
-            @RequestParam("password") String password,
-            @RequestParam("rePassword") String rePassword,
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
             RedirectAttributes redirectAttributes) {
-        if (!password.equals(rePassword)) {
-            redirectAttributes.addFlashAttribute("error", "Passwords do not match.");
-            return "redirect:/admin/edit-profile";
-        }
         User user = getCurrentUser();
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "User not found.");
             return "redirect:/login";
         }
-        userService.updatePassword(user.getId(), password);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return "redirect:/admin/edit-profile?error=old-password-invalid";
+        }
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
+        userService.handleSaveUser(user);
         redirectAttributes.addFlashAttribute("success", "Password changed successfully.");
         return "redirect:/admin/edit-profile";
     }
 
-    @PostMapping("/admin/profile")
+    @PostMapping("/admin/edit-profile")
     public String updateAdminProfile(
-            @RequestParam("username") String username,
+//            @RequestParam("username") String username,
             @RequestParam("fullname") String fullname,
             @RequestParam(value = "email", required = false) String email,
-            @RequestParam("phone") String phone,
-            @RequestParam("address") String address,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "address", required = false) String address,
             RedirectAttributes redirectAttributes) {
         User user = getCurrentUser();
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "User not found.");
             return "redirect:/login";
         }
-
-
-        user.setUsername(username);
+        if (userService.existsByEmail(email) && !user.getEmail().equals(email)){
+            return "redirect:/admin/edit-profile?error=email-exists";
+        }
+        if (userService.existsByPhone(phone) && !user.getPhone().equals(phone)){
+            return "redirect:/admin/edit-profile?error=phone-exists";
+        }
+//        user.setUsername(username);
         user.setFullname(fullname);
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
-
         userService.save(user);
         sessionUtil.updateSessionUserInfo(user);
 
-        redirectAttributes.addFlashAttribute("success", "Profile updated successfully.");
-        return "redirect:/admin/edit-profile";
+//        redirectAttributes.addFlashAttribute("success", "Profile updated successfully.");
+        return "redirect:/admin/edit-profile?success=profile-updated-successfully";
     }
 }
