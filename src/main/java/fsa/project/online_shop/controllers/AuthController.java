@@ -33,7 +33,6 @@ public class AuthController implements ErrorController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
-
     @GetMapping("/register")
     public String registerPage() {
         return "user/register";
@@ -45,8 +44,7 @@ public class AuthController implements ErrorController {
             @RequestParam String password,
             @RequestParam(required = false) String fullname,
             @RequestParam String email,
-            @RequestParam(required = false) String phone
-    ) {
+            @RequestParam(required = false) String phone) {
         User user = userService.findByUsername(username);
         if (user != null) {
             return "redirect:/register?error=username-exists";
@@ -91,8 +89,7 @@ public class AuthController implements ErrorController {
     public String handleForgotPassword(
             @RequestParam String email,
             @RequestParam String username,
-            Model model
-    ){
+            Model model) {
         User user = userService.findByUsername(username);
         if (user == null || user.getEmail() == null || !user.getEmail().equals(email)) {
             return "redirect:/forgot-password?error=username-or-email-not-matched";
@@ -113,8 +110,7 @@ public class AuthController implements ErrorController {
     public String handleResetPassword(
             @RequestParam String email,
             @RequestParam String password,
-            Model model
-    ){
+            Model model) {
         User user = userService.findByEmail(email);
         user.setPassword(password);
         userService.save(user);
@@ -124,15 +120,14 @@ public class AuthController implements ErrorController {
     @PostMapping("/resend-code")
     public String resendCode(
             @RequestParam String email,
-            Model model
-    ){
+            Model model) {
         String verificationCode = generateRandomCode();
         String hashedVerificationCode = DigestUtils.sha256Hex(verificationCode);
         model.addAttribute("hashedVerificationCode", hashedVerificationCode);
         model.addAttribute("email", email);
         try {
-            emailSenderService.sendVerificationCode(email, userService.findByEmail(email).getUsername()
-                    , verificationCode);
+            emailSenderService.sendVerificationCode(email, userService.findByEmail(email).getUsername(),
+                    verificationCode);
             return "user/verification";
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -140,10 +135,12 @@ public class AuthController implements ErrorController {
     }
 
     @GetMapping("/admin/dashboard")
-    public String dashboard(Model model) {
-    model.addAttribute("orderCount", orderService.countAll());
-    model.addAttribute("latestProducts", productService.getLatestProducts(5));
-    model.addAttribute("categoriesOfMonth", categoryService.getAllCategories());
-    return "admin/dashboard";
-}
+    public String dashboard(Model model, @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        model.addAttribute("topSoldProducts", productService.getTopSoldProducts(limit));
+        model.addAttribute("limit", limit);
+        model.addAttribute("totalSold", productService.getTotalSold());
+        model.addAttribute("totalEarnings", orderService.getTotalEarnings());
+        model.addAttribute("totalOrders", orderService.countAll());
+        return "admin/dashboard";
+    }
 }
