@@ -43,8 +43,7 @@ public class ProductServiceImpl implements ProductService {
                 categoryId,
                 productId,
                 0,
-                PageRequest.of(0, 4)
-        );
+                PageRequest.of(0, 4));
     }
 
     @Override
@@ -77,5 +76,16 @@ public class ProductServiceImpl implements ProductService {
             // Base slug exists, append ID for uniqueness
             return baseSlug + "-" + productId;
         }
+    }
+
+    @Override
+    public List<Product> getTopSoldProducts(int limit) {
+        return productRepository.findTopOrderBySold(PageRequest.of(0, limit));
+    }
+
+    @Override
+    public int getTotalSold() {
+        Integer total = productRepository.sumAllSold();
+        return total != null ? total : 0;
     }
 }

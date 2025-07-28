@@ -16,26 +16,25 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Long categoryId,
             Long productId,
             Integer quantity,
-            Pageable pageable
-    );
+            Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.status = true AND p.quantity > 0 ORDER BY p.id DESC")
     List<Product> findLatestActiveProducts(Pageable pageable);
 
     @Query("""
-        SELECT DISTINCT p FROM Product p
-        WHERE p.status = true 
-        AND p.quantity > 0
-        ORDER BY (
-            (SELECT COUNT(oi) FROM OrderItem oi WHERE oi.product = p) +
-            (SELECT COUNT(ci) FROM CartItem ci WHERE ci.product = p)
-        ) DESC, p.id ASC
-        """)
+            SELECT DISTINCT p FROM Product p
+            WHERE p.status = true
+            AND p.quantity > 0
+            ORDER BY (
+                (SELECT COUNT(oi) FROM OrderItem oi WHERE oi.product = p) +
+                (SELECT COUNT(ci) FROM CartItem ci WHERE ci.product = p)
+            ) DESC, p.id ASC
+            """)
     List<Product> getFeaturedActiveProductsSimple(Pageable pageable);
-// AND (
-//            EXISTS (SELECT 1 FROM OrderItem oi WHERE oi.product = p)
-//            OR EXISTS (SELECT 1 FROM CartItem ci WHERE ci.product = p)
-//        )
+    // AND (
+    // EXISTS (SELECT 1 FROM OrderItem oi WHERE oi.product = p)
+    // OR EXISTS (SELECT 1 FROM CartItem ci WHERE ci.product = p)
+    // )
 
     @Query("SELECT p FROM Product p WHERE p.status = true AND p.quantity > 0 ORDER BY p.price DESC")
     List<Product> findFeaturedProductsByHighestPrice(Pageable pageable);
@@ -44,4 +43,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryIdAndStatusTrueOrderByIdDesc(@Param("categoryId") Long categoryId);
 
     Product findBySlug(String slug);
+
+    @Query("SELECT p FROM Product p ORDER BY p.sold DESC")
+    List<Product> findTopOrderBySold(Pageable pageable);
+
+    @Query("SELECT SUM(p.sold) FROM Product p")
+    Integer sumAllSold();
 }

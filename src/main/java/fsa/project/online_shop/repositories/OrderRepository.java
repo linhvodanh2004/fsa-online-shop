@@ -63,6 +63,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * Find all orders ordered by creation time desc
      */
     Page<Order> findAllByOrderByCreationTimeDesc(Pageable pageable);
+
     Page<Order> findByStatusOrderByPaymentStatusAscCreationTimeDesc(String orderStatus, Pageable pageable);
 
     /**
@@ -81,7 +82,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
     @Query("SELECT o FROM Order o WHERE o.creationTime BETWEEN :startDate AND :endDate")
     List<Order> findOrdersInDateRange(@Param("startDate") java.time.LocalDateTime startDate,
-                                     @Param("endDate") java.time.LocalDateTime endDate);
+            @Param("endDate") java.time.LocalDateTime endDate);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o SET o.status = 'IN TRANSIT', o.transitTime = :now WHERE o.status = 'PENDING'")
@@ -94,5 +95,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.status = :status")
     List<Order> findByStatusWithItems(@Param("status") String status);
 
+    @Query("SELECT SUM(o.sum) FROM Order o")
+    Double sumAllEarnings();
 
 }

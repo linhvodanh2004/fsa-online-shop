@@ -4,6 +4,8 @@ import fsa.project.online_shop.models.Product;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
+
 public interface ProductService {
     List<Product> getLatestProducts(int limit);
 
@@ -22,4 +24,8 @@ public interface ProductService {
     Product getProductBySlug(String slug);
 
     String generateUniqueSlug(String productName, Long productId);
+
+    List<Product> getTopSoldProducts(int limit);
+
+    int getTotalSold();
 }

@@ -54,10 +54,12 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Failed to get user orders", e);
         }
     }
+
     @Override
     public Order handleSaveOrder(Order order) {
         return orderRepository.save(order);
     }
+
     @Override
     public Order getOrderById(Long orderId) {
         try {
@@ -114,6 +116,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Failed to update order", e);
         }
     }
+
     @Override
     @Transactional
     public void handlePaymentSuccess(Long orderId, String transactionId) {
@@ -163,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-//            String oldStatus = order.getStatus();
+            // String oldStatus = order.getStatus();
             order.setStatus(status);
             // Set appropriate timestamps based on status
             switch (status.toUpperCase()) {
@@ -180,7 +183,7 @@ public class OrderServiceImpl implements OrderService {
                     Set<OrderItem> orderItems = order.getOrderItems();
                     orderItems.forEach(orderItem -> {
                         Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
-                        if(product != null){
+                        if (product != null) {
                             product.setQuantity(product.getQuantity() + orderItem.getQuantity());
                             product.setSold(product.getSold() - orderItem.getQuantity());
                             productRepository.save(product);
@@ -195,6 +198,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Failed to update order status", e);
         }
     }
+
     @Override
     @Transactional
     public void handlePaymentFailed(Long orderId) {
@@ -209,13 +213,14 @@ public class OrderServiceImpl implements OrderService {
         Set<OrderItem> orderItems = order.getOrderItems();
         orderItems.forEach(orderItem -> {
             Product product = productRepository.findById(orderItem.getProduct().getId()).orElse(null);
-            if(product != null){
+            if (product != null) {
                 product.setQuantity(product.getQuantity() + orderItem.getQuantity());
                 product.setSold(product.getSold() - orderItem.getQuantity());
                 productRepository.save(product);
             }
         });
     }
+
     @Override
     public List<Order> getOrdersByStatus(String status) {
         try {
@@ -274,10 +279,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void updateOrderStatusInBulk(String orderStatus) {
-        if(orderStatus.equals(OrderStatus.IN_TRANSIT)){
+        if (orderStatus.equals(OrderStatus.IN_TRANSIT)) {
             orderRepository.updatePendingOrdersToInTransit(LocalDateTime.now());
-        }
-        else if(orderStatus.equals(OrderStatus.DELIVERED)){
+        } else if (orderStatus.equals(OrderStatus.DELIVERED)) {
             orderRepository.updateInTransitOrdersToDelivered(LocalDateTime.now());
         }
     }
@@ -285,7 +289,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order createOrder(Cart cart) {
-        if(!cartRepository.areAllCartItemsValid(cart.getId()) || cart.getCartItems().isEmpty()){
+        if (!cartRepository.areAllCartItemsValid(cart.getId()) || cart.getCartItems().isEmpty()) {
             throw new IllegalArgumentException("Cart is not valid");
         }
 
@@ -320,5 +324,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.count();
     }
 
-    
+    @Override
+    public double getTotalEarnings() {
+        Double total = orderRepository.sumAllEarnings();
+        return total != null ? total : 0.0;
+    }
+
 }

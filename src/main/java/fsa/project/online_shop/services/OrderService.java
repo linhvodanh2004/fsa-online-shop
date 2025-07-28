@@ -73,4 +73,6 @@ public interface OrderService {
 
     long countAll();
 
+    double getTotalEarnings();
+
 }
