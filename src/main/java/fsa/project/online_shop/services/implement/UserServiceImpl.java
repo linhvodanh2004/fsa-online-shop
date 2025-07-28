@@ -137,6 +137,14 @@ public class UserServiceImpl implements UserService {
             if (user.getStatus() == null) {
                 user.setStatus(true);
             }
+            if(user.getCart() == null) {
+                Cart cart = Cart.builder()
+                        .user(userRepository.save(user))
+                        .sum(0D)
+                        .build();
+                cartRepository.save(cart);
+                user.setCart(cart);
+            }
 
             return userRepository.save(user);
         } catch (Exception e) {

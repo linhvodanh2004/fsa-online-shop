@@ -51,17 +51,18 @@ public class AuthController implements ErrorController {
         // Handle optional fields
         String finalFullname = (fullname != null && !fullname.trim().isEmpty()) ? fullname.trim() : null;
         String finalPhone = (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null;
-
+        String passwordHash = passwordEncoder.encode(password);
         user = User.builder()
                 .username(username)
-                .password(password)
+                .password(passwordHash)
                 .fullname(finalFullname)
                 .email(email)
                 .phone(finalPhone)
                 .status(true)
                 .role(roleService.getRoleByName(UserRole.USER))
                 .build();
-        userService.save(user);
+        userService.handleSaveUser(user);
+//        userService.save(user);
         return "redirect:/login?success=register-successfully";
     }
 

@@ -391,7 +391,7 @@
                                                 </a>
                                                 <a type="button"
                                                    class="btn btn-sm btn-outline-danger confirm-link"
-                                                   th:if="${order.status != 'CANCELLED' and order.status != 'DELIVERED'}"
+                                               th:if="${order.status != 'CANCELLED' and order.status != 'DELIVERED'}"
                                                    th:href="@{/admin/orders/update-status/{orderId}
                                                    (orderStatus='CANCELLED', orderId=${order.id})}"
                                                    title="Cancel Order">

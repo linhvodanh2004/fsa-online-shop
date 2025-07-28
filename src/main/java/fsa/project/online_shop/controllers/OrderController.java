@@ -120,16 +120,16 @@ public class OrderController {
         Order order = orderService.getOrderById(orderId);
         if (order != null) {
             try {
-                orderService.updateOrderStatus(orderId, orderStatus.toUpperCase());
-                if(orderStatus.equalsIgnoreCase(OrderStatus.IN_TRANSIT)){
+                if(orderStatus.equalsIgnoreCase("IN TRANSIT")){
                     emailSenderService.notifyOrderTransit(order);
                 }
-                else if(orderStatus.equalsIgnoreCase(OrderStatus.DELIVERED)){
+                else if(orderStatus.equalsIgnoreCase("DELIVERED")){
                     emailSenderService.notifyOrderDelivered(order);
                 }
-                else if(orderStatus.equalsIgnoreCase(OrderStatus.CANCELLED)){
+                else if(orderStatus.equalsIgnoreCase("CANCELLED")){
                     emailSenderService.notifyOrderCancelled(order);
                 }
+                orderService.updateOrderStatus(orderId, orderStatus.toUpperCase());
                 return "redirect:/admin/orders?success=update-order-status-successfully";
             } catch (MessagingException e) {
                 return "redirect:/admin/orders?error=email-failed";

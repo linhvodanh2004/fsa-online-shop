@@ -53,7 +53,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Confirm password<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="password" name="confirm-password" id="confirm-password"
+                    <input class="form-control form-control-lg" type="password" name="confirm-password"
+                           id="confirm-password"
                            placeholder="Confirm password"/>
                     <div id="confirm-password-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
@@ -64,7 +65,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email<span class="text-danger">*</span></label>
-                    <input class="form-control form-control-lg" type="text" name="email" id="email" placeholder="Enter email"/>
+                    <input class="form-control form-control-lg" type="text" name="email" id="email"
+                           placeholder="Enter email"/>
                     <div id="email-error" class="text-danger mt-1" style="display: none;"></div>
                 </div>
                 <div class="mb-3">
@@ -181,10 +183,14 @@
             return;
         }
 
-        if (username.startsWith("google_user_")) {
-            showError('username', 'Invalid username');
+        if (
+            username.startsWith("google_user_") ||
+            /\s/.test(username) // checks for any whitespace character
+        ) {
+            showError('username', 'Username cannot contain whitespace');
             return;
         }
+
 
         try {
             const response = await fetch(`/api/validation/check-username?username=${encodeURIComponent(username)}`);
@@ -290,27 +296,27 @@
     }, 500);
 
     // Add event listeners
-    document.getElementById('username').addEventListener('blur', function() {
+    document.getElementById('username').addEventListener('blur', function () {
         checkUsername(this.value.trim());
     });
 
-    document.getElementById('username').addEventListener('input', function() {
+    document.getElementById('username').addEventListener('input', function () {
         updateFieldValue('username', this.value);
     });
 
-    document.getElementById('email').addEventListener('blur', function() {
+    document.getElementById('email').addEventListener('blur', function () {
         checkEmail(this.value.trim());
     });
 
-    document.getElementById('email').addEventListener('input', function() {
+    document.getElementById('email').addEventListener('input', function () {
         updateFieldValue('email', this.value);
     });
 
-    document.getElementById('password').addEventListener('blur', function() {
+    document.getElementById('password').addEventListener('blur', function () {
         validatePassword(this.value.trim());
     });
 
-    document.getElementById('password').addEventListener('input', function() {
+    document.getElementById('password').addEventListener('input', function () {
         updateFieldValue('password', this.value);
         // Also revalidate confirm password when password changes
         const confirmPassword = document.getElementById('confirm-password').value;
@@ -319,18 +325,18 @@
         }
     });
 
-    document.getElementById('confirm-password').addEventListener('blur', function() {
+    document.getElementById('confirm-password').addEventListener('blur', function () {
         const password = document.getElementById('password').value;
         validateConfirmPassword(password.trim(), this.value.trim());
     });
 
-    document.getElementById('confirm-password').addEventListener('input', function() {
+    document.getElementById('confirm-password').addEventListener('input', function () {
         updateFieldValue('confirm-password', this.value);
         const password = document.getElementById('password').value;
         validateConfirmPassword(password.trim(), this.value.trim());
     });
 
-    document.getElementById('phone').addEventListener('blur', function() {
+    document.getElementById('phone').addEventListener('blur', function () {
         checkPhone(this.value.trim());
     });
 

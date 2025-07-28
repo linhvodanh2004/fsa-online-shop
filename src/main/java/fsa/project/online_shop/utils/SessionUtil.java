@@ -25,20 +25,20 @@ public class SessionUtil {
         return (userId != null) ? userService.getUserById(userId) : null;
     }
 
-    public Map<Long, Integer> getCartFromSession() {
-        HttpSession session = request.getSession(false);
-        Map<Long, Integer> cartMap = (Map<Long, Integer>) session.getAttribute("cart");
-        if(cartMap == null){
-            cartMap = new HashMap<>();
-            session.setAttribute("cart", cartMap);
-        }
-        return cartMap;
-    }
-
-    public void setCartToSession(Map<Long, Integer> cartMap) {
-        HttpSession session = request.getSession(true);
-        session.setAttribute("cart", cartMap);
-    }
+//    public Map<Long, Integer> getCartFromSession() {
+//        HttpSession session = request.getSession(false);
+//        Map<Long, Integer> cartMap = (Map<Long, Integer>) session.getAttribute("cart");
+//        if(cartMap == null){
+//            cartMap = new HashMap<>();
+//            session.setAttribute("cart", cartMap);
+//        }
+//        return cartMap;
+//    }
+//
+//    public void setCartToSession(Map<Long, Integer> cartMap) {
+//        HttpSession session = request.getSession(true);
+//        session.setAttribute("cart", cartMap);
+//    }
 
     /**
      * Update session user information after profile update

@@ -38,7 +38,8 @@ public class UserProfileController {
     @GetMapping("/my-profile")
     public String showMyProfile(Model model, Authentication authentication) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
             if (user == null) {
                 log.warn("User not found for profile page");
                 return "redirect:/login";
@@ -66,7 +67,8 @@ public class UserProfileController {
             Model model,
             Authentication authentication) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
             if (user == null) {
                 log.warn("User not found for orders page");
                 return "redirect:/login";
@@ -110,7 +112,8 @@ public class UserProfileController {
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
             if (user == null) {
                 redirectAttributes.addFlashAttribute("error", "User not found");
                 return "redirect:/login";
@@ -147,7 +150,9 @@ public class UserProfileController {
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
+
             if (user == null) {
                 redirectAttributes.addFlashAttribute("error", "User not found");
                 return "redirect:/login";
@@ -190,7 +195,9 @@ public class UserProfileController {
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
+
             if (user == null) {
                 redirectAttributes.addFlashAttribute("error", "User not found");
                 return "redirect:/login";
@@ -232,7 +239,9 @@ public class UserProfileController {
             Model model,
             Authentication authentication) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
+
             if (user == null) {
                 return "redirect:/login";
             }
@@ -264,7 +273,8 @@ public class UserProfileController {
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         try {
-            User user = getCurrentUser(authentication);
+//            User user = getCurrentUser(authentication);
+            User user = sessionUtil.getUserFromSession();
             if (user == null) {
                 return "redirect:/login";
             }
