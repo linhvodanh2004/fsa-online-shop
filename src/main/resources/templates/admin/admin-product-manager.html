@@ -128,8 +128,8 @@
 												<th>Price</th>
 												<th>Quantity</th>
 												<th>Sold</th>
-												<th></th>
 												<th>Status</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -145,12 +145,6 @@
 												<td th:text="${product.quantity}"></td>
 												<td th:text="${product.sold}"></td>
 												<td>
-													<button class="btn btn-link text-decoration-none" type="button"
-														th:onclick="'location.href=\'/admin/products/update/' + ${product.id} + '\';'">
-														<i class="align-middle text-primary" data-feather="edit-2"></i>
-													</button>
-												</td>
-												<td>
 													<span class="align-middle" onclick="event.stopPropagation();">
 														<i class="align-middle" th:if="${product.status}"
 															data-feather="toggle-right"
@@ -165,6 +159,12 @@
 															onclick="toggleProductStatus(this)">
 														</i>
 													</span>
+												</td>
+												<td>
+													<button class="btn btn-link text-decoration-none" type="button"
+															th:onclick="'location.href=\'/admin/products/update/' + ${product.id} + '\';'">
+														<i class="align-middle text-primary" data-feather="edit-2"></i>
+													</button>
 												</td>
 											</tr>
 											<tr class="addrow" onclick="location.href='/admin/products/add';">

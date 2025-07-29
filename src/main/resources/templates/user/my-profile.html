@@ -92,13 +92,13 @@
                 <!-- Success/Error Messages -->
                 <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fas fa-check-circle me-2"></i>
-                    <span th:text="${success != null}">Success message</span>
+                    <span th:text="${success}">Success message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
                 <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-circle me-2"></i>
-                    <span th:text="${error != null}">Error message</span>
+                    <span th:text="${error}">Error message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
@@ -236,10 +236,10 @@
                         <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Change Password</h5>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-warning">
-                            <i class="fas fa-shield-alt me-2"></i>
-                            <strong>Security Notice:</strong> Password change requires email verification for your account security.
-                        </div>
+<!--                        <div class="alert alert-warning">-->
+<!--                            <i class="fas fa-shield-alt me-2"></i>-->
+<!--                            <strong>Security Notice:</strong> Password change requires email verification for your account security.-->
+<!--                        </div>-->
 
                         <form th:action="@{/my-profile/change-password}" method="post">
                             <div class="mb-3">
@@ -256,6 +256,10 @@
                                     </label>
                                     <input type="password" class="form-control" id="newPassword" name="newPassword"
                                            required placeholder="Enter new password">
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Minimum 6 characters, include letters and numbers
+                                    </div>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -264,10 +268,6 @@
                                     </label>
                                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
                                            required placeholder="Confirm password" minlength="6">
-                                    <div class="form-text">
-                                        <i class="fas fa-info-circle me-1"></i>
-                                        Minimum 6 characters, include letters and numbers
-                                    </div>
                                 </div>
                             </div>
 <!--                            <div class="alert alert-info">-->

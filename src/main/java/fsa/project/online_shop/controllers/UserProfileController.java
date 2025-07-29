@@ -3,6 +3,7 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.models.constant.OrderStatus;
+import fsa.project.online_shop.models.constant.UserRole;
 import fsa.project.online_shop.services.EmailSenderService;
 import fsa.project.online_shop.services.OrderService;
 import fsa.project.online_shop.services.UserService;
@@ -45,6 +46,9 @@ public class UserProfileController {
             if (user == null) {
                 log.warn("User not found for profile page");
                 return "redirect:/login";
+            }
+            if (user.getRole().getName().equals(UserRole.ADMIN)){
+                return "redirect:/admin/edit-profile";
             }
             model.addAttribute("user", user);
             log.info("👤 User {} accessed profile page", user.getEmail());
@@ -222,6 +226,7 @@ public class UserProfileController {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             userService.handleSaveUser(user);
+            redirectAttributes.addFlashAttribute("success", "Password changed successfully!");
             log.info("🔐 User {} requested password change", user.getEmail());
             return "redirect:/my-profile";
 
