@@ -4,10 +4,14 @@ let itemsPerPage = 5;
 let allUsers = [];
 let filteredUsers = [];
 
+// Variables for role management modal
+let currentUserId = null;
+let currentAction = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize users array from the table
     initializeUsers();
-    
+
     // Set up event listeners for pagination
     const itemsPerPageSelect = document.getElementById('itemsPerPage');
     if (itemsPerPageSelect) {
@@ -17,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTable();
         });
     }
-    
+
     // Search and filter functionality
     const searchBox = document.getElementById('userSearchBox');
     if (searchBox) {
@@ -196,11 +200,11 @@ function updateTable() {
 function updatePaginationInfo() {
     const paginationInfo = document.getElementById('paginationInfo');
     if (!paginationInfo) return;
-    
+
     const totalItems = filteredUsers.length;
     const startIndex = Math.min((currentPage - 1) * itemsPerPage + 1, totalItems);
     const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
-    
+
     if (totalItems === 0) {
         paginationInfo.textContent = 'No entries found';
     } else {
@@ -211,14 +215,14 @@ function updatePaginationInfo() {
 function updatePaginationNav() {
     const paginationNav = document.getElementById('paginationNav');
     if (!paginationNav) return;
-    
+
     const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-    
+
     // Clear existing page numbers
     const prevButton = document.getElementById('prevPage');
     const nextButton = document.getElementById('nextPage');
     paginationNav.innerHTML = '';
-    
+
     // Add previous button
     if (prevButton) {
         const newPrevButton = prevButton.cloneNode(true);
@@ -232,18 +236,18 @@ function updatePaginationNav() {
         });
         paginationNav.appendChild(newPrevButton);
     }
-    
+
     // Add page numbers
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, currentPage + 2);
-    
+
     for (let i = startPage; i <= endPage; i++) {
         const pageItem = document.createElement('li');
         pageItem.className = 'page-item';
         if (i === currentPage) {
             pageItem.classList.add('active');
         }
-        
+
         const pageLink = document.createElement('a');
         pageLink.className = 'page-link';
         pageLink.href = '#';
@@ -253,11 +257,11 @@ function updatePaginationNav() {
             currentPage = i;
             updateTable();
         });
-        
+
         pageItem.appendChild(pageLink);
         paginationNav.appendChild(pageItem);
     }
-    
+
     // Add next button
     if (nextButton) {
         const newNextButton = nextButton.cloneNode(true);
@@ -547,39 +551,96 @@ function showToast(message, type = 'info', duration = 3000) {
     }).showToast();
 }
 
-// Alternative simpler version if you prefer basic styling
-function showToastSimple(message, type = 'info', duration = 3000) {
-    const colors = {
-        success: '#4CAF50',
-        promotion: '#2196F3',
-        error: '#f44336',
-        warning: '#ff9800',
-        demotion: '#FF5722',
-        info: '#2196F3'
-    };
 
-    Toastify({
-        text: message,
-        duration: duration,
-        close: true,
-        gravity: "top",
-        position: "right",
-        stopOnFocus: true,
-        style: {
-            background: colors[type] || colors.info,
-            borderRadius: "6px",
-            fontSize: "14px"
-        }
-    }).showToast();
+// Show confirmation modal for role management
+function showConfirmModal(action, userId, userName) {
+    currentUserId = userId;
+    currentAction = action;
+
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('confirmModal');
+    if (!modal) {
+        createConfirmModal();
+        modal = document.getElementById('confirmModal');
+    }
+
+    const message = document.getElementById('confirmMessage');
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    if (action === 'promote') {
+        message.textContent = `Are you sure you want to promote ${userName} to Admin?`;
+        confirmBtn.textContent = 'Promote';
+        confirmBtn.className = 'btn btn-success';
+    } else {
+        message.textContent = `Are you sure you want to demote ${userName} to User?`;
+        confirmBtn.textContent = 'Demote';
+        confirmBtn.className = 'btn btn-warning';
+    }
+
+    const confirmModal = new bootstrap.Modal(modal);
+    confirmModal.show();
 }
 
-// Your updated role management functions using the enhanced toast
-function promoteUser(userId) {
-    const button = event.target.closest('button');
-    const originalContent = button.innerHTML;
-    button.innerHTML = '<i data-feather="loader" class="feather-rotate"></i>';
-    button.disabled = true;
+// Create the confirmation modal dynamically
+function createConfirmModal() {
+    const modalHTML = `
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="confirmMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn" id="confirmBtn" onclick="executeAction()">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+// Execute the confirmed action
+function executeAction() {
+    const confirmBtn = document.getElementById('confirmBtn');
+    const originalContent = confirmBtn.textContent;
+
+    confirmBtn.innerHTML = '<i data-feather="loader" class="feather-rotate me-1"></i>Processing...';
+    confirmBtn.disabled = true;
+
+    // Close modal
+    const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+    confirmModal.hide();
+
+    if (currentAction === 'promote') {
+        promoteUser(currentUserId);
+    } else {
+        demoteUser(currentUserId);
+    }
+
+    // Reset button state after a delay
+    setTimeout(() => {
+        confirmBtn.textContent = originalContent;
+        confirmBtn.disabled = false;
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    }, 1000);
+}
+function openConfirmFromElement(btn, action) {
+    const userId = btn.getAttribute('data-id');
+    const userName = btn.getAttribute('data-name');
+    showConfirmModal(action, userId, userName);
+}
+
+// Updated role management functions with modal confirmation
+function promoteUser(userId) {
     showToast('🔄 Processing promotion request...', 'info', 2000);
 
     fetch(`/admin/promote-user/${userId}`, {
@@ -608,19 +669,10 @@ function promoteUser(userId) {
     .catch(error => {
         console.error('Error:', error);
         showToast('❌ Failed to promote user: ' + error.message, 'error', 5000);
-
-        button.innerHTML = originalContent;
-        button.disabled = false;
-        feather.replace();
     });
 }
 
 function demoteUser(userId) {
-    const button = event.target.closest('button');
-    const originalContent = button.innerHTML;
-    button.innerHTML = '<i data-feather="loader" class="feather-rotate"></i>';
-    button.disabled = true;
-
     showToast('🔄 Processing demotion request...', 'info', 2000);
 
     fetch(`/admin/demote-user/${userId}`, {
@@ -649,9 +701,5 @@ function demoteUser(userId) {
     .catch(error => {
         console.error('Error:', error);
         showToast('❌ Failed to demote user: ' + error.message, 'error', 5000);
-
-        button.innerHTML = originalContent;
-        button.disabled = false;
-        feather.replace();
     });
 }
