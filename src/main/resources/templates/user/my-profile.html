@@ -55,7 +55,8 @@
                         <span class="badge bg-success" th:if="${user.provider == 'GOOGLE'}">
                             <i class="fab fa-google me-1"></i>Google Account
                         </span>
-                        <span class="badge bg-primary" th:if="${user.provider == null or user.provider == ''}">
+                        <span class="badge bg-primary" th:if="${user.provider == null or user.provider == ''
+                        or user.provider == 'LOCAL'}">
                             <i class="fas fa-user me-1"></i>Local Account
                         </span>
                     </div>
@@ -79,7 +80,7 @@
                         <div class="d-flex justify-content-between">
                             <span>Member Since:</span>
                             <small class="text-muted">
-                                <i class="fas fa-calendar-alt me-1"></i>2024
+                                <i class="fas fa-calendar-alt me-1"></i>2025
                             </small>
                         </div>
                     </div>
@@ -89,15 +90,15 @@
             <!-- Profile Form -->
             <div class="col-lg-9 col-md-8">
                 <!-- Success/Error Messages -->
-                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fas fa-check-circle me-2"></i>
-                    <span th:text="${success}">Success message</span>
+                    <span th:text="${success != null}">Success message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
-                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-circle me-2"></i>
-                    <span th:text="${error}">Error message</span>
+                    <span th:text="${error != null}">Error message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
@@ -209,9 +210,9 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-outline-secondary" disabled>
-                                    <i class="fas fa-plus me-2"></i>Add New Address
-                                </button>
+<!--                                <button type="button" class="btn btn-outline-secondary" disabled>-->
+<!--                                    <i class="fas fa-plus me-2"></i>Add New Address-->
+<!--                                </button>-->
                                 <button type="submit" class="btn btn-success">
                                     <i class="fas fa-save me-2"></i>Save Default Address
                                 </button>
@@ -219,18 +220,18 @@
                         </form>
 
                         <!-- Address List (Future feature) -->
-                        <div class="mt-4">
-                            <h6 class="text-muted mb-3">Saved Addresses</h6>
-                            <div class="alert alert-light">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Multiple address management will be available soon. Currently, you can save one default address.
-                            </div>
-                        </div>
+<!--                        <div class="mt-4">-->
+<!--                            <h6 class="text-muted mb-3">Saved Addresses</h6>-->
+<!--                            <div class="alert alert-light">-->
+<!--                                <i class="fas fa-info-circle me-2"></i>-->
+<!--                                Multiple address management will be available soon. Currently, you can save one default address.-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
 
                 <!-- Password Change Card (Only for local accounts) -->
-                <div class="card mt-4" th:if="${user.provider == null or user.provider == ''}">
+                <div class="card mt-4" th:if="${user.provider == null or user.provider == '' or user.provider == 'LOCAL'}">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Change Password</h5>
                     </div>
@@ -241,48 +242,47 @@
                         </div>
 
                         <form th:action="@{/my-profile/change-password}" method="post">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">
+                                    <i class="fas fa-check-double me-2"></i>Enter current password *
+                                </label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                       required placeholder="Enter your current password" minlength="6">
+                            </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="currentPassword" class="form-label">
-                                        <i class="fas fa-key me-2"></i>Current Password *
-                                    </label>
-                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword"
-                                           required placeholder="Enter your current password">
-                                </div>
-                                <div class="col-md-6 mb-3">
                                     <label for="newPassword" class="form-label">
-                                        <i class="fas fa-lock me-2"></i>New Password *
+                                        <i class="fas fa-key me-2"></i>New Password *
                                     </label>
                                     <input type="password" class="form-control" id="newPassword" name="newPassword"
-                                           required placeholder="Enter new password" minlength="6">
+                                           required placeholder="Enter new password">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirmPassword" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Confirm Password *
+                                    </label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                           required placeholder="Confirm password" minlength="6">
                                     <div class="form-text">
                                         <i class="fas fa-info-circle me-1"></i>
                                         Minimum 6 characters, include letters and numbers
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">
-                                    <i class="fas fa-check-double me-2"></i>Confirm New Password *
-                                </label>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                                       required placeholder="Confirm your new password" minlength="6">
-                            </div>
-
-                            <div class="alert alert-info">
-                                <i class="fas fa-envelope me-2"></i>
-                                <strong>Email Verification Required:</strong>
-                                After submitting, we'll send a verification email to <strong th:text="${user.email}">your email</strong>.
-                                Click the link in the email to confirm your password change.
-                            </div>
+<!--                            <div class="alert alert-info">-->
+<!--                                <i class="fas fa-envelope me-2"></i>-->
+<!--                                <strong>Email Verification Required:</strong>-->
+<!--                                After submitting, we'll send a verification email to <strong th:text="${user.email}">your email</strong>.-->
+<!--                                Click the link in the email to confirm your password change.-->
+<!--                            </div>-->
 
                             <div class="d-flex justify-content-between">
                                 <button type="button" class="btn btn-outline-secondary" onclick="clearPasswordForm()">
                                     <i class="fas fa-times me-2"></i>Cancel
                                 </button>
                                 <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-paper-plane me-2"></i>Send Verification Email
+                                    <i class="fas fa-paper-plane me-2"></i>Change password
                                 </button>
                             </div>
                         </form>
@@ -335,7 +335,8 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex align-items-center p-3 border rounded" th:if="${user.provider == null or user.provider == ''}">
+                            <div class="d-flex align-items-center p-3 border rounded"
+                                 th:if="${user.provider == null or user.provider == '' or user.provider == 'LOCAL'}">
                                 <div class="me-3">
                                     <i class="fas fa-user-shield fa-2x text-primary"></i>
                                 </div>
@@ -354,16 +355,16 @@
                         </div>
 
                         <!-- Account Linking Options -->
-                        <div class="mb-3" th:if="${user.provider == null or user.provider == ''}">
-                            <h6 class="text-muted mb-3">Link Google Account</h6>
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Coming Soon:</strong> Link your Google account for easier login access.
-                            </div>
+                        <div class="mb-3" th:if="${user.provider == null or user.provider == '' or user.provider == 'LOCAL'}">
+<!--                            <h6 class="text-muted mb-3">Link Google Account</h6>-->
+<!--                            <div class="alert alert-info">-->
+<!--                                <i class="fas fa-info-circle me-2"></i>-->
+<!--                                <strong>Coming Soon:</strong> Link your Google account for easier login access.-->
+<!--                            </div>-->
 
-                            <button class="btn btn-outline-danger" disabled>
-                                <i class="fab fa-google me-2"></i>Link Google Account
-                            </button>
+<!--                            <button class="btn btn-outline-danger" disabled>-->
+<!--                                <i class="fab fa-google me-2"></i>Link Google Account-->
+<!--                            </button>-->
                         </div>
 
                         <!-- Security Notice -->

@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class UserProfileController {
     private final OrderService orderService;
     private final SessionUtil sessionUtil;
     private final EmailSenderService emailSenderService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Show user profile page
@@ -44,7 +46,6 @@ public class UserProfileController {
                 log.warn("User not found for profile page");
                 return "redirect:/login";
             }
-
             model.addAttribute("user", user);
             log.info("👤 User {} accessed profile page", user.getEmail());
             return "user/my-profile";
@@ -73,16 +74,13 @@ public class UserProfileController {
                 log.warn("User not found for orders page");
                 return "redirect:/login";
             }
-
             // Create pageable with sorting
             Sort sort = sortDir.equalsIgnoreCase("desc") 
                 ? Sort.by(sortBy).descending() 
                 : Sort.by(sortBy).ascending();
             Pageable pageable = PageRequest.of(page, size, sort);
-
             // Get user orders
             Page<Order> orderPage = orderService.getOrdersByUser(user, pageable);
-            
             model.addAttribute("user", user);
             model.addAttribute("orders", orderPage.getContent());
             model.addAttribute("currentPage", page);
@@ -91,11 +89,9 @@ public class UserProfileController {
             model.addAttribute("sortBy", sortBy);
             model.addAttribute("sortDir", sortDir);
             model.addAttribute("hasOrders", !orderPage.getContent().isEmpty());
-
             log.info("📦 User {} accessed orders page - {} orders found", 
                     user.getEmail(), orderPage.getTotalElements());
             return "user/my-orders";
-
         } catch (Exception e) {
             log.error("Error loading orders page: {}", e.getMessage(), e);
             return "redirect:/";
@@ -118,16 +114,16 @@ public class UserProfileController {
                 redirectAttributes.addFlashAttribute("error", "User not found");
                 return "redirect:/login";
             }
-
+            if (userService.existsByPhone(phone) && !user.getPhone().equals(phone)){
+                redirectAttributes.addFlashAttribute("error", "Phone number is already taken. Please try another one.");
+                return "redirect:/my-profile";
+            }
             // Update user info (only allow certain fields)
             user.setFullname(fullname != null ? fullname.trim() : user.getFullname());
             user.setPhone(phone != null ? phone.trim() : user.getPhone());
-
             userService.handleSaveUser(user);
-
             // Update session attributes
             sessionUtil.updateSessionUserInfo(user);
-
             redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
             log.info("✅ User {} updated profile", user.getEmail());
             return "redirect:/my-profile";
@@ -216,10 +212,16 @@ public class UserProfileController {
             }
 
             // Password change with email verification (placeholder)
-            redirectAttributes.addFlashAttribute("info",
-                "Password change functionality with email verification will be implemented soon. " +
-                "A verification email would be sent to " + user.getEmail());
-
+//            redirectAttributes.addFlashAttribute("info",
+//                "Password change functionality with email verification will be implemented soon. " +
+//                "A verification email would be sent to " + user.getEmail());
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                redirectAttributes.addFlashAttribute("error", "Current password is incorrect");
+                return "redirect:/my-profile";
+            }
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encodedPassword);
+            userService.handleSaveUser(user);
             log.info("🔐 User {} requested password change", user.getEmail());
             return "redirect:/my-profile";
 
