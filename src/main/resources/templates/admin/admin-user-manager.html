@@ -160,27 +160,29 @@
 													</span>
                                         </td>
                                         <td th:unless="${user.role != null and user.role.id == 1}" style="width: 10px;">
-                                            <!-- Role Promotion Button - Only show if role_id is 2 (promote to role_id 1) -->
+                                            <!-- Role Promotion Button -->
                                             <button type="button" class="btn btn-sm btn-outline-success ms-2"
-                                                    th:onclick="|promoteUser(${user.id}); event.stopPropagation();|"
+                                                    th:attr="data-id=${user.id}, data-name=${user.fullname}"
+                                                    onclick="openConfirmFromElement(this, 'promote')"
                                                     th:if="${user.role != null and user.role.id == 2}"
                                                     title="Promote to Admin">
                                                 <i data-feather="arrow-up"></i>
                                             </button>
 
-                                            <!-- Role Demotion Button - Only show if role_id is 1 (demote to role_id 2) -->
+                                            <!-- Role Demotion Button -->
                                             <button type="button" class="btn btn-sm btn-outline-warning ms-2"
-                                                    th:onclick="|demoteUser(${user.id}); event.stopPropagation();|"
+                                                    th:attr="data-id=${user.id}, data-name=${user.fullname}"
+                                                    onclick="openConfirmFromElement(this, 'demote')"
                                                     th:if="${user.role != null and user.role.id == 1}"
                                                     title="Demote to User">
                                                 <i data-feather="arrow-down"></i>
                                             </button>
 
-                                            <!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
-                                            <!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
-                                            <!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
-                                            <!--                                                <i data-feather="trash-2"></i>-->
-                                            <!--                                            </button>-->
+<!--                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2"-->
+<!--                                                    onclick="deleteUser(${user.id}); event.stopPropagation();"-->
+<!--                                                    th:if="${user.role.name != 'ADMIN'}">-->
+<!--                                                <i data-feather="trash-2"></i>-->
+<!--                                            </button>-->
 
 <!--                                            <button type="button" class="btn btn-sm ms-2"-->
 <!--                                                    onclick="location.reload(); event.stopPropagation();">-->
@@ -188,13 +190,32 @@
 <!--                                            </button>-->
                                         </td>
                                     </tr>
-                                    <!--                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">-->
-                                    <!--                                        <td colspan="9" style="text-align: center;">-->
-                                    <!--                                            <i data-feather="plus"></i>-->
-                                    <!--                                        </td>-->
-                                    <!--                                    </tr>-->
+<!--                                    <tr style="cursor: pointer;" onclick="location.href='/admin/add-user';">-->
+<!--                                        <td colspan="9" style="text-align: center;">-->
+<!--                                            <i data-feather="plus"></i>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
                                     </tbody>
                                 </table>
+
+                                <!-- Confirmation Modal -->
+                                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p id="confirmMessage"></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn" id="confirmBtn" onclick="executeAction()">Confirm</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Pagination Controls -->
                                 <div class="pagination-controls" th:if="${users != null and !#lists.isEmpty(users)}">
