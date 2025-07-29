@@ -1,5 +1,6 @@
 package fsa.project.online_shop.controllers;
 
+import fsa.project.online_shop.dtos.MonthlyRevenueDto;
 import fsa.project.online_shop.dtos.OrderResponse;
 import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.Order;
@@ -172,6 +173,12 @@ public class OrderController {
         Order order = orderService.getOrderById(orderId);
         OrderResponse orderResponse = OrderMapper.toOrderResponse(order);
         return ResponseEntity.ok(orderResponse);
+    }
+
+    @ResponseBody
+    @GetMapping("/orders/api/revenue-last-6-months")
+    public List<MonthlyRevenueDto> getRevenueLast6Months() {
+        return orderService.getRevenueLast6Months();
     }
 
     private Double parseCurrencyToLong(String input) {

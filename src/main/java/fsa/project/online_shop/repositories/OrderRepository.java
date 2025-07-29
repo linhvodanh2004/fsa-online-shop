@@ -1,5 +1,6 @@
 package fsa.project.online_shop.repositories;
 
+import fsa.project.online_shop.dtos.MonthlyRevenueDto;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
 import org.springframework.data.domain.Page;
@@ -82,7 +83,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
     @Query("SELECT o FROM Order o WHERE o.creationTime BETWEEN :startDate AND :endDate")
     List<Order> findOrdersInDateRange(@Param("startDate") java.time.LocalDateTime startDate,
-            @Param("endDate") java.time.LocalDateTime endDate);
+                                      @Param("endDate") java.time.LocalDateTime endDate);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o SET o.status = 'IN TRANSIT', o.transitTime = :now WHERE o.status = 'PENDING'")
@@ -99,11 +100,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Double sumAllEarnings();
 
     @Query("""
-    SELECT SUM(o.sum) 
-    FROM Order o 
-    WHERE o.status <> 'CANCELLED' 
-      AND o.creationTime >= :fromDate
-""")
+                SELECT SUM(o.sum) 
+                FROM Order o 
+                WHERE o.status <> 'CANCELLED' 
+                  AND o.creationTime >= :fromDate
+            """)
     Double sumAllEarningsWithin7Days(@Param("fromDate") LocalDateTime fromDate);
 
     @Query("""
@@ -113,5 +114,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             AND o.creationTime >= :fromDate
             """)
     Integer countOrdersWithing7Days(@Param("fromDate") LocalDateTime fromDate);
+
+    @Query("""
+                SELECT MONTH(o.creationTime), SUM(o.sum)
+                FROM Order o
+                WHERE o.status != 'CANCELLED'
+                  AND o.creationTime >= :startDate
+                GROUP BY MONTH(o.creationTime)
+                ORDER BY MONTH(o.creationTime)
+            """)
+    List<Object[]> getMonthlyRevenueRaw(@Param("startDate") LocalDateTime startDate);
+
 
 }

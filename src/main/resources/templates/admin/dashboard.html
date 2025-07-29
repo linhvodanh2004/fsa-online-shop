@@ -51,6 +51,14 @@
         gtag('config', 'UA-120946860-10', {'anonymize_ip': true});
     </script>
     <script src="/admin/js/active-nav.js"></script>
+    <style>
+        .text-truncate-custom {
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
 </head>
 <!--
   HOW TO USE:
@@ -143,8 +151,23 @@
                             </div>
 
 
+
                             <div class="row">
-                                <div class="col-12 d-flex">
+                                <div class="col-12 col-lg-6 d-flex">
+                                    <div class="card flex-fill w-100">
+                                        <div class="card-header">
+                                            <div class="float-end">
+                                            </div>
+                                            <h5 class="card-title mb-0">Total Revenue in previous months</h5>
+                                        </div>
+                                        <div class="card-body pt-2 pb-3">
+                                            <div class="chart chart-md">
+                                                <canvas id="chartjs-dashboard-line"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 d-flex">
                                     <div class="card flex-fill">
                                         <div
                                                 class="card-header d-flex justify-content-between align-items-center mx-3">
@@ -178,7 +201,7 @@
                                                     <img th:src="@{${product.image}}" alt="Product Image"
                                                          style="width: 50px; height: 50px; object-fit: cover;">
                                                 </td>
-                                                <td th:text="${product.name}">Product Name</td>
+                                                <td th:text="${product.name}" class="text-truncate-custom">Product Name</td>
                                                 <td th:text="${product.sold}">0</td>
                                                 <td
                                                         th:text="${product.category != null ? product.category.name : 'N/A'}">
@@ -213,70 +236,64 @@
         gradientDark.addColorStop(1, "rgba(51, 66, 84, 0)");
     });
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Pie chart
-        new Chart(document.getElementById("chartjs-dashboard-pie"), {
-            type: "pie",
-            data: {
-                labels: ["Chrome", "Firefox", "IE", "Other"],
-                datasets: [{
-                    data: [4306, 3801, 1689, 3251],
-                    backgroundColor: [
-                        window.theme.primary,
-                        window.theme.warning,
-                        window.theme.danger,
-                        "#E8EAED"
-                    ],
-                    borderWidth: 5,
-                    borderColor: window.theme.white
-                }]
-            },
-            options: {
-                responsive: !window.MSInputMethodContext,
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                cutoutPercentage: 70
-            }
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-        var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-        document.getElementById("datetimepicker-dashboard").flatpickr({
-            inline: true,
-            prevArrow: "<span class=\"fas fa-chevron-left\" title=\"Previous month\"></span>",
-            nextArrow: "<span class=\"fas fa-chevron-right\" title=\"Next month\"></span>",
-            defaultDate: defaultDate
-        });
-    });
-</script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function (event) {
-        setTimeout(function () {
-            if (localStorage.getItem('popState') !== 'shown') {
-                window.notyf.open({
-                    type: "success",
-                    message: "Get access to all 500+ components and 45+ pages with AdminKit PRO. <u><a class=\"text-white\" href=\"https://adminkit.io/pricing\" target=\"_blank\">More info</a></u> 🚀",
-                    duration: 10000,
-                    ripple: true,
-                    dismissible: false,
-                    position: {
-                        x: "left",
-                        y: "bottom"
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/orders/api/revenue-last-6-months')
+            .then(res => res.json())
+            .then(data => {
+                const currentMonth = new Date().getMonth() + 1; // 1 to 12
+                const labels = [];
+                const values = [];
+                for (let i = 5; i >= 0; i--) {
+                    const m = ((currentMonth - i - 1 + 12) % 12) + 1;
+                    labels.push(new Date(0, m - 1).toLocaleString('en-US', { month: 'short' }));
+                    const monthData = data.find(d => d.month === m);
+                    values.push(monthData ? monthData.total : 0);
+                }
+                const ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
+                const gradient = ctx.createLinearGradient(0, 0, 0, 225);
+                gradient.addColorStop(0, "rgba(51, 66, 84, 1)");
+                gradient.addColorStop(1, "rgba(51, 66, 84, 0)");
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Revenue (VND)",
+                            fill: true,
+                            backgroundColor: gradient,
+                            borderColor: "#4c84ff",
+                            data: values
+                        }]
+                    },
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    return 'Revenue: ' + tooltipItem.yLabel.toLocaleString(); // Adds commas
+                                }
+                            }
+                        },
+                        maintainAspectRatio: false,
+                        plugins: {
+                            filler: { propagate: false }
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: { color: "rgba(0,0,0,0.05)" }
+                            }],
+                            yAxes: [{
+                                ticks: { beginAtZero: true },
+                                gridLines: { color: "rgba(0,0,0,0.05)" }
+                            }]
+                        }
                     }
                 });
-
-                localStorage.setItem('popState', 'shown');
-            }
-        }, 15000);
+            });
     });
 </script>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/toastify-message.js"></script>
 

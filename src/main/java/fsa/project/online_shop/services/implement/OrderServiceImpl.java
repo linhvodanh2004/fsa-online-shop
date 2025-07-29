@@ -1,5 +1,6 @@
 package fsa.project.online_shop.services.implement;
 
+import fsa.project.online_shop.dtos.MonthlyRevenueDto;
 import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.OrderItem;
@@ -17,9 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -332,6 +335,18 @@ public class OrderServiceImpl implements OrderService {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         Double total = orderRepository.sumAllEarningsWithin7Days(sevenDaysAgo);
         return total != null ? total : 0.0;
+    }
+
+    @Override
+    public List<MonthlyRevenueDto> getRevenueLast6Months() {
+        LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(5).withDayOfMonth(1);
+        List<Object[]> rawData = orderRepository.getMonthlyRevenueRaw(sixMonthsAgo);
+        return rawData.stream()
+                .map(obj -> new MonthlyRevenueDto(
+                        ((Number) obj[0]).intValue(),
+                        ((Number) obj[1]).doubleValue()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

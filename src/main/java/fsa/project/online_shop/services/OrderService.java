@@ -1,5 +1,6 @@
 package fsa.project.online_shop.services;
 
+import fsa.project.online_shop.dtos.MonthlyRevenueDto;
 import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
@@ -75,4 +76,5 @@ public interface OrderService {
 
     double getTotalEarnings();
 
+    public List<MonthlyRevenueDto> getRevenueLast6Months();
 }
