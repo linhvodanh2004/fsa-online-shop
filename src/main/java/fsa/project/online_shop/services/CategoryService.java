@@ -11,4 +11,6 @@ public interface CategoryService {
     public List<Category> getAllCategories();
     public Category getCategoryById(Long categoryId);
     public void deleteCategoryById(Long categoryId);
+
+    List<Category> searchCategories(String query);
 }

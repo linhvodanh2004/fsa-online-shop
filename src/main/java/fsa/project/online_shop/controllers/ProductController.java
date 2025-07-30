@@ -3,6 +3,7 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.services.*;
+import fsa.project.online_shop.utils.SearchResults;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -224,6 +226,21 @@ public class ProductController {
         model.addAttribute("pageType", "privacy");
         return "user/privacy";
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchResults> search(@RequestParam(name = "q", required = false) String q) {
+        if (q == null || q.trim().isEmpty()) {
+            return ResponseEntity.ok(new SearchResults(new ArrayList<>(), new ArrayList<>()));
+        }
+
+        List<Category> categories = categoryService.searchCategories(q.trim());
+        List<Product> products = productService.searchProducts(q.trim());
+
+        SearchResults results = new SearchResults(categories, products);
+        return ResponseEntity.ok(results);
+    }
+
+
     // Add missing endpoints for better navigation
     @GetMapping("/shop-category/{id}")
     public String showShopByCategory(@PathVariable Long id, Model model) {

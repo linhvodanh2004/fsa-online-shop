@@ -40,7 +40,7 @@ public class SecurityConfig {
             "/css/**", "/js/**", "/img/**", "/user/**", "/upload/**", "/productImg/**", "/resend-code",
             "/", "/login", "/register", "/error/**", "/reset-password", "/logout", "/forgot-password",
             "/shop/**", "/contact", "/about", "/shop-category/**", "/shop-single/**", "/access-denied",
-            "/privacy", "/toastify-message.js",
+            "/privacy", "/toastify-message.js", "/search",
             "/api/**",  // Allow API endpoints for chat
             "/product/**"  // Allow product slug URLs with /product/ prefix
     };
