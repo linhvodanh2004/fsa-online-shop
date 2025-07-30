@@ -77,4 +77,6 @@ public interface OrderService {
     double getTotalEarnings();
 
     public List<MonthlyRevenueDto> getRevenueLast6Months();
+
+    public Order getOrderByIdWithItems(Long orderId);
 }

@@ -30,6 +30,12 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+
+    @Override
+    public Order getOrderByIdWithItems(Long orderId) {
+        return orderRepository.findByIdWithItems(orderId);
+    }
+
     private final OrderItemRepository orderItemRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -288,6 +294,8 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.updateInTransitOrdersToDelivered(LocalDateTime.now());
         }
     }
+
+
 
     @Override
     @Transactional

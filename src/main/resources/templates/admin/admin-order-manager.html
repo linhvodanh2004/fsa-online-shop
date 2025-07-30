@@ -377,23 +377,21 @@
 
                                                 <a class="btn btn-sm btn-outline-primary mx-1 confirm-link"
                                                    th:if="${orderStatus == 'PENDING'}"
-                                                   th:href="@{/admin/orders/update-status/{orderId}
-                                                   (orderStatus='IN TRANSIT', orderId=${order.id})}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}(orderStatus='IN TRANSIT', orderId=${order.id})}"
                                                    title="Change order to In Transit">
                                                     <i data-feather="truck"></i>
                                                 </a>
                                                 <a class="btn btn-sm btn-outline-success mx-1 confirm-link"
                                                    th:if="${orderStatus == 'IN TRANSIT'}"
-                                                   th:href="@{/admin/orders/update-status/{orderId}
-                                                   (orderStatus='DELIVERED', orderId=${order.id})}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}(orderStatus='DELIVERED', orderId=${order.id})}"
                                                    title="Change order to Delivered">
                                                     <i data-feather="check-circle"></i>
                                                 </a>
+
                                                 <a type="button"
                                                    class="btn btn-sm btn-outline-danger confirm-link"
                                                th:if="${order.status != 'CANCELLED' and order.status != 'DELIVERED'}"
-                                                   th:href="@{/admin/orders/update-status/{orderId}
-                                                   (orderStatus='CANCELLED', orderId=${order.id})}"
+                                                   th:href="@{/admin/orders/update-status/{orderId}(orderStatus='CANCELLED', orderId=${order.id})}"
                                                    title="Cancel Order">
                                                     <i data-feather="x-circle"></i>
                                                 </a>

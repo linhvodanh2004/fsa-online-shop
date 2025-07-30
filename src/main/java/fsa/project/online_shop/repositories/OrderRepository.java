@@ -96,6 +96,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.status = :status")
     List<Order> findByStatusWithItems(@Param("status") String status);
 
+    @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.id = :id")
+    Order findByIdWithItems(@Param("id") Long id);
+
     @Query("SELECT SUM(o.sum) FROM Order o")
     Double sumAllEarnings();
 

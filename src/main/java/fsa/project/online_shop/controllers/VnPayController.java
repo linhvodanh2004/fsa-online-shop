@@ -6,6 +6,7 @@ import fsa.project.online_shop.models.Cart;
 import fsa.project.online_shop.models.Order;
 import fsa.project.online_shop.models.User;
 import fsa.project.online_shop.services.OrderService;
+import fsa.project.online_shop.services.UserService;
 import fsa.project.online_shop.services.VnPayService;
 import fsa.project.online_shop.utils.SessionUtil;
 import fsa.project.online_shop.utils.VnPayUtil;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class VnPayController {
     private final VnPayService vnPayService;
     private final OrderService orderService;
+    private final UserService userService;
     private final SessionUtil sessionUtil;
     @PostMapping("/create")
     public ResponseEntity<?> createPayment(HttpServletRequest request,
@@ -42,7 +44,19 @@ public class VnPayController {
             order.setReceiverAddress(paymentRequest.getReceiverAddress());
             order.setNote(paymentRequest.getNote());
             order.setPaymentMethod("VNPAY");
+
+            if (user.getReceiverName() == null) {
+                user.setReceiverName(paymentRequest.getReceiverName());
+            }
+            if (user.getReceiverPhone() == null) {
+                user.setReceiverPhone(paymentRequest.getReceiverPhone());
+            }
+            if (user.getAddress() == null) {
+                user.setAddress(paymentRequest.getReceiverAddress());
+            }
+            userService.handleSaveUser(user);
             orderService.handleSaveOrder(order);
+
             String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
             String vnpayUrl = vnPayService.createVnPayPayment(paymentRequest,
                     VnPayUtil.getIpAddress(request.getRemoteAddr()), String.valueOf(order.getId()));

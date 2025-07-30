@@ -286,7 +286,7 @@ public class UserProfileController {
                 return "redirect:/login";
             }
 
-            Order order = orderService.getOrderById(orderId);
+            Order order = orderService.getOrderByIdWithItems(orderId);
             if (order == null || !order.getUser().getId().equals(user.getId())) {
                 redirectAttributes.addFlashAttribute("error", "Order not found");
                 return "redirect:/my-orders";

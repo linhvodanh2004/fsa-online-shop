@@ -26,10 +26,10 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
-    private final CartService cartService;
     private final SessionUtil sessionUtil;
     private final VnPayService vnPayService;
     private final OrderService orderService;
+    private final UserService userService;
     private final EmailSenderService emailSenderService;
 
 
@@ -41,7 +41,7 @@ public class OrderController {
         model.addAttribute("userCart", (cart.getCartItems().isEmpty()) ? null : cart.getCartItems());
         model.addAttribute("receiverName", (user.getReceiverName() != null) ? user.getReceiverName()
                 : (user.getFullname() != null) ? user.getFullname() : "");
-        model.addAttribute("receiverEmail", (user.getEmail()  == null) ? "" : user.getEmail());
+        model.addAttribute("receiverEmail", (user.getEmail() == null) ? "" : user.getEmail());
         model.addAttribute("receiverPhone", (user.getReceiverPhone() != null) ? user.getReceiverPhone()
                 : (user.getPhone() != null) ? user.getPhone() : "");
         return "user/cart-detail";
@@ -52,7 +52,7 @@ public class OrderController {
         int result = vnPayService.vnPayReturn(request);
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
         String vnp_TransactionNo = request.getParameter("vnp_TransactionNo");
-        Order order = orderService.getOrderById(Long.parseLong(vnp_TxnRef));
+        Order order = orderService.getOrderByIdWithItems(Long.parseLong(vnp_TxnRef));
         try {
             if (result == 1) {
                 orderService.handlePaymentSuccess(order.getId(), vnp_TransactionNo);
@@ -91,6 +91,16 @@ public class OrderController {
             order.setReceiverAddress(receiverAddress);
             order.setNote(note);
             order.setPaymentMethod("COD");
+            if (user.getReceiverName() == null) {
+                user.setReceiverName(receiverName);
+            }
+            if (user.getReceiverPhone() == null) {
+                user.setReceiverPhone(receiverPhone);
+            }
+            if (user.getAddress() == null) {
+                user.setAddress(receiverAddress);
+            }
+            userService.handleSaveUser(user);
             orderService.handleSaveOrder(order);
             emailSenderService.notifyOrderPending(order);
             return "redirect:/?success=checkout-success";
@@ -118,17 +128,19 @@ public class OrderController {
     public String updateOrderStatus(
             @RequestParam String orderStatus,
             @PathVariable("orderId") Long orderId, Model model) {
-        Order order = orderService.getOrderById(orderId);
+        Order order = orderService.getOrderByIdWithItems(orderId);
         if (order != null) {
             try {
-                if(orderStatus.equalsIgnoreCase("IN TRANSIT")){
-                    emailSenderService.notifyOrderTransit(order);
-                }
-                else if(orderStatus.equalsIgnoreCase("DELIVERED")){
-                    emailSenderService.notifyOrderDelivered(order);
-                }
-                else if(orderStatus.equalsIgnoreCase("CANCELLED")){
-                    emailSenderService.notifyOrderCancelled(order);
+                switch (orderStatus) {
+                    case OrderStatus.IN_TRANSIT:
+                        emailSenderService.notifyOrderTransit(order);
+                        break;
+                    case OrderStatus.DELIVERED:
+                        emailSenderService.notifyOrderDelivered(order);
+                        break;
+                    case OrderStatus.CANCELLED:
+                        emailSenderService.notifyOrderCancelled(order);
+                        break;
                 }
                 orderService.updateOrderStatus(orderId, orderStatus.toUpperCase());
                 return "redirect:/admin/orders?success=update-order-status-successfully";
@@ -160,8 +172,7 @@ public class OrderController {
                     }
                     break;
             }
-        }
-        catch (MessagingException e){
+        } catch (MessagingException e) {
             return "redirect:/admin/orders?error=email-failed";
         }
         return "redirect:/admin/orders?success=update-order-status-successfully";
