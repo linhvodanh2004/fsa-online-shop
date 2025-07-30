@@ -28,4 +28,6 @@ public interface ProductService {
     List<Product> getTopSoldProducts(int limit);
 
     int getTotalSold();
+
+    List<Product> searchProducts(String query);
 }

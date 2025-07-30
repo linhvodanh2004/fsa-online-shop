@@ -49,4 +49,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT SUM(p.sold) FROM Product p")
     Integer sumAllSold();
+
+    List<Product> findByNameContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(String name, String categoryName);
+
+    // Alternative more specific search methods
+    @Query("SELECT p FROM Product p WHERE " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(p.category.name) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Product> searchProducts(@Param("query") String query);
+
+    // Alternative query including description search
+    @Query("SELECT p FROM Product p JOIN p.category c WHERE " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Product> searchProductsWithDescription(@Param("query") String query);
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -92,5 +93,14 @@ public class ProductServiceImpl implements ProductService {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         Integer total = orderItemRepository.sumQuantityFromValidOrders(sevenDaysAgo);
         return total != null ? total : 0;
+    }
+
+    @Override
+    public List<Product> searchProducts(String query) {
+        List<Product> products = productRepository.searchProducts(query);
+        // Filter only active products
+        return products.stream()
+                .filter(product -> Boolean.TRUE.equals(product.getStatus()))
+                .collect(Collectors.toList());
     }
 }
