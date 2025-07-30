@@ -22,10 +22,7 @@ $(document).ready(function() {
         $nextBtn.prop('disabled', isAtEnd);
     }
 
-    // Update button states on scroll
     $scrollArea.on('scroll', updateButtonStates);
-
-    // Initialize button states
     updateButtonStates();
 
     // Auto-scroll functionality
@@ -43,14 +40,10 @@ $(document).ready(function() {
         clearInterval(autoScrollInterval);
     }
 
-    // Start auto-scroll on page load
     startAutoScroll();
-
-    // Pause auto-scroll on hover
     $scrollArea.on('mouseenter', stopAutoScroll);
     $scrollArea.on('mouseleave', startAutoScroll);
 
-    // Button click handlers
     $prevBtn.on('click', function() {
         scrollCollection(-1);
     });
@@ -59,7 +52,7 @@ $(document).ready(function() {
         scrollCollection(1);
     });
 
-    // Handle touch/swipe on mobile
+    // Touch/swipe for mobile
     var startX, scrollLeft;
 
     $scrollArea.on('touchstart', function(e) {
@@ -69,7 +62,6 @@ $(document).ready(function() {
 
     $scrollArea.on('touchmove', function(e) {
         if (!startX) return;
-
         var x = e.originalEvent.touches[0].pageX - $scrollArea.offset().left;
         var walk = (x - startX) * 2;
         $scrollArea.scrollLeft(scrollLeft - walk);
@@ -82,11 +74,9 @@ $(document).ready(function() {
 
 // Enhanced Search Modal JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
     const searchModal = document.getElementById('templatemo_search');
     const searchInput = document.getElementById('inputModalSearch');
     const searchForm = document.getElementById('searchForm');
-    const searchResults = document.getElementById('searchResults');
     const loadingSpinner = document.querySelector('.loading-spinner');
     const categoriesSection = document.getElementById('categoriesSection');
     const productsSection = document.getElementById('productsSection');
@@ -94,64 +84,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const productsList = document.getElementById('productsList');
     const noResults = document.getElementById('noResults');
     const initialState = document.getElementById('initialState');
+    const searchIcon = document.getElementById('searchIcon');
 
-    // Search state
     let searchTimeout;
     let currentQuery = '';
 
-    // Search icon element (for opening modal)
-    const searchIcon = document.getElementById('searchIcon');
-
     // Initialize
-    init();
+    hideAllSections();
+    showInitialState();
+    bindEvents();
 
-    function init() {
-        hideAllSections();
-        showInitialState();
-        bindEvents();
-        bindSearchIcon();
-    }
-
-    function bindSearchIcon() {
-        // Handle search icon click to open modal
-        if (searchIcon) {
-            searchIcon.addEventListener('click', function(e) {
-                e.preventDefault();
-                openSearchModal();
-            });
-        }
-    }
-
-    function openSearchModal() {
-        const modal = new bootstrap.Modal(searchModal);
-        modal.show();
+    // Search icon click handler
+    if (searchIcon) {
+        searchIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            new bootstrap.Modal(searchModal).show();
+        });
     }
 
     function bindEvents() {
-        // Real-time search on input
         searchInput.addEventListener('input', handleSearchInput);
-
-        // Handle form submission
         searchForm.addEventListener('submit', handleFormSubmit);
-
-        // Clear search when modal is closed
         searchModal.addEventListener('hidden.bs.modal', clearSearch);
-
-        // Focus input when modal opens
-        searchModal.addEventListener('shown.bs.modal', function() {
-            searchInput.focus();
-        });
+        searchModal.addEventListener('shown.bs.modal', () => searchInput.focus());
     }
 
     function handleSearchInput(e) {
         const query = e.target.value.trim();
 
-        // Clear previous timeout
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
+        clearTimeout(searchTimeout);
 
-        // If query is empty, show initial state
         if (query === '') {
             hideAllSections();
             showInitialState();
@@ -159,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Debounce search requests
         searchTimeout = setTimeout(() => {
             if (query !== currentQuery) {
                 currentQuery = query;
@@ -173,9 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const query = searchInput.value.trim();
 
         if (query) {
-            // Close modal and redirect to shop page with search query
-            const modal = bootstrap.Modal.getInstance(searchModal);
-            modal.hide();
+            bootstrap.Modal.getInstance(searchModal).hide();
             window.location.href = `/shop?q=${encodeURIComponent(query)}`;
         }
     }
@@ -183,12 +142,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function performSearch(query) {
         try {
             showLoading();
-
             const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
 
-            if (!response.ok) {
-                throw new Error('Search request failed');
-            }
+            if (!response.ok) throw new Error('Search failed');
 
             const data = await response.json();
             displayResults(data, query);
@@ -204,78 +160,56 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayResults(data, query) {
         hideAllSections();
 
-        const hasCategories = data.categories && data.categories.length > 0;
-        const hasProducts = data.products && data.products.length > 0;
+        const hasCategories = data.categories?.length > 0;
+        const hasProducts = data.products?.length > 0;
 
         if (!hasCategories && !hasProducts) {
             showNoResults();
             return;
         }
 
-        if (hasCategories) {
-            displayCategories(data.categories, query);
-        }
-
-        if (hasProducts) {
-            displayProducts(data.products, query);
-        }
+        if (hasCategories) displayCategories(data.categories, query);
+        if (hasProducts) displayProducts(data.products, query);
     }
 
     function displayCategories(categories, query) {
         categoriesList.innerHTML = '';
-
         categories.forEach(category => {
-            const categoryElement = createCategoryElement(category, query);
-            categoriesList.appendChild(categoryElement);
+            categoriesList.appendChild(createCategoryElement(category, query));
         });
-
         categoriesSection.style.display = 'block';
     }
 
     function displayProducts(products, query) {
         productsList.innerHTML = '';
-
         products.forEach(product => {
-            const productElement = createProductElement(product, query);
-            productsList.appendChild(productElement);
+            productsList.appendChild(createProductElement(product, query));
         });
-
         productsSection.style.display = 'block';
     }
 
     function createCategoryElement(category, query) {
         const div = document.createElement('div');
         div.className = 'search-result-item category-item p-2 mb-2 border rounded cursor-pointer';
-        div.setAttribute('data-category-id', category.id);
-
-        const highlightedName = highlightText(category.name, query);
 
         div.innerHTML = `
             <div class="d-flex align-items-center">
                 <i class="fas fa-folder text-success me-2"></i>
                 <div class="flex-grow-1">
-                    <div class="fw-semibold">${highlightedName}</div>
+                    <div class="fw-semibold">${highlightText(category.name, query)}</div>
                     ${category.description ? `<small class="text-muted">${escapeHtml(category.description)}</small>` : ''}
                 </div>
                 <small class="text-muted ms-2">Category</small>
             </div>
         `;
 
-        // Add click handler
         div.addEventListener('click', () => {
-            const modal = bootstrap.Modal.getInstance(searchModal);
-            modal.hide();
+            bootstrap.Modal.getInstance(searchModal).hide();
             window.location.href = `/shop?category=${category.id}`;
         });
 
-        // Add hover effects
-        div.addEventListener('mouseenter', () => {
-            div.classList.add('bg-light');
-        });
-
-        div.addEventListener('mouseleave', () => {
-            div.classList.remove('bg-light');
-        });
+        div.addEventListener('mouseenter', () => div.classList.add('bg-light'));
+        div.addEventListener('mouseleave', () => div.classList.remove('bg-light'));
 
         return div;
     }
@@ -283,26 +217,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function createProductElement(product, query) {
         const div = document.createElement('div');
         div.className = 'search-result-item product-item p-2 mb-2 border rounded cursor-pointer';
-        div.setAttribute('data-product-id', product.id);
 
-        const highlightedName = highlightText(product.name, query);
-        const price = product.price ? `$${parseFloat(product.price).toFixed(2)}` : '';
+        const price = product.price ? `${parseFloat(product.price).toFixed(2)}` : '';
 
         div.innerHTML = `
             <div class="d-flex align-items-center">
                 <div class="me-3">
-                    ${product.imageUrl ?
-                        `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}"
-                             class="rounded" style="width: 40px; height: 40px; object-fit: cover;">` :
-                        `<div class="bg-light rounded d-flex align-items-center justify-content-center"
-                             style="width: 40px; height: 40px;">
-                            <i class="fas fa-image text-muted"></i>
-                         </div>`
-                    }
+                    ${createProductImage(product)}
                 </div>
                 <div class="flex-grow-1">
-                    <div class="fw-semibold">${highlightedName}</div>
-                    ${product.description ? `<small class="text-muted">${escapeHtml(truncateText(product.description, 60))}</small>` : ''}
+                    <div class="fw-semibold">${highlightText(product.name, query)}</div>
+                    ${product.categoryName ? `<small class="text-muted">${escapeHtml(product.categoryName)}</small>` : ''}
                 </div>
                 <div class="text-end ms-2">
                     ${price ? `<div class="fw-bold text-success">${price}</div>` : ''}
@@ -311,23 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Add click handler
         div.addEventListener('click', () => {
-            const modal = bootstrap.Modal.getInstance(searchModal);
-            modal.hide();
-            // Use slug if available, otherwise fall back to ID
+            bootstrap.Modal.getInstance(searchModal).hide();
             const productPath = product.slug ? `/product/${product.slug}` : `/shop/product/${product.id}`;
             window.location.href = productPath;
         });
 
-        // Add hover effects
-        div.addEventListener('mouseenter', () => {
-            div.classList.add('bg-light');
-        });
-
-        div.addEventListener('mouseleave', () => {
-            div.classList.remove('bg-light');
-        });
+        div.addEventListener('mouseenter', () => div.classList.add('bg-light'));
+        div.addEventListener('mouseleave', () => div.classList.remove('bg-light'));
 
         return div;
     }
@@ -346,6 +262,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function createProductImage(product) {
+        // Check if product has an image
+        if (product.image && product.image.trim() !== '') {
+            let imageUrl = product.image;
+
+            // Handle different image path formats
+            if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+                // Assume images are stored in /images/products/ directory
+                imageUrl = '/images/products/' + imageUrl;
+            }
+
+            return `
+                <img src="${escapeHtml(imageUrl)}"
+                     alt="${escapeHtml(product.name)}"
+                     class="product-search-image rounded"
+                     style="width: 40px; height: 40px; object-fit: cover;"
+                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'bg-light rounded d-flex align-items-center justify-content-center\\' style=\\'width: 40px; height: 40px;\\'><i class=\\'fas fa-exclamation-triangle text-warning\\'></i></div>';">
+            `;
+        }
+
+        // Default placeholder when no image
+        return `
+            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                 style="width: 40px; height: 40px;">
+                <i class="fas fa-image text-muted"></i>
+            </div>
+        `;
     }
 
     function truncateText(text, maxLength) {
@@ -392,9 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentQuery = '';
         hideAllSections();
         showInitialState();
-
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
+        clearTimeout(searchTimeout);
     }
 });
