@@ -3,7 +3,7 @@ package fsa.project.online_shop.controllers;
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
 import fsa.project.online_shop.services.*;
-import fsa.project.online_shop.utils.SearchResults;
+import fsa.project.online_shop.dtos.SearchResults;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
