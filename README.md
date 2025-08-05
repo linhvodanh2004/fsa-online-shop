@@ -84,9 +84,30 @@ CREATE DATABASE online_shop;
 3. **⚙️ Configure environment**
 Create `.env` file:
 ```env
+# Database Configuration
 DB_URL=jdbc:mysql://localhost:3306/online_shop
-DB_USERNAME=root
-DB_PASSWORD=your_password
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+
+# Email Configuration
+MAIL_EMAIL=your_email@example.com
+MAIL_APPLICATION_PASSWORD=your_app_password
+
+# VNPAY Configuration
+VNPAY_TMN_CODE=your_vnpay_tmn_code
+VNPAY_HASH_SECRET=your_vnpay_hash_secret
+VNPAY_RETURN_URL=http://localhost:8080/cart-detail/checkout-vnpay-success
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Gemini API Key
+GEMINI_API_KEY=your_gemini_api_key
+
+# Remember-Me Key for Spring Security
+REMEMBER_ME_KEY=your_remember_me_key
+
 ```
 
 4. **▶️ Run the application**

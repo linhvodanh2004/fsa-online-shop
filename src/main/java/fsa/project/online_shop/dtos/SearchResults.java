@@ -1,4 +1,4 @@
-package fsa.project.online_shop.utils;
+package fsa.project.online_shop.dtos;
 
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
