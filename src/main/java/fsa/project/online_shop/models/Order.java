@@ -18,7 +18,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "receiver_name")
+    @Column(name = "receiver_name", length = 255)
     private String receiverName;
 
     @Column(name = "receiver_phone")
@@ -27,7 +27,7 @@ public class Order {
     @Column(name = "receiver_email")
     private String receiverEmail;
 
-    @Column(name = "receiver_address")
+    @Column(name = "receiver_address", length = 255)
     private String receiverAddress;
 
     private String status;

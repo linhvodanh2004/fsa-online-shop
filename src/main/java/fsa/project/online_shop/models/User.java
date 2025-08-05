@@ -22,6 +22,7 @@ public class User {
     @Column(nullable = true) // OAuth2 users don't have password
     private String password;
 
+    @Column(length = 255)
     private String fullname;
 
     @Column(unique = true)
@@ -32,7 +33,7 @@ public class User {
     private String provider;
 
     // Default delivery address fields
-    @Column(name = "receiver_name")
+    @Column(name = "receiver_name", length = 255)
     private String receiverName;
 
     @Column(name = "receiver_phone")
