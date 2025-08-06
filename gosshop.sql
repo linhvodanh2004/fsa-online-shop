@@ -18,6 +18,9 @@
 --
 -- Table structure for table `cart_items`
 --
+CREATE DATABASE IF NOT EXISTS online_shop;
+
+USE online_shop;
 
 DROP TABLE IF EXISTS `cart_items`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
