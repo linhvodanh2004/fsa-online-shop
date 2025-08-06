@@ -32,4 +32,6 @@ public interface ProductService {
     int getTotalSold();
 
     List<Product> searchProducts(String query);
+
+    List<Product> getProductsPagedAndSorted(int page, int size, String sortBy, String direction);
 }

@@ -7,6 +7,8 @@ import fsa.project.online_shop.services.ProductService;
 import fsa.project.online_shop.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,5 +110,14 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .filter(product -> Boolean.TRUE.equals(product.getStatus()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> getProductsPagedAndSorted(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return productRepository.findAll(pageable).getContent();
     }
 }

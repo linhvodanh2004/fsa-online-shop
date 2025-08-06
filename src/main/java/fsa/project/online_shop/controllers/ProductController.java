@@ -2,10 +2,15 @@ package fsa.project.online_shop.controllers;
 
 import fsa.project.online_shop.models.Category;
 import fsa.project.online_shop.models.Product;
+import fsa.project.online_shop.repositories.ProductRepository;
 import fsa.project.online_shop.services.*;
 import fsa.project.online_shop.dtos.SearchResults;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +32,7 @@ public class ProductController {
     private final CategoryService categoryService;
     private final CartItemService cartItemService;
     private final EmailSenderService emailSenderService;
+    private final ProductRepository productRepository;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -271,13 +277,40 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    // src/main/java/fsa/project/online_shop/controllers/ProductController.java
     @GetMapping("/admin/products")
-    public String adminProductPage(Model model, org.springframework.security.web.csrf.CsrfToken csrfToken) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String adminProductPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "price") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String search,
+            Model model,
+            org.springframework.security.web.csrf.CsrfToken csrfToken
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage;
+
+        if (search != null && !search.trim().isEmpty()) {
+            productPage = productRepository.searchProductsPaged(search.trim(), pageable);
+        } else {
+            productPage = productRepository.findAll(pageable);
+        }
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalElements", productPage.getTotalElements());
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("direction", direction);
+        model.addAttribute("search", search);
         model.addAttribute("_csrf", csrfToken);
         return "admin/admin-product-manager";
     }
+
+
 
     @GetMapping("/admin/products/update/{pid}")
     public String updateProductPage(@PathVariable Long pid, Model model) {
