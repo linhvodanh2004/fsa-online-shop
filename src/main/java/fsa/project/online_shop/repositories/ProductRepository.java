@@ -67,4 +67,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> searchProductsWithDescription(@Param("query") String query);
 
     List<Product> findByStatus(Boolean status);
+
+    @Query("SELECT p FROM Product p WHERE " +
+            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(p.category.name) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
+            "p.status = true")
+    Page<Product> searchProductsPaged(@Param("query") String query, Pageable pageable);
 }

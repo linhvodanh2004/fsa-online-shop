@@ -87,8 +87,6 @@
 										<select id="sortSelect" class="form-select form-select-sm w-auto ms-2"
 											style="font-size: 16px; min-width: 180px;">
 											<option value="">Sort by</option>
-											<option value="name-asc">Name (A-Z)</option>
-											<option value="name-desc">Name (Z-A)</option>
 											<option value="price-asc">Price ↑</option>
 											<option value="price-desc">Price ↓</option>
 											<option value="quantity-asc">Quantity ↑</option>
@@ -104,18 +102,6 @@
 									<div th:if="${#lists.isEmpty(products)}">
 										<div th:replace="~{component/no-item-notification :: no-item-notification}">
 										</div>
-									</div>
-									<div class="me-2 d-flex align-items-center">
-										<label for="entriesSelect" class="me-1" style="font-size: 12px;">Show</label>
-										<select id="entriesSelect" class="form-select form-select-sm w-auto"
-											style="font-size: 12px;">
-											<option value="3">3</option>
-											<option value="5" selected>5</option>
-											<option value="10">10</option>
-											<option value="15">15</option>
-											<option value="20">20</option>
-										</select>
-										<span class="ms-1" style="font-size: 12px;">products</span>
 									</div>
 									<table id="datatables-column-search-text-inputs" class="table"
 										style="width:100%; text-align: center;"
@@ -167,17 +153,28 @@
 													</button>
 												</td>
 											</tr>
-											<tr class="addrow" onclick="location.href='/admin/products/add';">
-												<td colspan="8" style="text-align: center;">
-													<i data-feather="plus"></i>
-												</td>
-											</tr>
 										</tbody>
 									</table>
 
-									<div class="d-flex justify-content-between align-items-center mt-3">
-										<div id="table-info" style="font-size: 15px;"></div>
-										<div id="pagination"></div>
+									<div id="pagination" class="mt-3">
+										<nav th:if="${totalPages > 1}">
+											<ul class="pagination mb-0">
+												<li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+													<a class="page-link"
+													   th:href="@{/admin/products(page=${page-1},size=${size},sortBy=${sortBy},direction=${direction})}">Previous</a>
+												</li>
+												<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+													th:classappend="${i == page} ? 'active'">
+													<a class="page-link"
+													   th:href="@{/admin/products(page=${i},size=${size},sortBy=${sortBy},direction=${direction})}"
+													   th:text="${i+1}"></a>
+												</li>
+												<li class="page-item" th:classappend="${page == totalPages-1} ? 'disabled'">
+													<a class="page-link"
+													   th:href="@{/admin/products(page=${page+1},size=${size},sortBy=${sortBy},direction=${direction})}">Next</a>
+												</li>
+											</ul>
+										</nav>
 									</div>
 								</div>
 							</div>
@@ -207,60 +204,8 @@
 		});
 	</script>
 
-
+<!--Update product status script-->
 	<script>
-
-		document.addEventListener("DOMContentLoaded", function () {
-			const searchBox = document.getElementById('productSearchBox');
-			const table = document.getElementById('datatables-column-search-text-inputs');
-			searchBox.addEventListener('keyup', function () {
-				const filter = searchBox.value.toLowerCase();
-				const rows = table.querySelectorAll('tbody tr');
-				rows.forEach(row => {
-					const text = row.textContent.toLowerCase();
-					row.style.display = text.includes(filter) ? '' : 'none';
-				});
-			});
-		});
-
-		document.addEventListener("DOMContentLoaded", function () {
-			const sortSelect = document.getElementById('sortSelect');
-			const table = document.getElementById('datatables-column-search-text-inputs');
-			sortSelect.addEventListener('change', function () {
-				const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)')); // Exclude add row
-				const addRow = table.querySelector('tbody tr.addrow'); // Find add row
-				let compare;
-				switch (sortSelect.value) {
-					case 'name-asc':
-						compare = (a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent);
-						break;
-					case 'name-desc':
-						compare = (a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent);
-						break;
-					case 'price-asc':
-						compare = (a, b) => parseFloat(a.children[3].textContent) - parseFloat(b.children[3].textContent);
-						break;
-					case 'price-desc':
-						compare = (a, b) => parseFloat(b.children[3].textContent) - parseFloat(a.children[3].textContent);
-						break;
-					case 'quantity-asc':
-						compare = (a, b) => parseFloat(a.children[4].textContent) - parseFloat(b.children[4].textContent);
-						break;
-					case 'quantity-desc':
-						compare = (a, b) => parseFloat(b.children[4].textContent) - parseFloat(a.children[4].textContent);
-						break;
-					default:
-						compare = null;
-				}
-				if (compare) {
-					rows.sort(compare);
-					const tbody = table.querySelector('tbody');
-					rows.forEach(row => tbody.appendChild(row));
-					if (addRow) tbody.appendChild(addRow); // Keep add row at the end
-				}
-			});
-		});
-
 		function updateRowOpacity(icon, newStatus) {
 			const row = icon.closest('tr');
 			if (!newStatus) {
@@ -316,86 +261,34 @@
 				});
 		}
 	</script>
-	<!-- table pagination script -->
+	<!-- table sort script -->
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const table = document.getElementById('datatables-column-search-text-inputs');
-			const pagination = document.getElementById('pagination');
-			const tableInfo = document.getElementById('table-info');
-			const entriesSelect = document.getElementById('entriesSelect');
-			const rows = Array.from(table.querySelectorAll('tbody tr:not(.addrow)'));
-			const addRow = table.querySelector('tbody tr.addrow');
-			let rowsPerPage = parseInt(entriesSelect.value, 10);
-			let currentPage = 1;
+		function updateProductList(params) {
+			const url = new URL(window.location.href);
+			Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+			window.location.href = url.toString();
+		}
+		document.getElementById('sortSelect').addEventListener('change', function () {
+			const value = this.value;
+			let sortBy = 'price', direction = 'asc';
+			if (value === 'price-desc') { sortBy = 'price'; direction = 'desc'; }
+			else if (value === 'price-asc') { sortBy = 'price'; direction = 'asc'; }
+			else if (value === 'quantity-desc') { sortBy = 'quantity'; direction = 'desc'; }
+			else if (value === 'quantity-asc') { sortBy = 'quantity'; direction = 'asc'; }
+			updateProductList({ sortBy, direction, page: 0 });
+		});
 
-			function showPage(page) {
-				const start = (page - 1) * rowsPerPage;
-				const end = start + rowsPerPage;
-				let visibleRows = rows.filter(row => row.style.display !== 'none' || true); // all rows for pagination
-				visibleRows.forEach((row, idx) => {
-					row.style.display = (idx >= start && idx < end) ? '' : 'none';
-				});
-				if (addRow) addRow.style.display = page === Math.ceil(visibleRows.length / rowsPerPage) ? '' : 'none';
-				renderPagination(visibleRows.length);
-				renderTableInfo(start, end, visibleRows.length);
+	</script>
+	<!-- Search box script -->
+	<script>
+		document.getElementById('productSearchBox').addEventListener('keyup', function (e) {
+			if (e.key === 'Enter') {
+				const query = this.value.trim();
+				const url = new URL(window.location.href);
+				url.searchParams.set('search', query);
+				url.searchParams.set('page', 0); // Reset to first page
+				window.location.href = url.toString();
 			}
-
-			function renderTableInfo(start, end, total) {
-				const from = total === 0 ? 0 : start + 1;
-				const to = Math.min(end, total);
-				tableInfo.textContent = `Showing ${from} to ${to} of ${total} products`;
-			}
-
-			function renderPagination(totalRows) {
-				const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
-				let html = `<nav><ul class="pagination mb-0">`;
-				html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}">
-                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
-				for (let i = 1; i <= totalPages; i++) {
-					html += `<li class="page-item${i === currentPage ? ' active' : ''}">
-                        <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-				}
-				html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}">
-                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
-				html += `</ul></nav>`;
-				pagination.innerHTML = html;
-				pagination.querySelectorAll('a.page-link').forEach(link => {
-					link.addEventListener('click', function (e) {
-						e.preventDefault();
-						const page = parseInt(this.getAttribute('data-page'));
-						const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
-						if (page >= 1 && page <= totalPages) {
-							currentPage = page;
-							showPage(currentPage);
-						}
-					});
-				});
-			}
-
-			showPage(currentPage);
-
-			// Change entries per page
-			entriesSelect.addEventListener('change', function () {
-				rowsPerPage = parseInt(entriesSelect.value, 10);
-				currentPage = 1;
-				showPage(currentPage);
-			});
-
-			// Re-apply pagination after sorting or searching
-			document.getElementById('sortSelect').addEventListener('change', function () {
-				showPage(1);
-			});
-			document.getElementById('productSearchBox').addEventListener('keyup', function () {
-				// Only show rows that are visible after search
-				const filter = this.value.toLowerCase();
-				rows.forEach(row => {
-					const text = row.textContent.toLowerCase();
-					row.style.display = text.includes(filter) ? '' : 'none';
-				});
-				currentPage = 1;
-				const visibleRows = rows.filter(row => row.style.display !== 'none');
-				showPage(currentPage);
-			});
 		});
 	</script>
 </body>
