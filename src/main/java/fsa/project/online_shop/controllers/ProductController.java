@@ -337,14 +337,19 @@ public class ProductController {
         product.setPrice(price);
         product.setQuantity(quantity);
         product.setDescription(description);
+        product.setSlug(productService.generateUniqueSlug(name, id));
 
         Category category = categoryService.getCategoryById(categoryId);
         product.setCategory(category);
 
         try {
             String fileName = fileService.handleUploadImage(image);
+            String oldFileName = product.getImage();
             if (fileName == null || fileName.isEmpty()) {
                 fileName = product.getImage();
+            }
+            else {
+                fileService.handleDeleteImage(oldFileName);
             }
             product.setImage(fileName);
         } catch (IOException e) {

@@ -239,7 +239,7 @@ public class UserController {
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to create user: " + e.getMessage());
-            return "redirect:/admin/add-user";
+            return "redirect:/admin/users/add-user";
         }
     }
 

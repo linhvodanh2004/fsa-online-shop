@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "fail-to-update-order-status": "Fail to update order status",
         "profile-updated-successfully": "Profile updated successfully",
         "old-password-invalid": "Old password is invalid",
+        "product-not-found": "Product not found",
     }
 
     if (params.has("success")) {

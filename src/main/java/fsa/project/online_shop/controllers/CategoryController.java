@@ -32,7 +32,7 @@ public class CategoryController {
             @RequestParam("image") MultipartFile image
     ){
         if(categoryService.checkCategoryExists(name)){
-            return "redirect:/admin/category-manager?error=category-exists";
+            return "redirect:/admin/categories?error=category-exists";
         }
         try {
             String fileName = fileService.handleUploadImage(image);
@@ -41,9 +41,9 @@ public class CategoryController {
                     .image(fileName)
                     .build();
             categoryService.handleSaveCategory(category);
-            return "redirect:/admin/category-manager?success=add-category-successfully";
+            return "redirect:/admin/categories?success=add-category-successfully";
         } catch (IOException e) {
-            return "redirect:/admin/category-manager?error=failed-to-upload-category-image";
+            return "redirect:/admin/categories?error=failed-to-upload-category-image";
         }
     }
 
@@ -55,7 +55,7 @@ public class CategoryController {
     ){
         Category category = categoryService.getCategoryById(id);
         if (categoryService.checkCategoryExists(name) && !category.getName().equals(name)) {
-            return "redirect:/admin/category-manager?error=category-exists";
+            return "redirect:/admin/categories?error=category-exists";
         }
         try {
             if (!image.isEmpty()) {
@@ -69,19 +69,19 @@ public class CategoryController {
             }
             category.setName(name);
             categoryService.handleSaveCategory(category);
-            return "redirect:/admin/category-manager?success=edit-category-successfully";
+            return "redirect:/admin/categories?success=edit-category-successfully";
         } catch (IOException e) {
-            return "redirect:/admin/category-manager?error=failed-to-upload-category-image";
+            return "redirect:/admin/categories?error=failed-to-upload-category-image";
         }
     }
     @GetMapping("/admin/categories/delete-category/{id}")
     public String handleDeleteCategory(@PathVariable("id") Long id){
         Category category = categoryService.getCategoryById(id);
         if(category == null){
-            return "redirect:/admin/category-manager?error=category-not-found";
+            return "redirect:/admin/categories?error=category-not-found";
         }
         if(!category.getProducts().isEmpty()){
-            return "redirect:/admin/category-manager?error=category-has-products";
+            return "redirect:/admin/categories?error=category-has-products";
         }
         try {
             String image = category.getImage();
@@ -89,9 +89,9 @@ public class CategoryController {
                 fileService.handleDeleteImage(image);
             }
             categoryService.deleteCategoryById(id);
-            return "redirect:/admin/category-manager?success=delete-category-successfully";
+            return "redirect:/admin/categories?success=delete-category-successfully";
         } catch (IOException e) {
-            return "redirect:/admin/category-manager?error=failed-to-delete-category-image";
+            return "redirect:/admin/categories?error=failed-to-delete-category-image";
         }
     }
 }
