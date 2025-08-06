@@ -6,17 +6,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="user/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="user/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/user/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/user/img/favicon.ico">
 
-    <link rel="stylesheet" href="user/css/bootstrap.min.css">
-    <link rel="stylesheet" href="user/css/templatemo.css">
-    <link rel="stylesheet" href="user/css/custom.css">
+    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/templatemo.css">
+    <link rel="stylesheet" href="/user/css/custom.css">
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="user/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/user/css/fontawesome.min.css">
 
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -88,7 +88,7 @@
 <body>
 <div class="container-fluid">
     <div class="shadow-lg border-0 row justify-content-center">
-        <div class="col-md-7 d-none d-md-block login-bg">
+        <div class="col-md-7 d-none d-lg-block login-bg">
             <div class="login-bg-content">
                 <div>
                     <h1>Inspirational gaming setup</h1>
@@ -97,9 +97,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 mt-3">
             <a class="navbar-brand text-success logo h1 align-self-center d-flex justify-content-center"
-               href="index.html">
+               th:href="@{/}">
                 GOS
             </a>
             <div class="text-center mb-4">
@@ -171,12 +171,13 @@
 <div th:replace="~{component/chat-widget :: chat-widget('shop', '🛒', 'GOS Shop Support', '● Tư vấn mua sắm', '🛒 <strong>Chào mừng đến GOS Shop!</strong><br>Tôi có thể giúp bạn:<br>• Tìm sản phẩm phù hợp<br>• So sánh giá cả<br>• Thông tin khuyến mãi<br>• Hỗ trợ đặt hàng<br><br>Bạn đang tìm sản phẩm gì? 😊')}"></div>
 
 <!-- Scripts -->
-<script src="user/js/jquery-1.11.0.min.js"></script>
-<script src="user/js/jquery-migrate-1.2.1.min.js"></script>
-<script src="user/js/bootstrap.bundle.min.js"></script>
-<script src="user/js/templatemo.js"></script>
-<script src="user/js/custom.js"></script>
+<script src="/user/js/jquery-1.11.0.min.js"></script>
+<script src="/user/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="/user/js/bootstrap.bundle.min.js"></script>
+<script src="/user/js/templatemo.js"></script>
+<script src="/user/js/custom.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script type="text/javascript" src="/toastify-message.js"></script>
 <script th:inline="javascript" type="text/javascript">
     const hashedVerificationCode = /*[[${hashedVerificationCode}]]*/ '';
 

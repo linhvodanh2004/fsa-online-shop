@@ -48,7 +48,7 @@ public class ProductController {
             Model model) {
 
         // Get all products first
-        List<Product> products = productService.getAllProducts();
+        List<Product> products = productService.getActiveProducts();
 
         // Apply filters
         if (categoryId != null) {
@@ -163,7 +163,7 @@ public class ProductController {
     public String showProductDetailBySlug(@PathVariable String slug, Model model) {
         try {
             Product product = productService.getProductBySlug(slug);
-            if (product == null) {
+            if (product == null || product.getStatus() == null || !product.getStatus()) {
                 return "redirect:/shop?error=product-not-found";
             }
 

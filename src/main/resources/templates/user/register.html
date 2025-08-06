@@ -23,7 +23,7 @@
 <body>
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-7 d-none d-md-block login-bg">
+        <div class="col-md-7 d-none d-lg-block login-bg">
             <div class="login-bg-content">
                 <div>
                     <h1>Inspirational gaming setup</h1>
@@ -32,10 +32,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 mt-3">
             <!--            <h3 class="text-center mb-4 mt-3">Create New Account</h3>-->
             <a class="navbar-brand text-success logo h1 align-self-center d-flex justify-content-center"
-               href="index.html">
+               th:href="@{/}">
                 GOS
             </a>
             <form id="registerForm" method="post" th:action="@{/register}">

@@ -44,6 +44,7 @@ public class OrderController {
         model.addAttribute("receiverEmail", (user.getEmail() == null) ? "" : user.getEmail());
         model.addAttribute("receiverPhone", (user.getReceiverPhone() != null) ? user.getReceiverPhone()
                 : (user.getPhone() != null) ? user.getPhone() : "");
+        model.addAttribute("receiverAddress", (user.getAddress() != null) ? user.getAddress() : "");
         return "user/cart-detail";
     }
 

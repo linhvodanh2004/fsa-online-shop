@@ -65,4 +65,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Product> searchProductsWithDescription(@Param("query") String query);
+
+    List<Product> findByStatus(Boolean status);
 }

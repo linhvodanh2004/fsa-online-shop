@@ -13,6 +13,8 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
+    List<Product> getActiveProducts();
+
     Product getProductById(Long id);
 
     List<Product> getRelatedProducts(Long categoryId, Long productId);
