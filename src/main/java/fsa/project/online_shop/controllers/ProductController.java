@@ -333,6 +333,7 @@ public class ProductController {
 
     ) {
         Product product = productService.getProductById(id);
+        String oldFileName = product.getImage();
         product.setName(name);
         product.setPrice(price);
         product.setQuantity(quantity);
@@ -343,13 +344,12 @@ public class ProductController {
         product.setCategory(category);
 
         try {
-            String fileName = fileService.handleUploadImage(image);
-            String oldFileName = product.getImage();
-            if (fileName == null || fileName.isEmpty()) {
-                fileName = product.getImage();
+            String fileName = null;
+            if (image != null && !image.isEmpty()) {
+                fileName = fileService.handleUploadImage(image);
             }
-            else {
-                fileService.handleDeleteImage(oldFileName);
+            if (fileName == null || fileName.isEmpty()) {
+                fileName = oldFileName;
             }
             product.setImage(fileName);
         } catch (IOException e) {
