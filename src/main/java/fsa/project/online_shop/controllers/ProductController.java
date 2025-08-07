@@ -281,7 +281,7 @@ public class ProductController {
     @GetMapping("/admin/products")
     public String adminProductPage(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "price") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
             @RequestParam(required = false) String search,
@@ -347,18 +347,20 @@ public class ProductController {
             String fileName = null;
             if (image != null && !image.isEmpty()) {
                 fileName = fileService.handleUploadImage(image);
+                if(oldFileName != null && !oldFileName.isEmpty()){
+                    fileService.handleDeleteImage(oldFileName);
+                }
             }
             if (fileName == null || fileName.isEmpty()) {
                 fileName = oldFileName;
             }
             product.setImage(fileName);
+            productService.saveProduct(product);
+            return "redirect:/admin/products";
         } catch (IOException e) {
             e.printStackTrace();
+            return "redirect:/admin/products";
         }
-
-
-        productService.saveProduct(product);
-        return "redirect:/admin/products";
     }
 
     @GetMapping("/admin/products/add")
