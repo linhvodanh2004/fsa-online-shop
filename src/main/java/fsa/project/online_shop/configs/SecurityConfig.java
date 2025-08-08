@@ -44,12 +44,6 @@ public class SecurityConfig {
             "/api/**",  // Allow API endpoints for chat
             "/product/**"  // Allow product slug URLs with /product/ prefix
     };
-//    private static final String[] AUTHENTICATED_ENDPOINTS = {
-//            "/cart/**", "/cart-detail/**", "/admin/**"
-//    };
-
-
-
 
     @Bean
     public SpringSessionRememberMeServices rememberMeServices() {

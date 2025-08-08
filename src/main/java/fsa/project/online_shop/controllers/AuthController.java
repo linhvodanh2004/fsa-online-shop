@@ -112,8 +112,8 @@ public class AuthController implements ErrorController {
             @RequestParam String password,
             Model model) {
         User user = userService.findByEmail(email);
-        user.setPassword(password);
-        userService.save(user);
+        user.setPassword(passwordEncoder.encode(password));
+        userService.handleSaveUser(user);
         return "redirect:/login?success=reset-successfully";
     }
 

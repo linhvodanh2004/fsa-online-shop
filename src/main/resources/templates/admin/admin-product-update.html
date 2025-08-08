@@ -92,12 +92,12 @@
 								<div class="mb-3">
 									<label class="form-label">Price:<span class="text-danger">*</span></label>
 									<input type="number" class="form-control" name="price"
-										   th:value="${product.price}">
+										   th:value="${product.price}" min="0">
 								</div>
 								<div class="mb-3">
 									<label class="form-label">Quantity:</label>
 									<input type="number" class="form-control" name="quantity"
-										   th:value="${product.quantity}">
+										   th:value="${product.quantity}" min="0">
 								</div>
 								<div class="mb-3">
 									<label class="form-label">Description:</label>

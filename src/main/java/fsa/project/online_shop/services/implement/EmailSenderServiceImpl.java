@@ -167,14 +167,14 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         // Add order items
         for (OrderItem item : order.getOrderItems()) {
-            double itemTotal = item.getQuantity() * item.getPrice();
+            double itemTotal = item.getQuantity() * item.getProduct().getPrice();
             content.append("<tr>")
                     .append("<td style='padding: 12px; border-bottom: 1px solid #f1f3f4; color: #333;'>")
                     .append(item.getProduct().getName()).append("</td>")
                     .append("<td style='padding: 12px; text-align: center; border-bottom: 1px solid #f1f3f4; color: #333;'>")
                     .append(item.getQuantity()).append("</td>")
                     .append("<td style='padding: 12px; text-align: right; border-bottom: 1px solid #f1f3f4; color: #333;'>")
-                    .append(df.format(item.getPrice())).append(" VND</td>")
+                    .append(df.format(item.getProduct().getPrice())).append(" VND</td>")
                     .append("<td style='padding: 12px; text-align: right; border-bottom: 1px solid #f1f3f4; color: #333; font-weight: bold;'>")
                     .append(df.format(itemTotal)).append(" VND</td>")
                     .append("</tr>");
