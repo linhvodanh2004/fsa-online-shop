@@ -1,0 +1,52 @@
+
+
+services:
+  app:
+    build: .
+    container_name: online-shop-app
+    ports:
+      - "8089:8080"
+    environment:
+      - DB_URL=jdbc:mysql://db:3306/online_shop
+      - DB_USERNAME=root
+      - DB_PASSWORD=123456
+      - MAIL_EMAIL=${MAIL_EMAIL}
+      - MAIL_APPLICATION_PASSWORD=${MAIL_APPLICATION_PASSWORD}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - VNPAY_TMN_CODE=${VNPAY_TMN_CODE}
+      - VNPAY_HASH_SECRET=${VNPAY_HASH_SECRET}
+      - VNPAY_RETURN_URL=${VNPAY_RETURN_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - REMEMBER_ME_KEY=${REMEMBER_ME_KEY}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    depends_on:
+      - db
+    networks:
+      - app-network
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: online-shop-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: online_shop
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Initialize database if needed, uncomment if you want to use the local sql file
+      # - ./gosshop.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    restart: always
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

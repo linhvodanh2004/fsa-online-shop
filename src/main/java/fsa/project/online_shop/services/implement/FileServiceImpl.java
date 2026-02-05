@@ -1,23 +1,23 @@
 package fsa.project.online_shop.services.implement;
 
 import fsa.project.online_shop.services.FileService;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
-    private static final String UPLOAD_DIR = "upload/";
+    private final Cloudinary cloudinary;
     private static final String[] IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
 
+    @Override
     public String handleUploadImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
@@ -26,14 +26,10 @@ public class FileServiceImpl implements FileService {
         if (!isValidImageFile(originalFilename)) {
             throw new IllegalArgumentException("Invalid file type. Only image files are allowed.");
         }
-        String newFilename = UUID.randomUUID().toString() + System.currentTimeMillis()  + originalFilename;
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        Path filePath = uploadPath.resolve(newFilename);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return "/upload/" + newFilename;
+        
+        // Upload to Cloudinary
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        return (String) uploadResult.get("secure_url");
     }
 
     private boolean isValidImageFile(String filename) {
@@ -48,20 +44,36 @@ public class FileServiceImpl implements FileService {
         }
         return false;
     }
+
     @Override
-    public boolean handleDeleteImage(String filename) throws IOException {
-        if (filename == null || filename.isEmpty()) {
+    public boolean handleDeleteImage(String url) throws IOException {
+        if (url == null || url.isEmpty()) {
             return false;
         }
 
-        // Remove "/upload/" prefix if it exists
-        if (filename.startsWith("/upload/")) {
-            filename = filename.substring("/upload/".length());
+        try {
+            // Extract public ID from URL
+            String publicId = extractPublicIdFromUrl(url);
+            Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            return "ok".equals(result.get("result"));
+        } catch (Exception e) {
+            // Log error?
+            return false;
         }
-
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        Path targetPath = uploadPath.resolve(filename);
-        return Files.deleteIfExists(targetPath);
     }
 
+    private String extractPublicIdFromUrl(String url) {
+        // Example URL: https://res.cloudinary.com/cloudname/image/upload/v1234567890/public_id.jpg
+        // We need 'public_id'
+        try {
+            int lastSlashIndex = url.lastIndexOf('/');
+            int lastDotIndex = url.lastIndexOf('.');
+            if (lastSlashIndex != -1 && lastDotIndex != -1 && lastDotIndex > lastSlashIndex) {
+                 return url.substring(lastSlashIndex + 1, lastDotIndex);
+            }
+        } catch (Exception e) {
+            // fallback or return null
+        }
+        return null;
+    }
 }
